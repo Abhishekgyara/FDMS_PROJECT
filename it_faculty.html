@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Faculty Profiles</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="dash_styles.css">
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <style>
+    body { background: linear-gradient(120deg, #2d92db, #df19ae); padding: 20px; }
+    h2 { color: white; font-weight: 600; }
+    table { background-color: white; }
+    th { background-color: #01614d; color: white; }
+    a { text-decoration: none; }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <a href="#" class="logo">Faculty Data Management System</a>
+    <input type="checkbox" id="check">
+    <label for="check" class="icons">
+      <i class="bx bx-menu" id="menu-icon"></i>
+      <i class="bx bx-x" id="close-icon"></i>
+    </label>
+    <nav class="navbar">
+      <a href="dashboard.html" style="--i:0">Home</a>
+      <a href="about.html" style="--i:1">About</a>
+      <a href="profiles.html" style="--i:2">Profiles</a>
+      <a href="contact.html" target="_blank" style="--i:3">Contact-us</Contact-us></a>
+      <a href="#" style="--i:4">Awards</a>
+    </nav>
+  </header>
+
+  <div class="container mt-5">
+    <h2 class="text-center">IT FACULTY</h2>
+    <form id="addFacultyForm" class="mb-3">
+      <input type="text" id="name" placeholder="Name" required>
+      <input type="text" id="designation" placeholder="Designation" required>
+      <input type="text" id="qualification" placeholder="Qualification" required>
+      <input type="text" id="department" placeholder="Department" required>
+      <button type="submit" class="btn btn-success">Add Faculty</button>
+    </form>
+    <table class="table" id="facultyTable">
+      <thead>
+        <tr>
+          <th>S.No</th>
+          <th>Name</th>
+          <th>Designation</th>
+          <th>Qualification</th>
+          <th>Department</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script>
+    const form = document.getElementById('addFacultyForm');
+    const tableBody = document.querySelector('#facultyTable tbody');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const profile = {
+        name: document.getElementById('name').value,
+        designation: document.getElementById('designation').value,
+        qualification: document.getElementById('qualification').value,
+        department: document.getElementById('department').value,
+      };
+      const response = await fetch('http://127.0.0.1:3050/addProfile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(profile),
+      });
+      const result = await response.json();
+      form.reset();
+      addProfileToTable(result.profile);
+    });
+
+    function addProfileToTable(profile) {
+      const row = document.createElement('tr');
+      row.dataset.id = profile._id;
+      const url = `profile.html?name=${encodeURIComponent(profile.name)}&designation=${encodeURIComponent(profile.designation)}&qualification=${encodeURIComponent(profile.qualification)}&department=${encodeURIComponent(profile.department)}`;
+
+
+      row.innerHTML = `
+        <td>${tableBody.children.length + 1}</td>
+        <td><a href="${url}" target="_blank">${profile.name}</a></td>
+        <td>${profile.designation}</td>
+        <td>${profile.qualification}</td>
+        <td>${profile.department}</td>
+        
+        <td>
+          <button class="btn btn-warning btn-sm" onclick="editProfile('${profile._id}', this)">
+            <i class='bx bx-edit'></i>
+          </button>
+          <button class="btn btn-danger btn-sm" onclick="deleteProfile('${profile._id}', this)">
+            <i class='bx bx-trash'></i>
+          </button>
+        </td>
+      `;
+      tableBody.appendChild(row);
+    }
+
+    async function deleteProfile(id, button) {
+      try {
+        const response = await fetch(`http://127.0.0.1:3050/deleteProfile/${id}`, {
+          method: 'DELETE',
+        });
+        const result = await response.json();
+        if (result.success) {
+          button.closest('tr').remove();
+          alert('Profile deleted successfully');
+        } else {
+          alert('Error deleting profile: ' + result.message);
+        }
+      } catch (error) {
+        console.error('Failed to delete profile:', error);
+        alert('Failed to delete profile');
+      }
+    }
+
+    async function editProfile(id, button) {
+      const row = button.closest('tr');
+      const nameCell = row.children[1];
+      const designationCell = row.children[2];
+      const qualificationCell = row.children[3];
+      const departmentCell=row.children[4];
+
+      const nameInput = `<input type="text" value="${nameCell.textContent}" class="form-control">`;
+      const designationInput = `<input type="text" value="${designationCell.textContent}" class="form-control">`;
+      const qualificationInput = `<input type="text" value="${qualificationCell.textContent}" class="form-control">`;
+      const departmentInput=`<input type="text" value="${departmentCell.textContent}" class="form-control">`;
+
+      nameCell.innerHTML = nameInput;
+      designationCell.innerHTML = designationInput;
+      qualificationCell.innerHTML = qualificationInput;
+      departmentCell.innerHTML=departmentInput;
+
+      button.innerHTML = `<i class='bx bx-save'></i>`;
+      button.classList.remove('btn-warning');
+      button.classList.add('btn-success');
+      button.setAttribute('onclick', `saveProfile('${id}', this)`);
+    }
+
+    async function saveProfile(id, button) {
+      const row = button.closest('tr');
+      const nameCell = row.children[1];
+      const designationCell = row.children[2];
+      const qualificationCell = row.children[3];
+      const departmentCell=row.children[4];
+
+      const updatedProfile = {
+        name: nameCell.children[0].value,
+        designation: designationCell.children[0].value,
+        qualification: qualificationCell.children[0].value,
+        department:departmentCell.children[0].value,
+      };
+
+      try {
+        const response = await fetch(`http://127.0.0.1:3050/updateProfile/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updatedProfile),
+        });
+
+        const result = await response.json();
+        if (result.success) {
+          nameCell.innerHTML = `<a href="profile.html?name=${encodeURIComponent(updatedProfile.name)}&designation=${encodeURIComponent(updatedProfile.designation)}&qualification=${encodeURIComponent(updatedProfile.qualification)}" target="_blank">${
+                      updatedProfile.name}</a>`;
+          designationCell.textContent = updatedProfile.designation;
+          qualificationCell.textContent = updatedProfile.qualification;
+          departmentCell.textContent=updatedProfile.department;
+
+          button.innerHTML = `<i class='bx bx-edit'></i>`;
+          button.classList.remove('btn-success');
+          button.classList.add('btn-warning');
+          button.setAttribute('onclick', `editProfile('${id}', this)`);
+        } else {
+          alert('Error updating profile: ' + result.message);
+        }
+      } catch (error) {
+        console.error('Failed to update profile:', error);
+        alert('Failed to update profile');
+      }
+    }
+
+    async function fetchProfiles() {
+  try {
+    const response = await fetch('http://127.0.0.1:3050/getProfiles');
+    const profiles = await response.json();
+    
+    // Filter only CSE department profiles
+    const cseProfiles = profiles.filter(profile => profile.department.toUpperCase() === "IT");
+
+    cseProfiles.forEach(addProfileToTable);
+  } catch (error) {
+    console.error('Error fetching profiles:', error);
+  }
+}
+
+
+    window.onload = fetchProfiles;
+  </script>
+</body>
+</html>
+
