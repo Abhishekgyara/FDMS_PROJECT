@@ -17,11 +17,11 @@ const facultyProfileSchema = new mongoose.Schema({
   name: String,
   designation: String,
   qualification: String,
+  department: String,
   email: String,
   phone: String,
   officeAddress: String,
   imageUrl: String,
-  departments: [String],
   researchInterests: [String]
 });
 
@@ -116,4 +116,3 @@ app.delete('/deleteProfile/:id', async (req, res) => {
 // 🌐 Server Port
 const PORT = 3050;
 app.listen(PORT, () => console.log(`Server running on http://127.0.0.1:${PORT}`));
-
