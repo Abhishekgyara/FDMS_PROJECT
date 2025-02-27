@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Profile</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .profile-container {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+        }
+        .profile-img {
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-right: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="text-center mt-4">Faculty Profile</h2>
+        <div id="profileDetails" class="profile-container">
+            <img id="facultyImage" class="profile-img" src="" alt="Faculty Image">
+            <div>
+                <h3 id="facultyName"></h3>
+                <p><strong>Designation:</strong> <span id="facultyDesignation"></span></p>
+                <p><strong>Qualification:</strong> <span id="facultyQualification"></span></p>
+                <p><strong>Email:</strong> <span id="facultyEmail"></span></p>
+                <p><strong>Phone:</strong> <span id="facultyPhone"></span></p>
+                <p><strong>Office Address:</strong> <span id="facultyOffice"></span></p>
+                <p><strong>Departments:</strong> <span id="facultyDepartments"></span></p>
+                <p><strong>Research Interests:</strong> <span id="facultyResearch"></span></p>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="facultyModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="facultyName"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Designation:</strong> <span id="facultyDesignation"></span></p>
+                <p><strong>Qualification:</strong> <span id="facultyQualification"></span></p>
+                <p><strong>Email:</strong> <span id="facultyEmail"></span></p>
+                <p><strong>Phone:</strong> <span id="facultyPhone"></span></p>
+                <p><strong>Experience:</strong> <span id="facultyExperience"></span></p>
+                <p><strong>Seminars Organized:</strong> <span id="facultySeminars"></span></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    <script>
+        $(document).ready(function() {
+            // Get faculty name from query parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            const facultyName = urlParams.get('name');
+
+            if (facultyName) {
+                fetch(`http://127.0.0.1:3050/getProfileByName?name=${encodeURIComponent(facultyName)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success === false) {
+                            alert(data.message);
+                            return;
+                        }
+                        $('#facultyImage').attr('src', data.imageUrl || 'default.jpg');
+                        $('#facultyName').text(data.name);
+                        $('#facultyDesignation').text(data.designation);
+                        $('#facultyQualification').text(data.qualification);
+                        $('#facultyEmail').text(data.email);
+                        $('#facultyPhone').text(data.phone);
+                        $('#facultyOffice').text(data.officeAddress);
+                        $('#facultyDepartments').text(data.departments.join(', '));
+                        $('#facultyResearch').text(data.researchInterests.join(', '));
+                    })
+                    .catch(error => console.error('Error fetching profile:', error));
+            } else {
+                alert('No faculty name provided.');
+            }
+        });
+    </script>
+</body>
+</html>
