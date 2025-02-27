@@ -141,27 +141,68 @@
     .stars span:nth-child(8) { background: gold; }
     .stars span:nth-child(9) { background: silver; }
     .stars span:nth-child(10) { background: lightgreen; }
-    
+
+    .departments {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 40px;
+      max-width: 80%;
+      margin: auto;
+    }
+
+    .department-card {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      position: relative;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .department-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .department-card h3 {
+      color: #6a11cb;
+      margin-bottom: 10px;
+    }
+
+    .department-link {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    .view-more {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      font-size: 20px;
+      color: #2575fc;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .view-more:hover {
+      color: #6a11cb;
+    }
   </style>
 </head>
-
 <body>
   <header class="header">
     <a href="#" class="logo">Faculty Data Management System</a>
-    <input type="checkbox" id="check">
-    <label for="check" class="icons">
-      <i class="bx bx-menu" id="menu-icon"></i>
-      <i class="bx bx-x" id="close-icon"></i>
-    </label>
-
     <nav class="navbar">
-      <a href="dashboard.html" style="--i:0">Home</a>
-      <a href="about.html" style="--i:1">About</a>
-      <a href="profiles.html" style="--i:2">Profiles</a>
-      <a href="contact.html" style="--i:3">Contact-Us</a>
-      <a href="#" style="--i:4">Awards</a>
+      <a href="dashboard.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="profiles.html">Profiles</a>
+      <a href="contact.html">Contact-Us</a>
+      <a href="settings.html">Awards</a>
     </nav>
   </header>
+
 
   <div class="stars">
     <span style="left: 10%; animation-delay: 0s;"></span>
@@ -185,34 +226,39 @@
     <img src="kmit_image.jpg" alt="Faculty Image">
   </div>
 
-  <!-- Department Cards -->
+
   <div class="departments">
-    <div class="department-card">
-      <h3>CSD Department</h3>
-      <p>Computer Science & Design focuses on UI/UX, AI, and Software Development.</p>
-      <a href="csd.html" class="view-more" target="_blank">&#10132;</a>
-    </div>
+    <a href="ds_faculty.html" class="department-link" target="_blank">
+      <div class="department-card">
+        <h3>CSD Department</h3>
+        <p>Computer Science & Design focuses on UI/UX, AI, and Software Development.</p>
+        <span class="view-more">&#10132;</span>
+      </div>
+    </a>
 
-    <div class="department-card">
-      <h3>AIML Department</h3>
-      <p>Artificial Intelligence & Machine Learning pioneers next-gen automation.</p>
-      <a href="aiml.html" class="view-more" target="_blank">&#10132;</a>
-    </div>
+    <a href="aiml_profiles.html" class="department-link" target="_blank">
+      <div class="department-card">
+        <h3>AIML Department</h3>
+        <p>Artificial Intelligence & Machine Learning pioneers next-gen automation.</p>
+        <span class="view-more">&#10132;</span>
+      </div>
+    </a>
 
-    <div class="department-card">
-      <h3>IT Department</h3>
-      <p>Information Technology fosters expertise in cloud computing & networks.</p>
-      <a href="it.html" class="view-more" target="_blank">&#10132;</a>
-    </div>
+    <a href="it_faculty.html" class="department-link" target="_blank">
+      <div class="department-card">
+        <h3>IT Department</h3>
+        <p>Information Technology fosters expertise in cloud computing & networks.</p>
+        <span class="view-more">&#10132;</span>
+      </div>
+    </a>
 
-    <div class="department-card">
-      <h3>CSE Department</h3>
-      <p>Computer Science Engineering drives innovation in software and systems.</p>
-      <a href="cse.html" class="view-more" target="_blank">&#10132;</a>
-    </div>
+    <a href="cse_profiles.html" class="department-link" target="_blank">
+      <div class="department-card">
+        <h3>CSE Department</h3>
+        <p>Computer Science Engineering drives innovation in software and systems.</p>
+        <span class="view-more">&#10132;</span>
+      </div>
+    </a>
   </div>
-
-  
 </body>
 </html>
-
