@@ -38,6 +38,7 @@
       <input type="text" id="name" placeholder="Name" required>
       <input type="text" id="designation" placeholder="Designation" required>
       <input type="text" id="qualification" placeholder="Qualification" required>
+      <input type="text" id="department" placeholder="Department" required>
       <button type="submit" class="btn btn-success">Add Faculty</button>
     </form>
     <table class="table" id="facultyTable">
@@ -47,6 +48,7 @@
           <th>Name</th>
           <th>Designation</th>
           <th>Qualification</th>
+          <th>Department</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -64,8 +66,9 @@
         name: document.getElementById('name').value,
         designation: document.getElementById('designation').value,
         qualification: document.getElementById('qualification').value,
+        departments: [document.getElementById('department').value]
       };
-      const response = await fetch('http://127.0.0.1:3050/addProfile', {
+      const response = await fetch('http://127.0.0.1:3000/addProfile', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(profile),
@@ -85,6 +88,7 @@
         <td><a href="${url}" target="_blank">${profile.name}</a></td>
         <td>${profile.designation}</td>
         <td>${profile.qualification}</td>
+        <td>${profile.departments.join(', ')}</td>
         <td>
           <button class="btn btn-warning btn-sm" onclick="editProfile('${profile._id}', this)">
             <i class='bx bx-edit'></i>
@@ -99,7 +103,7 @@
 
     async function deleteProfile(id, button) {
       try {
-        const response = await fetch(`http://127.0.0.1:3050/deleteProfile/${id}`, {
+        const response = await fetch(`http://127.0.0.1:3000/deleteProfile/${id}`, {
           method: 'DELETE',
         });
         const result = await response.json();
@@ -120,14 +124,17 @@
       const nameCell = row.children[1];
       const designationCell = row.children[2];
       const qualificationCell = row.children[3];
+      const departmentCell = row.children[4];
 
       const nameInput = `<input type="text" value="${nameCell.textContent}" class="form-control">`;
       const designationInput = `<input type="text" value="${designationCell.textContent}" class="form-control">`;
       const qualificationInput = `<input type="text" value="${qualificationCell.textContent}" class="form-control">`;
+      const departmentInput = `<input type="text" value="${departmentCell.textContent}" class="form-control">`;
 
       nameCell.innerHTML = nameInput;
       designationCell.innerHTML = designationInput;
       qualificationCell.innerHTML = qualificationInput;
+      departmentCell.innerHTML = departmentInput;
 
       button.innerHTML = `<i class='bx bx-save'></i>`;
       button.classList.remove('btn-warning');
@@ -140,15 +147,17 @@
       const nameCell = row.children[1];
       const designationCell = row.children[2];
       const qualificationCell = row.children[3];
+      const departmentCell = row.children[4];
 
       const updatedProfile = {
         name: nameCell.children[0].value,
         designation: designationCell.children[0].value,
         qualification: qualificationCell.children[0].value,
+        departments: [departmentCell.children[0].value]
       };
 
       try {
-        const response = await fetch(`http://127.0.0.1:3050/updateProfile/${id}`, {
+        const response = await fetch(`http://127.0.0.1:3000/updateProfile/${id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(updatedProfile),
@@ -160,6 +169,7 @@
                       updatedProfile.name}</a>`;
           designationCell.textContent = updatedProfile.designation;
           qualificationCell.textContent = updatedProfile.qualification;
+          departmentCell.textContent = updatedProfile.departments.join(', ');
 
           button.innerHTML = `<i class='bx bx-edit'></i>`;
           button.classList.remove('btn-success');
@@ -176,7 +186,7 @@
 
     async function fetchProfiles() {
       try {
-        const response = await fetch('http://127.0.0.1:3050/getProfiles');
+        const response = await fetch('http://127.0.0.1:3000/getProfiles');
         const profiles = await response.json();
         profiles.forEach(addProfileToTable);
       } catch (error) {
@@ -188,5 +198,3 @@
   </script>
 </body>
 </html>
-
-
