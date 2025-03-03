@@ -252,21 +252,21 @@
   <!-- Contact Form -->
   <div class="contact-container">
     <h2>Contact Us</h2>
-    <form>
+    <form id="contactForm">
       <div class="input-box">
-        <input type="text" required />
+        <input type="text" id="fullName" required />
         <label>Full Name</label>
       </div>
       <div class="input-box">
-        <input type="email" required />
+        <input type="email" id="email" required />
         <label>Email</label>
       </div>
       <div class="input-box">
-        <input type="tel" required />
+        <input type="tel" id="phone" required />
         <label>Phone Number</label>
       </div>
       <div class="input-box">
-        <textarea rows="4" required></textarea>
+        <textarea id="feedback" rows="4" required></textarea>
         <label>Your Feedback</label>
       </div>
       <button type="submit" class="contact-btn">Submit</button>
@@ -280,5 +280,30 @@
     <p><i class='bx bx-envelope'></i>support@facultydata.com</p>
     <p><i class='bx bx-phone'></i>+123 456 7890</p>
   </div> -->
+
+  <script>
+    document.getElementById('contactForm').addEventListener('submit', async function(event) {
+      event.preventDefault();
+
+      const fullName = document.getElementById('fullName').value;
+      const email = document.getElementById('email').value;
+      const phone = document.getElementById('phone').value;
+      const feedback = document.getElementById('feedback').value;
+
+      const response = await fetch('http://localhost:3000/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fullName, email, phone, feedback })
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        alert('Message received!');
+        document.getElementById('contactForm').reset();
+      } else {
+        alert('Failed to send message');
+      }
+    });
+  </script>
 </body>
 </html>
