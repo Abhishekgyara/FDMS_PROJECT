@@ -171,62 +171,73 @@
     
     // Handle login submission
     document.getElementById("loginFormSubmit").addEventListener("submit", async function (e) {
-        e.preventDefault();
-    
-        const response = await fetch("http://localhost:3000/login", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                email: document.getElementById("loginEmail").value,
-                password: document.getElementById("loginPassword").value,
-                role: selectedLoginRole
-            }),
-        });
-    
-        const data = await response.json();
-        const messageBox = document.getElementById("loginMessage");
-        messageBox.style.display = "block";
-        messageBox.textContent = data.message;
-        messageBox.className = `alert ${data.success ? "alert-success" : "alert-danger"}`;
-    
-        // Check if the role matches the one stored in the database
-        if (data.success) {
-            if (data.role !== selectedLoginRole) {
-                messageBox.textContent = "Invalid role. Please log in with your registered role.";
-                messageBox.className = "alert alert-danger";
-                return;
-            }
-            setTimeout(() => { window.open("dashboard.html", "_blank"); 
-                location.reload();
-            }, 1000);
-        }
+    e.preventDefault();
+
+    if (!selectedLoginRole) {
+        alert("Please select a role before logging in.");
+        return;
+    }
+
+    const response = await fetch("http://localhost:3000/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            email: document.getElementById("loginEmail").value,
+            password: document.getElementById("loginPassword").value,
+            role: selectedLoginRole
+        }),
     });
+
+    const data = await response.json();
+    const messageBox = document.getElementById("loginMessage");
+    messageBox.style.display = "block";
+    messageBox.textContent = data.message;
+    messageBox.className = `alert ${data.success ? "alert-success" : "alert-danger"}`;
+
+    if (data.success) {
+        setTimeout(() => { 
+            window.open("dashboard.html", "_blank"); 
+            location.reload();
+        }, 1000);
+    }
+});
+
+    
+        
     
     // Handle signup submission
     document.getElementById("signupFormSubmit").addEventListener("submit", async function (e) {
-        e.preventDefault();
-    
-        const response = await fetch("http://localhost:3000/signup", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                email: document.getElementById("signupEmail").value,
-                password: document.getElementById("signupPassword").value,
-                role: selectedSignupRole
-            }),
-        });
-    
-        const data = await response.json();
-        const messageBox = document.getElementById("signupMessage");
-    
-        messageBox.style.display = "block";
-        messageBox.textContent = data.message;
-        messageBox.className = `alert alert-success`;
-    
-        if (data.success) {
-            setTimeout(toggleForms, 2000);
-        }
+    e.preventDefault();
+
+    if (!selectedSignupRole) {
+        alert("Please select a role before signing up.");
+        return;
+    }
+
+    const response = await fetch("http://localhost3000/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            name: document.getElementById("signupName").value,
+            phone: document.getElementById("signupPhone").value,
+            email: document.getElementById("signupEmail").value,
+            password: document.getElementById("signupPassword").value,
+            role: selectedSignupRole
+        }),
     });
+
+    const data = await response.json();
+    const messageBox = document.getElementById("signupMessage");
+
+    messageBox.style.display = "block";
+    messageBox.textContent = data.message;
+    messageBox.className = `alert ${data.success ? "alert-success" : "alert-danger"}`;
+
+    if (data.success) {
+        setTimeout(toggleForms, 2000);
+    }
+});
+
     function validatePassword() {
         const passwordInput = document.getElementById("signupPassword");
         const signupButton = document.getElementById("signupButton");
@@ -258,3 +269,4 @@
 
 </body>
 </html>
+
