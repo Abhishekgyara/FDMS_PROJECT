@@ -24,10 +24,10 @@
       <i class="bx bx-x" id="close-icon"></i>
     </label>
     <nav class="navbar">
-      <a href="dashboard.html" style="--i:0">Home</a>
+      <a href="/dashboard" style="--i:0">Home</a>
       <a href="about.html" style="--i:1">About</a>
-      <a href="profiles.html" style="--i:2">Profiles</a>
-      <a href="contact.html" style="--i:3">Contact-us</Contact-us></a>
+      <a href="/profiles" style="--i:2">Profiles</a>
+      <a href="/contact" style="--i:3">Contact-us</Contact-us></a>
       <a href="#" style="--i:4">Awards</a>
     </nav>
   </header>
@@ -165,7 +165,7 @@
 
         const result = await response.json();
         if (result.success) {
-          nameCell.innerHTML = `<a href="profile.html?name=${encodeURIComponent(updatedProfile.name)}&designation=${encodeURIComponent(updatedProfile.designation)}&qualification=${encodeURIComponent(updatedProfile.qualification)}" target="_blank">${
+          nameCell.innerHTML = `<a href="/profile?name=${encodeURIComponent(updatedProfile.name)}&designation=${encodeURIComponent(updatedProfile.designation)}&qualification=${encodeURIComponent(updatedProfile.qualification)}" target="_blank">${
                       updatedProfile.name}</a>`;
           designationCell.textContent = updatedProfile.designation;
           qualificationCell.textContent = updatedProfile.qualification;
@@ -183,6 +183,29 @@
         alert('Failed to update profile');
       }
     }
+
+    function addProfileToTable(profile) {
+    const row = document.createElement('tr');
+    row.dataset.id = profile._id;
+    const url = `profile.html?name=${encodeURIComponent(profile.name)}&designation=${encodeURIComponent(profile.designation)}&qualification=${encodeURIComponent(profile.qualification)}&departments=${encodeURIComponent(profile.departments.join(', '))}`;
+
+    row.innerHTML = `
+      <td>${tableBody.children.length + 1}</td>
+      <td><a href="${url}" target="_blank">${profile.name}</a></td>
+      <td>${profile.designation}</td>
+      <td>${profile.qualification}</td>
+      <td>${profile.departments.join(', ')}</td>
+      <td>
+        <button class="btn btn-warning btn-sm" onclick="editProfile('${profile._id}', this)">
+          <i class='bx bx-edit'></i>
+        </button>
+        <button class="btn btn-danger btn-sm" onclick="deleteProfile('${profile._id}', this)">
+          <i class='bx bx-trash'></i>
+        </button>
+      </td>
+    `;
+    tableBody.appendChild(row);
+  }
 
     async function fetchProfiles() {
       try {
