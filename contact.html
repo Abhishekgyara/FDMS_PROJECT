@@ -227,10 +227,10 @@
       <i class="bx bx-x" id="close-icon"></i>
     </label>
     <nav class="navbar">
-      <a href="dashboard.html" style="--i:0">Home</a>
+      <a href="/dashboard" style="--i:0">Home</a>
       <a href="about.html" style="--i:1">About</a>
-      <a href="profiles.html" style="--i:2">Profiles</a>
-      <a href="contact.html" style="--i:3">Contact-Us</a>
+      <a href="/profiles" style="--i:2">Profiles</a>
+      <a href="/contact" style="--i:3">Contact-Us</a>
       <a href="#" style="--i:4">Awards</a>
     </nav>
   </header>
@@ -284,24 +284,33 @@
   <script>
     document.getElementById('contactForm').addEventListener('submit', async function(event) {
       event.preventDefault();
-
+  
       const fullName = document.getElementById('fullName').value;
       const email = document.getElementById('email').value;
       const phone = document.getElementById('phone').value;
       const feedback = document.getElementById('feedback').value;
-
-      const response = await fetch('http://localhost:3000/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ fullName, email, phone, feedback })
-      });
-
-      const result = await response.json();
-      if (result.success) {
-        alert('Message received!');
-        document.getElementById('contactForm').reset();
-      } else {
-        alert('Failed to send message');
+  
+      console.log('Form data:', { fullName, email, phone, feedback });
+  
+      try {
+        const response = await fetch('http://localhost:3000/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ fullName, email, phone, feedback })
+        });
+  
+        const result = await response.json();
+        console.log('Server response:', result);
+  
+        if (result.success) {
+          alert('Message received!');
+          document.getElementById('contactForm').reset();
+        } else {
+          alert('Failed to send message');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while sending the message');
       }
     });
   </script>
