@@ -8,7 +8,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
     <style>
         body {
-            /* background-color: #f8f9ff; */
             background: linear-gradient(45deg,#1e90ee,#c51bce);
             height: 100vh;
             display: flex;
@@ -39,37 +38,35 @@
             font-weight: 500;
             margin-top: 5px;
         }
-        
         .alert {
             display: none;
             padding: 10px;
             margin-bottom: 10px;
             border-radius: 5px;
             text-align: center;
-        }.role-btn {
-    flex: 1;
-    padding: 0.8rem;
-    border-radius: 8px;
-    background: #53a6ef;
-    color: white;
-    font-weight: 500;
-    display: flex;
-    flex-direction: column;  /* Stack icon and text */
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-    border: none;
-    transition: background 0.3s;
-    text-align: center;
-}
-
-.role-btn i {
-    font-size: 2.8rem;  /* Increase icon size */
-}
-
-.role-btn.active {
-    background: #007bff;
-}
+        }
+        .role-btn {
+            flex: 1;
+            padding: 0.8rem;
+            border-radius: 8px;
+            background: #53a6ef;
+            color: white;
+            font-weight: 500;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            border: none;
+            transition: background 0.3s;
+            text-align: center;
+        }
+        .role-btn i {
+            font-size: 2.8rem;
+        }
+        .role-btn.active {
+            background: #007bff;
+        }
         .alert-success {
             background-color: #d4edda;
             color: #155724;
@@ -111,40 +108,40 @@
         <p class="text-center mt-3">Don't have an account? <a href="#" onclick="toggleForms()">Sign up here</a></p>
     </div>
 
-<!-- Signup Form -->
-<div id="signupForm" style="display: none;">
-    <h4 class="text-center mb-3">Sign Up</h4>
-    <div class="d-flex gap-2 mb-3">
-        <button type="button" class="role-btn" onclick="setSignupRole('Faculty')">
-            <i class="fas fa-user"></i> Faculty
-        </button>
-        <button type="button" class="role-btn" onclick="setSignupRole('HOD')">
-            <i class="fas fa-user-tie"></i> HOD
-        </button>
-        <button type="button" class="role-btn" onclick="setSignupRole('Admin')">
-            <i class="fas fa-user-shield"></i> Admin
-        </button>
+    <!-- Signup Form -->
+    <div id="signupForm" style="display: none;">
+        <h4 class="text-center mb-3">Sign Up</h4>
+        <div class="d-flex gap-2 mb-3">
+            <button type="button" class="role-btn" onclick="setSignupRole('Faculty')">
+                <i class="fas fa-user"></i> Faculty
+            </button>
+            <button type="button" class="role-btn" onclick="setSignupRole('HOD')">
+                <i class="fas fa-user-tie"></i> HOD
+            </button>
+            <button type="button" class="role-btn" onclick="setSignupRole('Admin')">
+                <i class="fas fa-user-shield"></i> Admin
+            </button>
+        </div>
+        <div id="signupMessage" class="alert"></div>
+
+        <form id="signupFormSubmit">
+            <input type="text" class="form-control" id="signupName" placeholder="Full Name" required>
+            <input type="text" class="form-control" id="signupPhone" placeholder="Phone Number" required>
+            <input type="email" class="form-control" id="signupEmail" placeholder="Email Address" required>
+
+            <!-- Password Field with Validation -->
+            <input type="password" class="form-control" id="signupPassword" placeholder="Password" required onkeyup="validatePassword()">
+            <ul id="passwordHelp" class="text-danger" style="padding-left: 20px;">
+                <li id="lengthCheck">At least 6 characters long</li>
+                <li id="uppercaseCheck">At least 1 uppercase letter</li>
+            </ul>
+
+            <button type="submit" class="btn btn-primary" id="signupButton" disabled>Sign Up</button>
+        </form>
+        <p class="text-center mt-3">Already have an account? <a href="#" onclick="toggleForms()">Login here</a></p>
     </div>
-    <div id="signupMessage" class="alert"></div>
-
-    <form id="signupFormSubmit">
-        <input type="text" class="form-control" id="signupName" placeholder="Full Name" required>
-        <input type="text" class="form-control" id="signupPhone" placeholder="Phone Number" required>
-        <input type="email" class="form-control" id="signupEmail" placeholder="Email Address" required>
-
-        <!-- Password Field with Validation -->
-        <input type="password" class="form-control" id="signupPassword" placeholder="Password" required onkeyup="validatePassword()">
-        <ul id="passwordHelp" class="text-danger" style="padding-left: 20px;">
-            <li id="lengthCheck">At least 6 characters long</li>
-            <li id="uppercaseCheck">At least 1 uppercase letter</li>
-        </ul>
-
-        
-
-        <button type="submit" class="btn btn-primary" id="signupButton" disabled>Sign Up</button>
-    </form>
-    <p class="text-center mt-3">Already have an account? <a href="#" onclick="toggleForms()">Login here</a></p>
 </div>
+
 <script>
     let selectedLoginRole = "";
     let selectedSignupRole = "";
@@ -169,10 +166,51 @@
         event.currentTarget.classList.add("active");
     }
     
+    // // Handle login submission
+    // document.getElementById("loginFormSubmit").addEventListener("submit", async function (e) {
+    //     e.preventDefault();
+    
+    //     const response = await fetch("http://localhost:3000/login", {
+    //         method: "POST",
+    //         headers: { "Content-Type": "application/json" },
+    //         body: JSON.stringify({
+    //             email: document.getElementById("loginEmail").value,
+    //             password: document.getElementById("loginPassword").value,
+    //             role: selectedLoginRole
+    //         }),
+    //     });
+    
+    //     const data = await response.json();
+    //     const messageBox = document.getElementById("loginMessage");
+    //     messageBox.style.display = "block";
+    //     messageBox.textContent = data.message;
+    //     messageBox.className = `alert ${data.success ? "alert-success" : "alert-danger"}`;
+    
+    //     // Check if the role matches the one stored in the database
+    //     if (data.success) {
+    //         if (data.role !== selectedLoginRole) {
+    //             messageBox.textContent = "Invalid role. Please log in with your registered role.";
+    //             messageBox.className = "alert alert-danger";
+    //             return;
+    //         }
+    //         setTimeout(() => {
+    //             if (data.role === 'Admin') {
+    //                 window.location.href = '/dashboard';
+    //             } else if (data.role === 'HOD') {
+    //                 window.location.href = '/dashboard2';
+    //             } else if (data.role === 'Faculty') {
+    //                 window.location.href = '/dashboard3';
+    //             }
+    //         }, 1000);
+    //     }
+    // });
+
+    
+    
     // Handle login submission
     document.getElementById("loginFormSubmit").addEventListener("submit", async function (e) {
         e.preventDefault();
-    
+
         const response = await fetch("http://localhost:3000/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -182,13 +220,13 @@
                 role: selectedLoginRole
             }),
         });
-    
+
         const data = await response.json();
         const messageBox = document.getElementById("loginMessage");
         messageBox.style.display = "block";
         messageBox.textContent = data.message;
         messageBox.className = `alert ${data.success ? "alert-success" : "alert-danger"}`;
-    
+
         // Check if the role matches the one stored in the database
         if (data.success) {
             if (data.role !== selectedLoginRole) {
@@ -196,37 +234,79 @@
                 messageBox.className = "alert alert-danger";
                 return;
             }
-            setTimeout(() => { window.open("dashboard.html", "_blank"); 
-                location.reload();
+
+            // Save user information in localStorage
+            localStorage.setItem("userName", data.name);
+            localStorage.setItem("userEmail", data.email);
+            localStorage.setItem("profilePhoto", data.profilePhoto || "default-profile.png");
+
+            setTimeout(() => {
+                if (data.role === 'Admin') {
+                    window.location.href = '/dashboard';
+                } else if (data.role === 'HOD') {
+                    window.location.href = '/dashboard2';
+                } else if (data.role === 'Faculty') {
+                    window.location.href = '/dashboard3';
+                }
             }, 1000);
         }
     });
+
     
+    // Handle signup submission
+    // document.getElementById("signupFormSubmit").addEventListener("submit", async function (e) {
+    //     e.preventDefault();
+    
+    //     const response = await fetch("http://localhost:3000/signup", {
+    //         method: "POST",
+    //         headers: { "Content-Type": "application/json" },
+    //         body: JSON.stringify({
+    //             email: document.getElementById("signupEmail").value,
+    //             password: document.getElementById("signupPassword").value,
+    //             role: selectedSignupRole
+    //         }),
+    //     });
+    
+    //     const data = await response.json();
+    //     const messageBox = document.getElementById("signupMessage");
+    
+    //     messageBox.style.display = "block";
+    //     messageBox.textContent = data.message;
+    //     messageBox.className = `alert alert-success`;
+    
+    //     if (data.success) {
+    //         setTimeout(toggleForms, 2000);
+    //     }
+    // });
     // Handle signup submission
     document.getElementById("signupFormSubmit").addEventListener("submit", async function (e) {
         e.preventDefault();
-    
+
         const response = await fetch("http://localhost:3000/signup", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
+                name: document.getElementById("signupName").value,
                 email: document.getElementById("signupEmail").value,
                 password: document.getElementById("signupPassword").value,
                 role: selectedSignupRole
             }),
         });
-    
+
         const data = await response.json();
         const messageBox = document.getElementById("signupMessage");
-    
         messageBox.style.display = "block";
         messageBox.textContent = data.message;
-        messageBox.className = `alert alert-success`;
-    
+        messageBox.className = `alert ${data.success ? "alert-success" : "alert-danger"}`;
+
         if (data.success) {
-            setTimeout(toggleForms, 2000);
+            setTimeout(() => {
+                window.location.href = '/login';
+            }, 1000);
         }
     });
+
+
     function validatePassword() {
         const passwordInput = document.getElementById("signupPassword");
         const signupButton = document.getElementById("signupButton");
@@ -235,7 +315,7 @@
         const password = passwordInput.value;
         
         const uppercaseRegex = /[A-Z]/;
-        const minLength = password.length >= 4;
+        const minLength = password.length >= 6;
         
         // Update validation messages
         lengthCheck.style.color = minLength ? "green" : "red";
@@ -253,8 +333,7 @@
             signupButton.disabled = true;
         }
     }
-    </script>
-    
+</script>
 
 </body>
 </html>
