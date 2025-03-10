@@ -1,195 +1,144 @@
-
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Faculty Profile</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <style>
-        .profile-container {
-            display: flex;
-            align-items: center;
-            margin-top: 20px;
-        }
-        .profile-img {
-            width: 200px;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 10px;
-            margin-right: 20px;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h2 class="text-center mt-4">Faculty Profile</h2>
-        <div id="profileDetails" class="profile-container">
-            <img id="facultyImage" class="profile-img" src="" alt="Faculty Image">
-            <div>
-                <h3 id="facultyName"></h3>
-                <p><strong>Designation:</strong> <span id="facultyDesignation"></span></p>
-                <p><strong>Qualification:</strong> <span id="facultyQualification"></span></p>
-                <p><strong>Email:</strong> <span id="facultyEmail"></span></p>
-                <p><strong>Phone:</strong> <span id="facultyPhone"></span></p>
-                <p><strong>Office Address:</strong> <span id="facultyOffice"></span></p>
-                <p><strong>Departments:</strong> <span id="facultyDepartments"></span></p>
-                <p><strong>Research Interests:</strong> <span id="facultyResearch"></span></p>
-                <button id="editButton" class="btn btn-warning">Edit</button>
-            </div>
+<html>
+<title>W3.CSS Template</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto'>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif}
+</style>
+<body class="w3-light-grey">
+
+<!-- Page Container -->
+<div class="w3-content w3-margin-top" style="max-width:1400px;">
+
+  <!-- The Grid -->
+  <div class="w3-row-padding">
+  
+    <!-- Left Column -->
+    <div class="w3-third">
+    
+      <div class="w3-white w3-text-grey w3-card-4">
+        <div class="w3-display-container">
+          <img src="person.jpg" style="width:100%;height: 600px;" alt="Avatar">
+          <div class="w3-display-bottomleft w3-container w3-text-black">
+            <h2>Jane Doe</h2>
+          </div>
         </div>
-    </div>
-    <div class="modal fade" id="facultyModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="facultyName"></h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        <div class="w3-container">
+          <p><i class="fa fa-briefcase fa-fw w3-margin-right w3-large w3-text-teal"></i>Designer</p>
+          <p><i class="fa fa-home fa-fw w3-margin-right w3-large w3-text-teal"></i>London, UK</p>
+          <p><i class="fa fa-envelope fa-fw w3-margin-right w3-large w3-text-teal"></i>ex@mail.com</p>
+          <p><i class="fa fa-phone fa-fw w3-margin-right w3-large w3-text-teal"></i>1224435534</p>
+          <hr>
+
+          <p class="w3-large"><b><i class="fa fa-asterisk fa-fw w3-margin-right w3-text-teal"></i>Skills</b></p>
+          <p>Adobe Photoshop</p>
+          <div class="w3-light-grey w3-round-xlarge w3-small">
+            <div class="w3-container w3-center w3-round-xlarge w3-teal" style="width:90%">90%</div>
+          </div>
+          <p>Photography</p>
+          <div class="w3-light-grey w3-round-xlarge w3-small">
+            <div class="w3-container w3-center w3-round-xlarge w3-teal" style="width:80%">
+              <div class="w3-center w3-text-white">80%</div>
             </div>
-            <div class="modal-body">
-                <p><strong>Designation:</strong> <span id="facultyDesignation"></span></p>
-                <p><strong>Qualification:</strong> <span id="facultyQualification"></span></p>
-                <p><strong>Email:</strong> <span id="facultyEmail"></span></p>
-                <p><strong>Phone:</strong> <span id="facultyPhone"></span></p>
-                <p><strong>Experience:</strong> <span id="facultyExperience"></span></p>
-                <p><strong>Seminars Organized:</strong> <span id="facultySeminars"></span></p>
-            </div>
+          </div>
+          <p>Illustrator</p>
+          <div class="w3-light-grey w3-round-xlarge w3-small">
+            <div class="w3-container w3-center w3-round-xlarge w3-teal" style="width:75%">75%</div>
+          </div>
+          <p>Media</p>
+          <div class="w3-light-grey w3-round-xlarge w3-small">
+            <div class="w3-container w3-center w3-round-xlarge w3-teal" style="width:50%">50%</div>
+          </div>
+          <br>
+
+          <p class="w3-large w3-text-theme"><b><i class="fa fa-globe fa-fw w3-margin-right w3-text-teal"></i>Languages</b></p>
+          <p>English</p>
+          <div class="w3-light-grey w3-round-xlarge">
+            <div class="w3-round-xlarge w3-teal" style="height:24px;width:100%"></div>
+          </div>
+          <p>Spanish</p>
+          <div class="w3-light-grey w3-round-xlarge">
+            <div class="w3-round-xlarge w3-teal" style="height:24px;width:55%"></div>
+          </div>
+          <p>German</p>
+          <div class="w3-light-grey w3-round-xlarge">
+            <div class="w3-round-xlarge w3-teal" style="height:24px;width:25%"></div>
+          </div>
+          <br>
         </div>
+      </div><br>
+
+    <!-- End Left Column -->
     </div>
+
+    <!-- Right Column -->
+    <div class="w3-twothird">
+    
+      <div class="w3-container w3-card w3-white w3-margin-bottom">
+        <h2 class="w3-text-grey w3-padding-16"><i class="fa fa-suitcase fa-fw w3-margin-right w3-xxlarge w3-text-teal"></i>Work Experience</h2>
+        <div class="w3-container">
+          <h5 class="w3-opacity"><b>Front End Developer / w3schools.com</b></h5>
+          <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Jan 2015 - <span class="w3-tag w3-teal w3-round">Current</span></h6>
+          <p>Lorem ipsum dolor sit amet. Praesentium magnam consectetur vel in deserunt aspernatur est reprehenderit sunt hic. Nulla tempora soluta ea et odio, unde doloremque repellendus iure, iste.</p>
+          <hr>
+        </div>
+        <div class="w3-container">
+          <h5 class="w3-opacity"><b>Web Developer / something.com</b></h5>
+          <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Mar 2012 - Dec 2014</h6>
+          <p>Consectetur adipisicing elit. Praesentium magnam consectetur vel in deserunt aspernatur est reprehenderit sunt hic. Nulla tempora soluta ea et odio, unde doloremque repellendus iure, iste.</p>
+          <hr>
+        </div>
+        <div class="w3-container">
+          <h5 class="w3-opacity"><b>Graphic Designer / designsomething.com</b></h5>
+          <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Jun 2010 - Mar 2012</h6>
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. </p><br>
+        </div>
+      </div>
+
+      <div class="w3-container w3-card w3-white">
+        <h2 class="w3-text-grey w3-padding-16"><i class="fa fa-certificate fa-fw w3-margin-right w3-xxlarge w3-text-teal"></i>Education</h2>
+        <div class="w3-container">
+          <h5 class="w3-opacity"><b>W3Schools.com</b></h5>
+          <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Forever</h6>
+          <p>Web Development! All I need to know in one place</p>
+          <hr>
+        </div>
+        <div class="w3-container">
+          <h5 class="w3-opacity"><b>London Business School</b></h5>
+          <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>2013 - 2015</h6>
+          <p>Master Degree</p>
+          <hr>
+        </div>
+        <div class="w3-container">
+          <h5 class="w3-opacity"><b>School of Coding</b></h5>
+          <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>2010 - 2013</h6>
+          <p>Bachelor Degree</p><br>
+        </div>
+      </div>
+
+    <!-- End Right Column -->
+    </div>
+    
+  <!-- End Grid -->
+  </div>
+  
+  <!-- End Page Container -->
 </div>
 
-    <form id="updateProfileForm" style="display: none;">
-        <div class="mb-3">
-            <label for="name" class="form-label">Name</label>
-            <input type="text" class="form-control" id="name" readonly>
-        </div>
-        <div class="mb-3">
-            <label for="designation" class="form-label">Designation</label>
-            <input type="text" class="form-control" id="designation">
-        </div>
-        <div class="mb-3">
-            <label for="email" class="form-label">Email</label>
-            <input type="email" class="form-control" id="email">
-        </div>
-        <div class="mb-3">
-            <label for="qualification" class="form-label">Qualification</label>
-            <input type="text" class="form-control" id="qualification">
-        </div>
-        <div class="mb-3">
-            <label for="phone" class="form-label">Phone</label>
-            <input type="tel" class="form-control" id="phone">
-        </div>
-        <div class="mb-3">
-            <label for="officeAddress" class="form-label">Office Address</label>
-            <input type="text" class="form-control" id="officeAddress">
-        </div>
-        <div class="mb-3">
-            <label for="departments" class="form-label">Departments</label>
-            <input type="text" class="form-control" id="departments">
-        </div>
-        <div class="mb-3">
-            <label for="researchInterests" class="form-label">Research Interests</label>
-            <input type="text" class="form-control" id="researchInterests">
-        </div>
-        <div class="mb-3">
-            <label for="profilePicInput" class="form-label">Profile Picture</label>
-            <input type="file" class="form-control" id="profilePicInput">
-        </div>
-        <button type="button" class="btn btn-success" onclick="updateProfile()">Save</button>
-        <button type="button" class="btn btn-secondary" onclick="cancelEdit()">Cancel</button>
-    </form>
+<footer class="w3-container w3-teal w3-center w3-margin-top">
+  <p>Find me on social media.</p>
+  <i class="fa fa-facebook-official w3-hover-opacity"></i>
+  <i class="fa fa-instagram w3-hover-opacity"></i>
+  <i class="fa fa-snapchat w3-hover-opacity"></i>
+  <i class="fa fa-pinterest-p w3-hover-opacity"></i>
+  <i class="fa fa-twitter w3-hover-opacity"></i>
+  <i class="fa fa-linkedin w3-hover-opacity"></i>
+  <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
+</footer>
 
-    <script>
-        $(document).ready(function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const name = urlParams.get('name');
-            if (name) {
-                fetch(`http://127.0.0.1:3000/getProfileByName?name=${name}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data) {
-                            $('#facultyImage').attr('src', data.imageUrl || 'default.jpg');
-                            $('#facultyName').text(data.name);
-                            $('#facultyDesignation').text(data.designation);
-                            $('#facultyQualification').text(data.qualification);
-                            $('#facultyEmail').text(data.email);
-                            $('#facultyPhone').text(data.phone);
-                            $('#facultyOffice').text(data.officeAddress);
-                            $('#facultyDepartments').text(data.departments.join(', '));
-                            $('#facultyResearch').text(data.researchInterests.join(', '));
-
-                            $('#name').val(data.name);
-                            $('#designation').val(data.designation);
-                            $('#email').val(data.email);
-                            $('#qualification').val(data.qualification);
-                            $('#phone').val(data.phone);
-                            $('#officeAddress').val(data.officeAddress);
-                            $('#departments').val(data.departments.join(', '));
-                            $('#researchInterests').val(data.researchInterests.join(', '));
-                        } else {
-                            alert('Profile not found!');
-                        }
-                    })
-                    .catch(error => console.error('Error:', error));
-            }
-
-            $('#editButton').click(function() {
-                $('#profileDetails').hide();
-                $('#updateProfileForm').show();
-            });
-
-            $('#profilePicInput').change(function(event) {
-                const file = event.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        $('#facultyImage').attr('src', e.target.result);
-                    };
-                    reader.readAsDataURL(file);
-                }
-            });
-        });
-
-        function updateProfile() {
-            const name = $('#name').val(); // Name should not be editable
-            const updatedData = {
-                designation: $('#designation').val(),
-                email: $('#email').val(),
-                qualification: $('#qualification').val(),
-                phone: $('#phone').val(),
-                officeAddress: $('#officeAddress').val(),
-                departments: $('#departments').val().split(','),
-                researchInterests: $('#researchInterests').val().split(',')
-            };
-
-            const profilePicInput = document.getElementById('profilePicInput');
-            const formData = new FormData();
-            if (profilePicInput.files[0]) {
-                formData.append('profilePic', profilePicInput.files[0]);
-            }
-            formData.append('data', JSON.stringify(updatedData));
-
-            fetch(`http://127.0.0.1:3000/updateProfile/${encodeURIComponent(name)}`, {
-                method: 'PUT',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Profile updated successfully!');
-                    location.reload();
-                } else {
-                    alert('Failed to update profile: ' + data.message);
-                }
-            })
-            .catch(error => console.error('Error:', error));
-        }
-
-        function cancelEdit() {
-            $('#updateProfileForm').hide();
-            $('#profileDetails').show();
-        }
-    </script>
 </body>
 </html>
