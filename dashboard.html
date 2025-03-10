@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Dashboard</title>
   <link rel="stylesheet" href="dash_styles.css">
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
   <style>
@@ -94,7 +94,6 @@
       color: #6a11cb;
     }
 
-    
     .stars {
       position: absolute;
       width: 100%;
@@ -189,20 +188,46 @@
     .view-more:hover {
       color: #6a11cb;
     }
+
+    .theme-toggle {
+      margin-left: 20px;
+      font-size: 24px;
+      cursor: pointer;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .theme-toggle:hover {
+      transform: rotate(360deg);
+    }
+
+    body.light-mode {
+      background: linear-gradient(to right, #6a11cb, #2575fc);
+    }
+
+    body.dark-mode {
+      background: linear-gradient(to right, #0b0b0c, #0c0d0e);
+    }
+
+    body.dark-mode .theme-toggle {
+      color: white;
+    }
+    #p{
+      font-size: larger;
+    }
   </style>
 </head>
 <body>
   <header class="header">
     <a href="#" class="logo">Faculty Data Management System</a>
     <nav class="navbar">
-      <a href="dashboard.html">Home</a>
+      <a href="/dashboard">Home</a>
       <a href="about.html">About</a>
-      <a href="profiles.html">Profiles</a>
-      <a href="contact.html">Contact-Us</a>
+      <a href="/profiles">Profiles</a>
+      <a href="/contact">Contact-Us</a>
       <a href="settings.html">Awards</a>
+      <i class='bx bx-moon theme-toggle' id="theme-toggle"></i>
     </nav>
   </header>
-
 
   <div class="stars">
     <span style="left: 10%; animation-delay: 0s;"></span>
@@ -221,14 +246,13 @@
   <div class="main-card">
     <div class="description">
       <h2>Welcome to Faculty Data Management</h2>
-      <p>Our system helps you manage faculty profiles efficiently, track achievements, and organize data seamlessly. Explore departments and faculty details with ease.</p>
+      <p id="p">Our system helps you manage faculty profiles efficiently, track achievements, and organize data seamlessly. Explore departments and faculty details with ease.The system provides a centralized platform for managing faculty profiles, making it easier to track achievements and organize data.The Faculty Data Management System is a comprehensive web application designed to streamline the management of faculty profiles, track achievements, and organize data efficiently. This system is tailored to meet the needs of educational institutions, providing a centralized platform for managing faculty-related information.</p>
     </div>
     <img src="kmit_image.jpg" alt="Faculty Image">
   </div>
 
-
   <div class="departments">
-    <a href="ds_faculty.html" class="department-link" target="_blank">
+    <a href="/ds_faculty" class="department-link" target="_blank">
       <div class="department-card">
         <h3>CSD Department</h3>
         <p>Computer Science & Design focuses on UI/UX, AI, and Software Development.</p>
@@ -236,7 +260,7 @@
       </div>
     </a>
 
-    <a href="aiml_profiles.html" class="department-link" target="_blank">
+    <a href="/aiml_profiles" class="department-link" target="_blank">
       <div class="department-card">
         <h3>AIML Department</h3>
         <p>Artificial Intelligence & Machine Learning pioneers next-gen automation.</p>
@@ -244,7 +268,7 @@
       </div>
     </a>
 
-    <a href="it_faculty.html" class="department-link" target="_blank">
+    <a href="/it_faculty" class="department-link" target="_blank">
       <div class="department-card">
         <h3>IT Department</h3>
         <p>Information Technology fosters expertise in cloud computing & networks.</p>
@@ -252,7 +276,7 @@
       </div>
     </a>
 
-    <a href="cse_profiles.html" class="department-link" target="_blank">
+    <a href="/cse_profiles" class="department-link" target="_blank">
       <div class="department-card">
         <h3>CSE Department</h3>
         <p>Computer Science Engineering drives innovation in software and systems.</p>
@@ -260,5 +284,36 @@
       </div>
     </a>
   </div>
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+
+    // Check for saved theme in localStorage
+    if (localStorage.getItem('theme') === 'dark') {
+      body.classList.add('dark-mode');
+      body.classList.remove('light-mode');
+      themeToggle.classList.add('bx-sun');
+      themeToggle.classList.remove('bx-moon');
+    } else {
+      body.classList.add('light-mode');
+      body.classList.remove('dark-mode');
+      themeToggle.classList.add('bx-moon');
+      themeToggle.classList.remove('bx-sun');
+    }
+
+    themeToggle.addEventListener('click', () => {
+      body.classList.toggle('dark-mode');
+      body.classList.toggle('light-mode');
+      themeToggle.classList.toggle('bx-sun');
+      themeToggle.classList.toggle('bx-moon');
+
+      // Save the current theme in localStorage
+      if (body.classList.contains('dark-mode')) {
+        localStorage.setItem('theme', 'dark');
+      } else {
+        localStorage.setItem('theme', 'light');
+      }
+    });
+  </script>
 </body>
 </html>
