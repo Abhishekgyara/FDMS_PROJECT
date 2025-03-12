@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="dash_styles.css">
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <style>
+    body {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(to right, #6a11cb, #2575fc);
+    }
+
+    header {
+      margin-bottom: 80px;
+    }
+
+    /* Main Card */
+    .main-card {
+      display: flex;
+      justify-content: space-between;
+      /* align-items: center; */
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      max-width: 80%;
+      margin: auto;
+    }
+
+    .main-card .description {
+      flex: 1;
+      padding: 20px;
+    }
+
+    .main-card h2 {
+      color: #6a11cb;
+    }
+
+    .main-card img {
+      width: 350px; /* Increased initial size */
+      height: auto;
+      border-radius: 10px;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .main-card img:hover {
+      transform: scale(1.1); /* Zoom effect */
+    }
+
+    /* Departments Section */
+    .departments {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 40px;
+      max-width: 80%;
+      margin: auto;
+    }
+
+    .department-card {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      position: relative;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .department-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .department-card h3 {
+      color: #6a11cb;
+      margin-bottom: 10px;
+    }
+
+    /* Clickable Arrow */
+    .view-more {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      font-size: 20px;
+      color: #2575fc;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .view-more:hover {
+      color: #6a11cb;
+    }
+
+    .stars {
+      position: absolute;
+      width: 100%;
+      height: 100vh;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: -1;
+    }
+    .stars span {
+      position: absolute;
+      bottom: -50px;
+      width: 10px;
+      height: 10px;
+      background: rgba(255, 255, 255, 0.8);
+      clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+      animation: floatUp 5s infinite linear;
+    }
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-100vh);
+        opacity: 0;
+      }
+    }
+    .stars span:nth-child(odd) {
+      width: 15px;
+      height: 15px;
+      animation-duration: 7s;
+    }
+    .stars span:nth-child(even) {
+      animation-duration: 4s;
+    }
+    .stars span:nth-child(1) { background: yellow; }
+    .stars span:nth-child(2) { background: white; }
+    .stars span:nth-child(3) { background: lightblue; }
+    .stars span:nth-child(4) { background: pink; }
+    .stars span:nth-child(5) { background: violet; }
+    .stars span:nth-child(6) { background: lightyellow; }
+    .stars span:nth-child(7) { background: cyan; }
+    .stars span:nth-child(8) { background: gold; }
+    .stars span:nth-child(9) { background: silver; }
+    .stars span:nth-child(10) { background: lightgreen; }
+
+    .departments {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 40px;
+      max-width: 80%;
+      margin: auto;
+    }
+
+    .department-card {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      position: relative;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .department-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .department-card h3 {
+      color: #6a11cb;
+      margin-bottom: 10px;
+    }
+
+    .department-link {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    .view-more {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      font-size: 20px;
+      color: #2575fc;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .view-more:hover {
+      color: #6a11cb;
+    }
+
+    .theme-toggle {
+      margin-left: 20px;
+      font-size: 24px;
+      cursor: pointer;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .theme-toggle:hover {
+      transform: rotate(360deg);
+    }
+
+    body.light-mode {
+      background: linear-gradient(to right, #6a11cb, #2575fc);
+    }
+
+    body.dark-mode {
+      background: linear-gradient(to right, #0b0b0c, #0c0d0e);
+    }
+
+    body.dark-mode .theme-toggle {
+      color: white;
+    }
+    #p{
+      font-size: larger;
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <a href="#" class="logo">Faculty Data Management System</a>
+    <nav class="navbar">
+      <a href="/dashboard">Home</a>
+      <a href="/tasks">Tasks</a>
+      <a href="/profiles">Profiles</a>
+      <a href="/contact">Contact-Us</a>
+      <a href="settings.html">Awards</a>
+      <i class='bx bx-moon theme-toggle' id="theme-toggle"></i>
+    </nav>
+  </header>
+
+  <div class="stars">
+    <span style="left: 10%; animation-delay: 0s;"></span>
+    <span style="left: 20%; animation-delay: 1s;"></span>
+    <span style="left: 30%; animation-delay: 2s;"></span>
+    <span style="left: 40%; animation-delay: 3s;"></span>
+    <span style="left: 50%; animation-delay: 4s;"></span>
+    <span style="left: 60%; animation-delay: 5s;"></span>
+    <span style="left: 70%; animation-delay: 6s;"></span>
+    <span style="left: 80%; animation-delay: 7s;"></span>
+    <span style="left: 90%; animation-delay: 8s;"></span>
+    <span style="left: 95%; animation-delay: 9s;"></span>
+  </div>
+
+  <!-- Main Card -->
+  <div class="main-card">
+    <div class="description">
+      <h2>Welcome to Faculty Data Management</h2>
+      <p id="p">Our system helps you manage faculty profiles efficiently, track achievements, and organize data seamlessly. Explore departments and faculty details with ease.The system provides a centralized platform for managing faculty profiles, making it easier to track achievements and organize data.The Faculty Data Management System is a comprehensive web application designed to streamline the management of faculty profiles, track achievements, and organize data efficiently. This system is tailored to meet the needs of educational institutions, providing a centralized platform for managing faculty-related information.</p>
+    </div>
+    <img src="kmit_image.jpg" alt="Faculty Image">
+  </div>
+  </div>
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+
+    // Check for saved theme in localStorage
+    if (localStorage.getItem('theme') === 'dark') {
+      body.classList.add('dark-mode');
+      body.classList.remove('light-mode');
+      themeToggle.classList.add('bx-sun');
+      themeToggle.classList.remove('bx-moon');
+    } else {
+      body.classList.add('light-mode');
+      body.classList.remove('dark-mode');
+      themeToggle.classList.add('bx-moon');
+      themeToggle.classList.remove('bx-sun');
+    }
+
+    themeToggle.addEventListener('click', () => {
+      body.classList.toggle('dark-mode');
+      body.classList.toggle('light-mode');
+      themeToggle.classList.toggle('bx-sun');
+      themeToggle.classList.toggle('bx-moon');
+
+      // Save the current theme in localStorage
+      if (body.classList.contains('dark-mode')) {
+        localStorage.setItem('theme', 'dark');
+      } else {
+        localStorage.setItem('theme', 'light');
+      }
+    });
+  </script>
+</body>
+</html>
