@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tasks</title>
+    <link rel="stylesheet" href="dash_styles.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        body {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            font-family: Arial, sans-serif;
+        }
+        header {
+            margin-bottom: 60px;
+        }
+        .content {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 20px;
+        }
+        .tasks-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+        }
+        .tasks-header {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        .tasks-header h2 {
+            margin: 0;
+        }
+        .tasks-header input {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .task {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        .task button {
+            margin-left: 10px;
+        }
+        .stars {
+            position: absolute;
+            width: 100%;
+            height: 100vh;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: -1;
+        }
+        .stars span {
+            position: absolute;
+            bottom: -50px;
+            width: 10px;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            animation: floatUp 5s infinite linear;
+        }
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh);
+                opacity: 0;
+            }
+        }
+        .stars span:nth-child(odd) {
+            width: 15px;
+            height: 15px;
+            animation-duration: 7s;
+        }
+        .stars span:nth-child(even) {
+            animation-duration: 4s;
+        }
+        .stars span:nth-child(1) { background: yellow; }
+        .stars span:nth-child(2) { background: white; }
+        .stars span:nth-child(3) { background: lightblue; }
+        .stars span:nth-child(4) { background: pink; }
+        .stars span:nth-child(5) { background: violet; }
+        .stars span:nth-child(6) { background: lightyellow; }
+        .stars span:nth-child(7) { background: cyan; }
+        .stars span:nth-child(8) { background: gold; }
+        .stars span:nth-child(9) { background: silver; }
+        .stars span:nth-child(10) { background: lightgreen; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="#" class="logo">Faculty Data Management System</a>
+        <nav class="navbar">
+            <a href="/dashboard3">Home</a>
+            <a href="/tasks">Tasks</a>
+            <a href="/profiles">Profiles</a>
+            <a href="/contact">Contact-Us</a>
+            <a href="settings.html">Awards</a>
+            <i class='bx bx-moon theme-toggle' id="theme-toggle"></i>
+        </nav>
+    </header>
+
+    <div class="stars">
+        <span style="left: 10%; animation-delay: 0s;"></span>
+        <span style="left: 20%; animation-delay: 1s;"></span>
+        <span style="left: 30%; animation-delay: 2s;"></span>
+        <span style="left: 40%; animation-delay: 3s;"></span>
+        <span style="left: 50%; animation-delay: 4s;"></span>
+        <span style="left: 60%; animation-delay: 5s;"></span>
+        <span style="left: 70%; animation-delay: 6s;"></span>
+        <span style="left: 80%; animation-delay: 7s;"></span>
+        <span style="left: 90%; animation-delay: 8s;"></span>
+        <span style="left: 95%; animation-delay: 9s;"></span>
+    </div>
+
+    <div class="content">
+        <div class="tasks-container">
+            <div class="tasks-header">
+                <h2>Tasks</h2>
+                <input type="date" id="taskDate">
+                <input type="text" id="taskTitle" placeholder="Task Title">
+            </div>
+            <div id="tasksList"></div>
+            <button id="addTask">Add Task</button>
+        </div>
+    </div>
+
+    <script>
+        // Task management
+        const tasksList = document.getElementById('tasksList');
+        const addTaskButton = document.getElementById('addTask');
+        const taskDateInput = document.getElementById('taskDate');
+        const taskTitleInput = document.getElementById('taskTitle');
+
+        addTaskButton.addEventListener('click', () => {
+            const taskDate = taskDateInput.value;
+            const taskTitle = taskTitleInput.value;
+            if (taskDate && taskTitle) {
+                const taskItem = document.createElement('div');
+                taskItem.classList.add('task');
+                taskItem.innerHTML = `
+                    <span>${taskDate} - ${taskTitle}</span>
+                    <div>
+                        <button class="editTask">Edit</button>
+                        <button class="deleteTask">Delete</button>
+                    </div>
+                `;
+                tasksList.appendChild(taskItem);
+
+                taskItem.querySelector('.deleteTask').addEventListener('click', () => {
+                    tasksList.removeChild(taskItem);
+                });
+
+                taskItem.querySelector('.editTask').addEventListener('click', () => {
+                    const newDate = prompt('Enter new date (YYYY-MM-DD):', taskDate);
+                    const newTitle = prompt('Enter new title:', taskTitle);
+                    if (newDate && newTitle) {
+                        taskItem.querySelector('span').textContent = `${newDate} - ${newTitle}`;
+                    }
+                });
+
+                // Clear the input fields
+                taskDateInput.value = '';
+                taskTitleInput.value = '';
+            }
+        });
+    </script>
+</body>
+</html>
