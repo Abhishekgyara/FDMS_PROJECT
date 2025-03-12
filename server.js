@@ -126,6 +126,10 @@ app.get("/dash_styles.css", (req, res) => {
   res.sendFile(path.join(__dirname, 'dash_styles.css')); // Serve the dash_styles.css file from the "public" directory
 });
 
+app.get("/tasks", (req, res) => {
+  res.sendFile(path.join(__dirname, 'tasks.html')); // Serve the dash_styles.css file from the "public" directory
+});
+
 //KMIT image
 app.get("/kmit_image.jpg", (req, res) => {
   res.sendFile(path.join(__dirname, 'kmit_image.jpg')); // Serve the kmit_image.jpg file from the "public" directory
