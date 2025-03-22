@@ -3,163 +3,484 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CSE Faculty Profiles</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <title>Dashboard</title>
   <link rel="stylesheet" href="dash_styles.css">
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap" rel="stylesheet">
   <style>
-    body { background: linear-gradient(120deg, #1e90ee,#48daea); padding: 20px; }
-    h2 { color: white; font-weight: 600; }
-    table { background-color: white; }
-    th { background-color: #01614d; color: white; }
-    a { text-decoration: none; }
+    body {
+      position: relative;
+      font-family: "Poppins", sans-serif;
+      overflow: hidden;
+      background: linear-gradient(to right, #1e90ee,#48daea);
+    }
+
+    header {
+      margin-bottom: 80px;
+    }
+
+    /* Main Card */
+    .main-card {
+      
+      display: flex;
+      justify-content: space-between;
+      /* align-items: center; */
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      max-width: 80%;
+      margin: auto;
+    }
+
+    .main-card .description {
+      flex: 1;
+      padding: 20px;
+    }
+
+    .main-card h2 {
+      color: #11cbc5;
+    }
+
+    .main-card img {
+      width: 350px; /* Increased initial size */
+      height: auto;
+      border-radius: 10px;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .main-card img:hover {
+      transform: scale(1.1); /* Zoom effect */
+    }
+
+    /* Departments Section */
+    .departments {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 40px;
+      max-width: 80%;
+      margin: auto;
+    }
+
+    .department-card {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      position: relative;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .department-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .department-card h3 {
+      color: #1763d5;
+      margin-bottom: 10px;
+    }
+
+    /* Clickable Arrow */
+    .view-more {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      font-size: 20px;
+      color: #2575fc;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .view-more:hover {
+      color: #10a9e0;
+    }
+
+    .stars {
+      position: absolute;
+      width: 100%;
+      height: 100vh;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: -1;
+    }
+    .stars span {
+      position: absolute;
+      bottom: -50px;
+      width: 10px;
+      height: 10px;
+      background: rgba(255, 255, 255, 0.8);
+      clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+      animation: floatUp 5s infinite linear;
+    }
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-100vh);
+        opacity: 0;
+      }
+    }
+    .stars span:nth-child(odd) {
+      width: 15px;
+      height: 15px;
+      animation-duration: 7s;
+    }
+    .stars span:nth-child(even) {
+      animation-duration: 4s;
+    }
+    .stars span:nth-child(1) { background: yellow; }
+    .stars span:nth-child(2) { background: white; }
+    .stars span:nth-child(3) { background: lightblue; }
+    .stars span:nth-child(4) { background: pink; }
+    .stars span:nth-child(5) { background: violet; }
+    .stars span:nth-child(6) { background: lightyellow; }
+    .stars span:nth-child(7) { background: cyan; }
+    .stars span:nth-child(8) { background: gold; }
+    .stars span:nth-child(9) { background: silver; }
+    .stars span:nth-child(10) { background: lightgreen; }
+
+    .departments {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 40px;
+      max-width: 80%;
+      margin: auto;
+    }
+
+    .department-card {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      position: relative;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .department-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .department-card h3 {
+      color: #26d5f0;
+      margin-bottom: 10px;
+    }
+
+    .department-link {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    .view-more {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      font-size: 20px;
+      color: #2575fc;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .view-more:hover {
+      color: #6a11cb;
+    }
+
+    .theme-toggle {
+      margin-left: 20px;
+      font-size: 24px;
+      cursor: pointer;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .theme-toggle:hover {
+      transform: rotate(360deg);
+    }
+
+    body.light-mode {
+      background: linear-gradient(to right, #1e90ee,#48daea);
+    }
+
+    body.dark-mode {
+      background: linear-gradient(to right, #0b0b0c, #0c0d0e);
+    }
+
+    body.dark-mode .theme-toggle {
+      color: white;
+    }
+    #p{
+      font-size: larger;
+    }
+    h3{
+      style:"background-color: #48daea;"
+    }
   </style>
 </head>
 <body>
   <header class="header">
     <a href="#" class="logo">TATHYA</a>
-    <input type="checkbox" id="check">
-    <label for="check" class="icons">
-      <i class="bx bx-menu" id="menu-icon"></i>
-      <i class="bx bx-x" id="close-icon"></i>
-    </label>
     <nav class="navbar">
-      <a href="\dashboard" style="--i:0">Home</a>
-      <a href="\about" style="--i:1">About</a>
-      <a href="\profiles" style="--i:2">Profiles</a>
-      <a href="\contact" style="--i:3">Contact-us</a>
-      <a href="\awards" style="--i:4">Awards</a>
+      <a href="/dashboard">Home</a>
+      <a href="/about">About</a>
+      <a href="/profiles">Profiles</a>
+      <a href="/contact">Contact-Us</a>
+      <a href="/awards">Awards</a>
+      <i class='bx bx-moon theme-toggle' id="theme-toggle"></i>
     </nav>
   </header>
+  
 
-  <div class="container mt-5">
-    <h2 class="text-center">CSE Faculty Profiles</h2>
-    <table class="table" id="facultyTable">
-      <thead>
-        <tr>
-          <th>S.No</th>
-          <th>Name</th>
-          <th>Designation</th>
-          <th>Qualification</th>
-          <th>Department</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+
+
+  <div class="stars">
+    <span style="left: 10%; animation-delay: 0s;"></span>
+    <span style="left: 20%; animation-delay: 1s;"></span>
+    <span style="left: 30%; animation-delay: 2s;"></span>
+    <span style="left: 40%; animation-delay: 3s;"></span>
+    <span style="left: 50%; animation-delay: 4s;"></span>
+    <span style="left: 60%; animation-delay: 5s;"></span>
+    <span style="left: 70%; animation-delay: 6s;"></span>
+    <span style="left: 80%; animation-delay: 7s;"></span>
+    <span style="left: 90%; animation-delay: 8s;"></span>
+    <span style="left: 95%; animation-delay: 9s;"></span>
   </div>
 
-  <script>
-    const tableBody = document.querySelector('#facultyTable tbody');
+  <!-- Main Card -->
+  <div class="main-card">
+    <div class="description">
+      <h2>Welcome to Faculty Data Management</h2>
+      <p id="p">Our system helps you manage faculty profiles efficiently, track achievements, and organize data seamlessly. Explore departments and faculty details with ease.The system provides a centralized platform for managing faculty profiles, making it easier to track achievements and organize data.The Faculty Data Management System is a comprehensive web application designed to streamline the management of faculty profiles, track achievements, and organize data efficiently. This system is tailored to meet the needs of educational institutions, providing a centralized platform for managing faculty-related information.</p>
+    </div>
+    <img src="kmit_image.jpg" alt="Faculty Image">
+  </div>
+  <!-- ...existing code... -->
+</div> <!-- End of main-card -->
 
-    function addProfileToTable(profile, index) {
-      const row = document.createElement('tr');
-      const url = `profile.html?name=${encodeURIComponent(profile.name)}&designation=${encodeURIComponent(profile.designation)}&qualification=${encodeURIComponent(profile.qualification)}`;
-      
-      row.innerHTML = `
-        <td>${index + 1}</td>
-        <td><a href="${url}" target="_blank">${profile.name}</a></td>
-        <td>${profile.designation}</td>
-        <td>${profile.qualification}</td>
-        <td>${profile.departments.join(', ')}</td>
-        <td>
-          <button class="btn btn-warning btn-sm" onclick="editProfile('${profile._id}', this)">
-            <i class='bx bx-edit'></i>
-          </button>
-          <button class="btn btn-danger btn-sm" onclick="deleteProfile('${profile._id}', this)">
-            <i class='bx bx-trash'></i>
-          </button>
-        </td>
-      `;
-      tableBody.appendChild(row);
+<!-- View Departments Button -->
+<div style="text-align: center; margin-top: 20px;">
+  <button id="viewDepartmentsBtn" style="padding: 10px 20px; font-size: 16px; cursor: pointer;color:#0e48db;border-radius: 20px;">View Departments</button>
+</div>
+
+<!-- Departments Section -->
+<div id="departmentsSection" style="display: none;">
+  <div class="departments" >
+    <a href="/ds_faculty" class="department-link" target="_blank">
+      <div class="department-card" id="card1" >
+        <h3 >CSD Department</h3>
+        <p>Computer Science & Design focuses on UI/UX, AI, and Software Development.</p>
+        <span class="view-more">&#10132;</span>
+      </div>
+    </a>
+
+    <a href="/aiml_profiles" class="department-link" target="_blank">
+      <div class="department-card" id="card2">
+        <h3>AIML Department</h3>
+        <p>Artificial Intelligence & Machine Learning pioneers next-gen automation.</p>
+        <span class="view-more">&#10132;</span>
+      </div>
+    </a>
+
+    <a href="/it_faculty" class="department-link" target="_blank">
+      <div class="department-card" id="card3">
+        <h3>IT Department</h3>
+        <p>Information Technology fosters expertise in cloud computing & networks.</p>
+        <span class="view-more">&#10132;</span>
+      </div>
+    </a>
+
+    <a href="/cse_profiles" class="department-link" target="_blank">
+      <div class="department-card" id="card4">
+        <h3>CSE Department</h3>
+        <p>Computer Science Engineering drives innovation in software and systems.</p>
+        <span class="view-more">&#10132;</span>
+      </div>
+    </a>
+  </div>
+</div>
+
+<style>
+  .departments {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 40px;
+    max-width: 80%;
+    margin: auto;
+  }
+
+  .department-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    position: relative;
+    transition: transform 0.3s ease-in-out;
+    opacity: 0;
+  }
+
+  .department-card h3 {
+    color: #11cbcb;
+    margin-bottom: 10px;
+  }
+
+  .department-card:hover {
+    transform: translateY(-5px);
+  }
+
+  .view-more {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    font-size: 20px;
+    color: #2575fc;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .view-more:hover {
+    color: #6a11cb;
+  }
+
+  .department-card h3 {
+    color: #fff;
+    background-color: #4578e6;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+  }
+
+  @keyframes slideInFromLeft {
+    from {
+      transform: translateX(-100%);
+      opacity: 0;
     }
-
-    async function deleteProfile(id, button) {
-      try {
-        const response = await fetch(`http://127.0.0.1:3000/deleteProfile/${id}`, {
-          method: 'DELETE',
-        });
-        const result = await response.json();
-        if (result.success) {
-          button.closest('tr').remove();
-          alert('Profile deleted successfully');
-        } else {
-          alert('Error deleting profile: ' + result.message);
-        }
-      } catch (error) {
-        console.error('Failed to delete profile:', error);
-        alert('Failed to delete profile');
-      }
+    to {
+      transform: translateX(0);
+      opacity: 1;
     }
+  }
 
-    async function editProfile(id, button) {
-      const row = button.closest('tr');
-      const nameCell = row.children[1];
-      const designationCell = row.children[2];
-      const qualificationCell = row.children[3];
-      const departmentCell = row.children[4];
-
-      const nameInput = `<input type="text" value="${nameCell.textContent}" class="form-control">`;
-      const designationInput = `<input type="text" value="${designationCell.textContent}" class="form-control">`;
-      const qualificationInput = `<input type="text" value="${qualificationCell.textContent}" class="form-control">`;
-      const departmentInput = `<input type="text" value="${departmentCell.textContent}" class="form-control">`;
-
-      nameCell.innerHTML = nameInput;
-      designationCell.innerHTML = designationInput;
-      qualificationCell.innerHTML = qualificationInput;
-      departmentCell.innerHTML = departmentInput;
-
-      button.innerHTML = `<i class='bx bx-save'></i>`;
-      button.classList.remove('btn-warning');
-      button.classList.add('btn-success');
-      button.setAttribute('onclick', `saveProfile('${id}', this)`);
+  @keyframes slideInFromBottom {
+    from {
+      transform: translateY(100%);
+      opacity: 0;
     }
-
-    async function saveProfile(id, button) {
-      const row = button.closest('tr');
-      const name = row.children[1].querySelector('input').value;
-      const designation = row.children[2].querySelector('input').value;
-      const qualification = row.children[3].querySelector('input').value;
-      const department = row.children[4].querySelector('input').value;
-
-      try {
-        const response = await fetch(`http://127.0.0.1:3000/updateProfile/${id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, designation, qualification, department })
-        });
-        const result = await response.json();
-        if (result.success) {
-          row.children[1].innerHTML = `<a href="profile.html?name=${encodeURIComponent(name)}" target="_blank">${name}</a>`;
-          row.children[2].textContent = designation;
-          row.children[3].textContent = qualification;
-          row.children[4].textContent = department;
-          button.innerHTML = `<i class='bx bx-edit'></i>`;
-          button.classList.remove('btn-success');
-          button.classList.add('btn-warning');
-          button.setAttribute('onclick', `editProfile('${id}', this)`);
-          alert('Profile updated successfully');
-        } else {
-          alert('Error updating profile: ' + result.message);
-        }
-      } catch (error) {
-        console.error('Failed to update profile:', error);
-        alert('Failed to update profile');
-      }
+    to {
+      transform: translateY(0);
+      opacity: 1;
     }
+  }
 
-    async function fetchCSMProfiles() {
-      try {
-        const response = await fetch('http://127.0.0.1:3000/getProfiles');
-        const profiles = await response.json();
-        const csmProfiles = profiles.filter(profile => profile.departments.includes('CSE'));
-        csmProfiles.forEach(addProfileToTable);
-      } catch (error) {
-        console.error('Error fetching profiles:', error);
-      }
+  @keyframes slideInFromTop {
+    from {
+      transform: translateY(-100%);
+      opacity: 0;
     }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
 
-    window.onload = fetchCSMProfiles;
-  </script>
+  @keyframes slideInFromRight {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  #card1 {
+    animation: slideInFromLeft 1s forwards;
+  }
+
+  #card2 {
+    animation: slideInFromBottom 1s forwards;
+  }
+
+  #card3 {
+    animation: slideInFromTop 1s forwards;
+  }
+
+  #card4 {
+    animation: slideInFromRight 1s forwards;
+  }
+</style>
+
+<script>
+  const themeToggle = document.getElementById('theme-toggle');
+  const body = document.body;
+
+  // Check for saved theme in localStorage
+  if (localStorage.getItem('theme') === 'dark') {
+    body.classList.add('dark-mode');
+    body.classList.remove('light-mode');
+    themeToggle.classList.add('bx-sun');
+    themeToggle.classList.remove('bx-moon');
+  } else {
+    body.classList.add('light-mode');
+    body.classList.remove('dark-mode');
+    themeToggle.classList.add('bx-moon');
+    themeToggle.classList.remove('bx-sun');
+  }
+
+  themeToggle.addEventListener('click', () => {
+    body.classList.toggle('dark-mode');
+    body.classList.toggle('light-mode');
+    themeToggle.classList.toggle('bx-sun');
+    themeToggle.classList.toggle('bx-moon');
+
+    // Save the current theme in localStorage
+    if (body.classList.contains('dark-mode')) {
+      localStorage.setItem('theme', 'dark');
+    } else {
+      localStorage.setItem('theme', 'light');
+    }
+  });
+
+  function openEditModal() {
+    document.getElementById("editModal").style.display = "block";
+  }
+
+  function saveMarquee() {
+    let newText = document.getElementById("editText").value;
+    let newLink = document.getElementById("editLink").value;
+
+    if (newText.trim() !== "" && newLink.trim() !== "") {
+      document.getElementById("marquee-text").innerHTML = `<a href="${newLink}" target="_blank">${newText}</a>`;
+      document.getElementById("editModal").style.display = "none";
+    }
+  }
+
+  // Toggle Departments Section
+  const viewDepartmentsBtn = document.getElementById('viewDepartmentsBtn');
+  const departmentsSection = document.getElementById('departmentsSection');
+
+  viewDepartmentsBtn.addEventListener('click', () => {
+    if (departmentsSection.style.display === 'none') {
+      departmentsSection.style.display = 'block';
+      viewDepartmentsBtn.textContent = 'Hide Departments';
+    } else {
+      departmentsSection.style.display = 'none';
+      viewDepartmentsBtn.textContent = 'View Departments';
+    }
+  });
+</script>
 </body>
+</html>
+
+ 
+ </body>
 </html>
