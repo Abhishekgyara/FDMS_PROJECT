@@ -30,7 +30,7 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width: 100%;
+            width: 30%;
         }
         .tasks-header {
             width: 100%;
@@ -47,14 +47,45 @@
             border-radius: 5px;
         }
         .task {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        margin-bottom: 10px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .task button {
+        margin-left: 10px;
+        padding: 5px 10px;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+    }
+    .task .editTask {
+        background-color: #4CAF50;
+        color: white;
+    }
+    .task .deleteTask {
+        background-color: #f44336;
+        color: white;
+    }
+        
+        .tasks-display {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            margin-bottom: 10px;
+            flex-direction: column;
+            align-items: flex-start;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 65%;
         }
-        .task button {
-            margin-left: 10px;
+        .tasks-display h2 {
+            margin: 0 0 10px 0;
         }
         .stars {
             position: absolute;
@@ -106,7 +137,7 @@
 </head>
 <body>
     <header class="header">
-        <a href="#" class="logo">Faculty Data Management System</a>
+        <a href="#" class="logo">Tathya</a>
         <nav class="navbar">
             <a href="/dashboard3">Home</a>
             <a href="/tasks">Tasks</a>
@@ -137,14 +168,17 @@
                 <input type="date" id="taskDate">
                 <input type="text" id="taskTitle" placeholder="Task Title">
             </div>
-            <div id="tasksList"></div>
             <button id="addTask">Add Task</button>
+        </div>
+        <div class="tasks-display">
+            <h2>Tasks Display</h2>
+            <div id="displayTasksList"></div>
         </div>
     </div>
 
     <script>
         // Task management
-        const tasksList = document.getElementById('tasksList');
+        const displayTasksList = document.getElementById('displayTasksList');
         const addTaskButton = document.getElementById('addTask');
         const taskDateInput = document.getElementById('taskDate');
         const taskTitleInput = document.getElementById('taskTitle');
@@ -162,10 +196,10 @@
                         <button class="deleteTask">Delete</button>
                     </div>
                 `;
-                tasksList.appendChild(taskItem);
+                displayTasksList.appendChild(taskItem);
 
                 taskItem.querySelector('.deleteTask').addEventListener('click', () => {
-                    tasksList.removeChild(taskItem);
+                    displayTasksList.removeChild(taskItem);
                 });
 
                 taskItem.querySelector('.editTask').addEventListener('click', () => {
