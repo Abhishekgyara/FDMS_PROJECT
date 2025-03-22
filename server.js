@@ -3,6 +3,8 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const path = require("path");
+const nodemailer = require("nodemailer"); 
+
 
 const app = express();
 const PORT = 3000;
@@ -18,6 +20,7 @@ mongoose.connect("mongodb://localhost:27017/userDB", {
   useUnifiedTopology: true,
 });
 
+
 // User Schema
 const userSchema = new mongoose.Schema({
   name: String,
@@ -31,6 +34,9 @@ const User = mongoose.model("User", userSchema);
 
 // Profile Schema
 const profileSchema = new mongoose.Schema({
+  subject1: String,
+  subject2: String,
+  experience:Number,
   name: String,
   designation: String,
   qualification: String,
@@ -56,6 +62,8 @@ const contactSchema = new mongoose.Schema({
 
 const Contact = mongoose.model("Contact", contactSchema);
 
+
+
 // Root Route
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname,  'index.html')); // Serve the index.html file from the "public" directory
@@ -66,20 +74,31 @@ app.get("/login", (req, res) => {
   res.sendFile(path.join(__dirname,  'login.html')); // Serve the login.html file from the "public" directory
 });
 
+app.get("/print", (req, res) => {
+  res.sendFile(path.join(__dirname,  'print.html')); // Serve the login.html file from the "public" directory
+});
+
+app.get("/profile.html", (req, res) => {
+  res.sendFile(path.join(__dirname, 'profile.html')); // Serve the profile.html file from the "public" directory
+});
+app.get("/faculty", (req, res) => {
+  res.sendFile(path.join(__dirname, 'faculty.html')); // Serve the profile.html file from the "public" directory
+});
+
 
 app.get("/video", (req, res) => {
   res.sendFile(path.join(__dirname,  '13232-246463976_small.mp4')); // Serve the login.html file from the "public" directory
 });
 
 
-
 app.get("/profiles", (req, res) => {
   res.sendFile(path.join(__dirname,  'profiles.html')); // Serve the login.html file from the "public" directory
 });
 
-app.get("/profile", (req, res) => {
-  res.sendFile(path.join(__dirname,  'profile.html')); // Serve the login.html file from the "public" directory
+app.get("/awards", (req, res) => {
+  res.sendFile(path.join(__dirname,  'awards.html')); // Serve the login.html file from the "public" directory
 });
+
 
 
 
@@ -130,9 +149,42 @@ app.get("/tasks", (req, res) => {
   res.sendFile(path.join(__dirname, 'tasks.html')); // Serve the dash_styles.css file from the "public" directory
 });
 
+app.get("/printer", (req, res) => {
+  res.sendFile(path.join(__dirname, 'printer.html')); // Serve the dash_styles.css file from the "public" directory
+});
+
+app.get("/find", (req, res) => {
+  res.sendFile(path.join(__dirname, 'find.html')); // Serve the dash_styles.css file from the "public" directory
+});
+
 //KMIT image
+app.get("/user_image2.jpg", (req, res) => {
+  res.sendFile(path.join(__dirname, 'user_image2.jpg')); // Serve the kmit_image.jpg file from the "public" directory
+});
+
+
+app.get("/about", (req, res) => {
+  res.sendFile(path.join(__dirname, 'about.html')); // Serve the kmit_image.jpg file from the "public" directory
+});
+
 app.get("/kmit_image.jpg", (req, res) => {
   res.sendFile(path.join(__dirname, 'kmit_image.jpg')); // Serve the kmit_image.jpg file from the "public" directory
+});
+
+app.get("/user_pic.avif", (req, res) => {
+  res.sendFile(path.join(__dirname, 'user_pic.avif')); // Serve the kmit_image.jpg file from the "public" directory
+});
+
+app.get("/kmit_4.jpg", (req, res) => {
+  res.sendFile(path.join(__dirname, 'kmit_4.jpg')); // Serve the kmit_image.jpg file from the "public" directory
+});
+
+app.get("/faculty_pic.png", (req, res) => {
+  res.sendFile(path.join(__dirname, 'faculty_pic.png')); // Serve the kmit_image.jpg file from the "public" directory
+});
+
+app.get("/kmit_dean.jpg", (req, res) => {
+  res.sendFile(path.join(__dirname, 'kmit_dean.jpg')); // Serve the kmit_image.jpg file from the "public" directory
 });
 
 //Profiles.html routes
