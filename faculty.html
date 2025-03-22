@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Profile - Dr. Vishal Reddy</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .profile-header {
+            background-color: #f8f9fa;
+            padding: 2rem 0;
+            border-bottom: 3px solid #0d6efd;
+            position: relative;
+        }
+        
+        .profile-image {
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            border: 3px solid #fff;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            position: relative;
+            cursor: pointer; /* Add cursor pointer to indicate clickability */
+        }
+        
+        .section-title {
+            border-bottom: 2px solid #0d6efd;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .contact-info {
+            background-color: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+        }
+        
+        .publication-item {
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .course-card {
+            transition: transform 0.2s;
+        }
+        
+        .course-card:hover {
+            transform: translateY(-5px);
+        }
+    </style>
+</head>
+<body>
+    <!-- Profile Header -->
+    <div class="profile-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-3 text-center position-relative">
+                    <img src="user_image2.jpg" id="profileImage" class="profile-image rounded-circle mb-3" onclick="document.getElementById('imageUpload').click();">
+                    <input type="file" id="imageUpload" style="display: none;" accept="image/*">
+                </div>
+                <div class="col-md-9">
+                    <h1 class="display-4">MR. Anil Kumar</h1>
+                    <p class="lead">Head of the Department</p>
+                    <p class="text-muted">Department of Data Science</p>
+                    <div class="mt-3">
+                        <a href="#" class="btn btn-primary me-2">Contact</a>
+                        <a href="#" class="btn btn-outline-primary">Download CV</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('imageUpload').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const formData = new FormData();
+                formData.append('profileImage', file);
+
+                fetch('/uploadProfileImage', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('profileImage').src = data.imageUrl;
+                        alert('Profile image updated successfully');
+                    } else {
+                        alert('Error updating profile image: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to update profile image');
+                });
+            }
+        });
+    </script>
+</body>
+</html>
