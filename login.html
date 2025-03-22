@@ -8,11 +8,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
     <style>
         body {
-            background: linear-gradient(45deg,#1e90ee,#c51bce);
+            background: linear-gradient(45deg,#1e90ee,#48daea);
             height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
         }
         .card {
             width: 100%;
@@ -32,9 +33,9 @@
             width: 100%;
             padding: 0.8rem;
             border-radius: 8px;
-            background: linear-gradient(to right, #4263eb, #6c47ff);
+            background: linear-gradient(to right, #4263eb, #47edff);
             border: none;
-            color: white;
+            color: rgb(255, 255, 255);
             font-weight: 500;
             margin-top: 5px;
         }
@@ -77,11 +78,56 @@
             color: #721c24;
             border: 1px solid #f5c6cb;
         }
+
+        .welcome-text {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: center;
+        gap: 5px;
+    }
+    .welcome-text span {
+        display: inline-block;
+        opacity: 0;
+        animation: fillBlock 0.5s forwards, blinkColor 1s infinite;
+    }
+    @keyframes fillBlock {
+        from {
+            transform: scaleY(0);
+            opacity: 0;
+        }
+        to {
+            transform: scaleY(1);
+            opacity: 1;
+        }
+    }
+
+    @keyframes blinkColor {
+        0% {
+            color: red;
+        }
+        25% {
+            color: blue;
+        }
+        50% {
+            color: green;
+        }
+        75% {
+            color: yellow;
+        }
+        100% {
+            color: red;
+        }
+    }
     </style>
 </head>
 <body>
 
 <div class="card">
+    <div class="welcome-text" id="welcomeText">
+        <span>T</span><span>A</span><span>T</span><span>H</span><span>Y</span><span>A
+    </div>
     <!-- Login Form -->
     <div id="loginForm">
         <h4 class="text-center mb-3">Login</h4>
@@ -333,6 +379,8 @@
             signupButton.disabled = true;
         }
     }
+
+    
 </script>
 
 </body>
