@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Profile</title>
+    <link rel="stylesheet" href="dash_styles.css">
+    <style>
+        .profile-container {
+            max-width: 1200px;
+            margin: 100px auto;
+            padding: 20px;
+        }
+
+        .profile-section {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            padding: 20px;
+        }
+
+        .section-title {
+            color: #2575fc;
+            border-bottom: 2px solid #2575fc;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .info-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .info-label {
+            font-weight: bold;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            color: #333;
+        }
+
+        .edit-btn {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: #2575fc;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .edit-btn:hover {
+            background: #1957b8;
+        }
+
+        .navbar {
+            background: rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .navbar a:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .navbar a.active {
+            background: #2575fc;
+        }
+
+        .education-block {
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        .education-block h3 {
+            color: #2575fc;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #2575fc;
+        }
+
+        .education-divider {
+            height: 2px;
+            background: linear-gradient(to right, transparent, #ccc, transparent);
+            margin: 30px 0;
+        }
+
+        .edit-mode .info-value {
+            display: none;
+        }
+
+        .edit-mode .edit-input {
+            display: block;
+        }
+
+        .edit-input {
+            display: none;
+            width: 100%;
+            padding: 5px;
+            margin-top: 5px;
+            border: 1px solid #2575fc;
+            border-radius: 4px;
+        }
+
+        .button-group {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;  /* Changed from row to column */
+            gap: 10px;
+        }
+
+        .action-btn {
+            background: #2575fc;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 120px;  /* Added fixed width for consistent button size */
+        }
+
+        .save-btn {
+            display: none;
+            background: #4CAF50;
+        }
+
+        .action-btn:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/faculty_dashboard">Dashboard</a>
+        <a href="/research">Research</a>
+        <a href="/publications">Publications</a>
+        <a href="/faculty_profile" class="active">My Profile</a>
+    </nav>
+
+    <div class="button-group">
+        <button class="action-btn edit-btn" onclick="toggleEditMode()">Edit</button>
+        <br><br>
+        <button class="action-btn save-btn" onclick="saveChanges()">Save Changes</button>
+    </div>
+
+    <div class="profile-container">
+        <div class="profile-section" id="personal-info">
+            <h2 class="section-title">Personal Information</h2>
+            <div class="info-grid" id="personal-details">Loading...</div>
+        </div>
+
+        <div class="profile-section">
+            <h2 class="section-title">Educational Details</h2>
+            <div class="education-block">
+                <h3>School Education</h3>
+                <div class="info-grid" id="school-details">Loading...</div>
+            </div>
+
+            <div class="education-divider"></div>
+
+            <div class="education-block">
+                <h3>Intermediate Education</h3>
+                <div class="info-grid" id="intermediate-details">Loading...</div>
+            </div>
+
+            <div class="education-divider"></div>
+
+            <div class="education-block">
+                <h3>Under Graduate</h3>
+                <div class="info-grid" id="ug-details">Loading...</div>
+            </div>
+
+            <div class="education-divider"></div>
+
+            <div class="education-block">
+                <h3>Post Graduate</h3>
+                <div class="info-grid" id="pg-details">Loading...</div>
+            </div>
+
+            <div class="education-divider"></div>
+
+            <div class="education-block">
+                <h3>Ph.D</h3>
+                <div class="info-grid" id="phd-details">Loading...</div>
+            </div>
+        </div>
+
+        <div class="profile-section">
+            <h2 class="section-title">Professional Experience</h2>
+            <div id="experience-details">Loading...</div>
+        </div>
+    </div>
+
+    <script>
+        async function loadProfileData() {
+            try {
+                const userEmail = localStorage.getItem('userEmail');
+                console.log('Fetching data for email:', userEmail); // Debug log
+                const response = await fetch(`http://localhost:4009/api/faculty/details/byEmail/${userEmail}`);
+                const data = await response.json();
+                console.log('Received data:', data); // Debug log
+
+                if (data.success) {
+                    // Handle data from either FacultyForm or FacultyDetails
+                    const profileData = {
+                        personal: data.data.personal || data.data.personalDetails,
+                        education: data.data.education || data.data.educationDetails,
+                        experience: data.data.experience || data.data.experiences
+                    };
+
+                    displayPersonalInfo(profileData.personal);
+                    displayEducationInfo(profileData.education);
+                    displayExperienceInfo(profileData.experience);
+                    currentProfileData = profileData; // Store current data for edit comparison
+                }
+            } catch (error) {
+                console.error('Error loading profile:', error);
+            }
+        }
+
+        function createEditableField(value, type = 'text', field) {
+            const displayValue = type === 'date' && value ? value.split('T')[0] : value;
+            return `
+                <div class="info-value" data-field="${field}">${displayValue || ''}</div>
+                <input type="${type}" class="edit-input" data-field="${field}" value="${displayValue || ''}" />
+            `;
+        }
+
+        function displayPersonalInfo(personal) {
+            const personalHTML = `
+                <div class="info-item">
+                    <div class="info-label">Name</div>
+                    ${createEditableField(personal.name, 'text', 'name')}
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Gender</div>
+                    ${createEditableField(personal.gender, 'text', 'gender')}
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Date of Birth</div>
+                    ${createEditableField(personal.dob?.split('T')[0], 'date', 'dob')}
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Age</div>
+                    ${createEditableField(personal.age, 'number', 'age')}
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Email</div>
+                    ${createEditableField(personal.email, 'email', 'email')}
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Phone</div>
+                    ${createEditableField(personal.phone, 'tel', 'phone')}
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Temporary Address</div>
+                    <div class="nested-info">
+                        <div>State: ${createEditableField(personal.tempAddress?.state, 'text', 'temp-state')}</div>
+                        <div>City: ${createEditableField(personal.tempAddress?.city, 'text', 'temp-city')}</div>
+                        <div>Pincode: ${createEditableField(personal.tempAddress?.pincode, 'text', 'temp-pincode')}</div>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Permanent Address</div>
+                    <div class="nested-info">
+                        <div>State: ${createEditableField(personal.permAddress?.state, 'text', 'perm-state')}</div>
+                        <div>City: ${createEditableField(personal.permAddress?.city, 'text', 'perm-city')}</div>
+                        <div>Pincode: ${createEditableField(personal.permAddress?.pincode, 'text', 'perm-pincode')}</div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('personal-details').innerHTML = personalHTML;
+        }
+
+        function displayEducationInfo(education) {
+            console.log('Education data received:', education); // Debug log
+
+            // Display School Details
+            document.getElementById('school-details').innerHTML = education.school ? `
+                <div class="info-item">
+                    <div class="info-label">Institution Name</div>
+                    ${createEditableField(education.school.name, 'text', 'school-name')}
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Location</div>
+                    ${createEditableField(education.school.location, 'text', 'school-location')}
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Duration</div>
+                    <div>From: ${createEditableField(education.school.startDate?.split('T')[0], 'date', 'school-start')}</div>
+                    <div>To: ${createEditableField(education.school.endDate?.split('T')[0], 'date', 'school-end')}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Grade Information</div>
+                    <div>Type: ${createEditableField(education.school.gradeType, 'text', 'school-grade-type')}</div>
+                    <div>Grade: ${createEditableField(education.school.grade, 'number', 'school-grade')}</div>
+                </div>
+            ` : 'No school data available';
+
+            // Display Intermediate Details
+            document.getElementById('intermediate-details').innerHTML = education.intermediate ? `
+                <div class="info-item">
+                    <div class="info-label">Institution Name</div>
+                    ${createEditableField(education.intermediate.name, 'text', 'inter-name')}
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Location</div>
+                    ${createEditableField(education.intermediate.location, 'text', 'inter-location')}
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Duration</div>
+                    <div>From: ${createEditableField(education.intermediate.startDate?.split('T')[0], 'date', 'inter-start')}</div>
+                    <div>To: ${createEditableField(education.intermediate.endDate?.split('T')[0], 'date', 'inter-end')}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Grade Information</div>
+                    <div>Type: ${createEditableField(education.intermediate.gradeType, 'text', 'inter-grade-type')}</div>
+                    <div>Grade: ${createEditableField(education.intermediate.grade, 'number', 'inter-grade')}</div>
+                </div>
+            ` : 'No intermediate data available';
+
+            // Display UG Details
+            document.getElementById('ug-details').innerHTML = education.ug ? `
+                <div class="info-item">
+                    <div class="info-label">Institution Name</div>
+                    ${createEditableField(education.ug.name, 'text', 'ug-name')}
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Location</div>
+                    ${createEditableField(education.ug.location, 'text', 'ug-location')}
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Course & Specialization</div>
+                    <div>Course: ${createEditableField(education.ug.course, 'text', 'ug-course')}</div>
+                    <div>Specialization: ${createEditableField(education.ug.specialization, 'text', 'ug-specialization')}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Grade Information</div>
+                    <div>Type: ${createEditableField(education.ug.gradeType, 'text', 'ug-grade-type')}</div>
+                    <div>Grade: ${createEditableField(education.ug.grade, 'number', 'ug-grade')}</div>
+                </div>
+            ` : 'No UG data available';
+
+            // Display PG Details (similar structure as UG)
+            document.getElementById('pg-details').innerHTML = education.pg ? `
+                <div class="info-item">
+                    <div class="info-label">Institution Name</div>
+                    ${createEditableField(education.pg.name, 'text', 'pg-name')}
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Location</div>
+                    ${createEditableField(education.pg.location, 'text', 'pg-location')}
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Course & Specialization</div>
+                    <div>Course: ${createEditableField(education.pg.course, 'text', 'pg-course')}</div>
+                    <div>Specialization: ${createEditableField(education.pg.specialization, 'text', 'pg-specialization')}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Grade Information</div>
+                    <div>Type: ${createEditableField(education.pg.gradeType, 'text', 'pg-grade-type')}</div>
+                    <div>Grade: ${createEditableField(education.pg.grade, 'number', 'pg-grade')}</div>
+                </div>
+            ` : 'No PG data available';
+
+            // Display PhD Details
+            document.getElementById('phd-details').innerHTML = education.phd ? `
+                <div class="info-item">
+                    <div class="info-label">Institution Name</div>
+                    ${createEditableField(education.phd.name, 'text', 'phd-name')}
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Location</div>
+                    ${createEditableField(education.phd.location, 'text', 'phd-location')}
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Duration</div>
+                    <div>From: ${createEditableField(education.phd.startDate?.split('T')[0], 'date', 'phd-start')}</div>
+                    <div>To: ${createEditableField(education.phd.endDate?.split('T')[0], 'date', 'phd-end')}</div>
+                    <div>Total Duration: ${education.phd.duration || ''}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Institute Type</div>
+                    ${createEditableField(education.phd.instituteType, 'text', 'phd-type')}
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Status</div>
+                    ${createEditableField(education.phd.status, 'text', 'phd-status')}
+                </div>
+                ${education.phd.status === 'pursuing' ? `
+                    <div class="info-item">
+                        <div class="info-label">Current Year</div>
+                        ${createEditableField(education.phd.currentYear, 'number', 'phd-year')}
+                    </div>
+                ` : ''}
+                <div class="info-item">
+                    <div class="info-label">Grade Information</div>
+                    <div>Type: ${createEditableField(education.phd.gradeType, 'text', 'phd-grade-type')}</div>
+                    <div>Grade: ${createEditableField(education.phd.grade, 'number', 'phd-grade')}</div>
+                </div>
+            ` : 'No PhD data available';
+        }
+
+        function displayExperienceInfo(experiences) {
+            console.log('Experience data received:', experiences); // Debug log
+            const experienceContainer = document.getElementById('experience-details');
+
+            if (!experiences || experiences.length === 0) {
+                experienceContainer.innerHTML = 'No experience data available';
+                return;
+            }
+
+            const experienceHTML = experiences.map((exp, index) => `
+                <div class="info-item">
+                    <div class="info-label">Experience ${index + 1}</div>
+                    <div class="exp-details">
+                        <div>Organization: ${createEditableField(exp.organization, 'text', `exp-${index}-org`)}</div>
+                        <div>Designation: ${createEditableField(exp.designation, 'text', `exp-${index}-designation`)}</div>
+                        <div>Location: ${createEditableField(exp.state, 'text', `exp-${index}-state`)} - 
+                                    ${createEditableField(exp.city, 'text', `exp-${index}-city`)}</div>
+                        <div>Duration: From ${createEditableField(exp.joinDate?.split('T')[0], 'date', `exp-${index}-join`)} 
+                                    To ${createEditableField(exp.relieveDate?.split('T')[0], 'date', `exp-${index}-relieve`)}</div>
+                        <div>Total Duration: ${exp.duration || ''}</div>
+                    </div>
+                </div>
+            `).join('<hr>');
+
+            experienceContainer.innerHTML = experienceHTML;
+        }
+
+        let isEditMode = false;
+        let currentData = null;
+
+        function toggleEditMode() {
+            isEditMode = !isEditMode;
+            document.body.classList.toggle('edit-mode', isEditMode);
+            document.querySelector('.save-btn').style.display = isEditMode ? 'block' : 'none';
+            document.querySelector('.edit-btn').textContent = isEditMode ? 'Cancel' : 'Edit';
+        }
+
+        async function saveChanges() {
+            try {
+                const updatedData = {
+                    personalDetails: collectPersonalData(),
+                    educationDetails: collectEducationData(),
+                    experiences: collectExperienceData()
+                };
+
+                const response = await fetch('http://localhost:4009/api/faculty/details/update', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: localStorage.getItem('userEmail'),
+                        updates: updatedData
+                    })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    alert('Changes saved successfully!');
+                    toggleEditMode();
+                    await loadProfileData(); // Reload all data
+                } else {
+                    throw new Error(result.message);
+                }
+            } catch (error) {
+                console.error('Error saving changes:', error);
+                alert('Failed to save changes: ' + error.message);
+            }
+        }
+
+        function collectPersonalData() {
+            const data = {};
+            const personalSection = document.getElementById('personal-details');
+            personalSection.querySelectorAll('.edit-input').forEach(input => {
+                const field = input.getAttribute('data-field');
+                if (field.includes('-')) {
+                    const [parent, child] = field.split('-');
+                    if (!data[parent + 'Address']) data[parent + 'Address'] = {};
+                    data[parent + 'Address'][child] = input.value;
+                } else {
+                    data[field] = input.value;
+                }
+            });
+            return data;
+        }
+
+        function collectEducationData() {
+            const levels = ['school', 'intermediate', 'ug', 'pg', 'phd'];
+            const educationData = {};
+
+            levels.forEach(level => {
+                const sectionData = {};
+                const section = document.getElementById(`${level}-details`);
+                if (section) {
+                    section.querySelectorAll('.edit-input').forEach(input => {
+                        const field = input.getAttribute('data-field').replace(`${level}-`, '');
+                        sectionData[field] = input.type === 'number' ? parseFloat(input.value) : input.value;
+                    });
+                    educationData[level] = sectionData;
+                }
+            });
+
+            return educationData;
+        }
+
+        function collectExperienceData() {
+            const experiences = [];
+            const expSection = document.getElementById('experience-details');
+            const expCards = expSection.querySelectorAll('.exp-card');
+
+            expCards.forEach((card, index) => {
+                const exp = {
+                    organization: getInputValue(card, `exp-${index}-org`),
+                    designation: getInputValue(card, `exp-${index}-designation`),
+                    state: getInputValue(card, `exp-${index}-state`),
+                    city: getInputValue(card, `exp-${index}-city`),
+                    joinDate: getInputValue(card, `exp-${index}-join`),
+                    relieveDate: getInputValue(card, `exp-${index}-relieve`),
+                    duration: card.querySelector('.experience-duration')?.textContent || ''
+                };
+                experiences.push(exp);
+            });
+
+            return experiences;
+        }
+
+        function getInputValue(parent, dataField) {
+            const input = parent.querySelector(`[data-field="${dataField}"]`);
+            return input ? (input.value || input.textContent) : '';
+        }
+
+        document.addEventListener('DOMContentLoaded', loadProfileData);
+
+        function displayExperience(experiences) {
+            if (!experiences || experiences.length === 0) {
+                return 'No experience data available';
+            }
+        
+            return experiences.map(exp => `
+                <div class="exp-item">
+                    <h4>Organization: ${createEditableField(exp.organization, 'text', 'org-name')}</h4>
+                    <div class="exp-details">
+                        <div>Designation: ${createEditableField(exp.designation, 'text', 'designation')}</div>
+                        <div>Location: ${createEditableField(exp.state, 'text', 'state')} - ${createEditableField(exp.city, 'text', 'city')}</div>
+                        <div class="date-range">
+                            <div>From: ${createEditableField(exp.joinDate?.split('T')[0], 'date', 'join-date')}</div>
+                            <div>To: ${createEditableField(exp.relieveDate?.split('T')[0], 'date', 'relieve-date')}</div>
+                        </div>
+                        <div>Duration: ${exp.duration}</div>
+                    </div>
+                </div>
+            `).join('<div class="experience-divider"></div>');
+        }
+
+        // Add some additional CSS for better layout
+        document.head.insertAdjacentHTML('beforeend', `
+        <style>
+            .nested-info {
+                padding-left: 15px;
+                margin-top: 5px;
+            }
+            
+            .date-range {
+                display: flex;
+                gap: 20px;
+            }
+            
+            .exp-item {
+                background: #f8f9fa;
+                padding: 15px;
+                border-radius: 8px;
+                margin-bottom: 15px;
+            }
+            
+            .exp-details {
+                margin-left: 15px;
+                margin-top: 10px;
+            }
+            
+            .experience-divider {
+                height: 1px;
+                background: #ddd;
+                margin: 20px 0;
+            }
+        
+            .info-value {
+                color: #333;
+                font-weight: 500;
+                margin-top: 5px;
+            }
+        </style>
+        `);
+
+        function updateEducationSections(education) {
+            // Update School Details
+            const schoolHtml = createEducationBlock(education.school, 'school');
+            document.getElementById('school-details').innerHTML = schoolHtml;
+
+            // Update Intermediate Details
+            const interHtml = createEducationBlock(education.intermediate, 'intermediate');
+            document.getElementById('intermediate-details').innerHTML = interHtml;
+
+            // Update UG Details
+            const ugHtml = createHigherEducationBlock(education.ug, 'ug');
+            document.getElementById('ug-details').innerHTML = ugHtml;
+
+            // Update PG Details
+            const pgHtml = createHigherEducationBlock(education.pg, 'pg');
+            document.getElementById('pg-details').innerHTML = pgHtml;
+
+            // Update PhD Details
+            const phdHtml = createPhDBlock(education.phd);
+            document.getElementById('phd-details').innerHTML = phdHtml;
+        }
+
+        function createEducationBlock(edu, level) {
+            if (!edu || !edu.name) return 'No data available';
+
+            return `
+                <div class="info-item">
+                    <div class="info-label">Institution Name</div>
+                    ${createEditableField(edu.name, 'text', `${level}-name`)}
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Location</div>
+                    ${createEditableField(edu.location, 'text', `${level}-location`)}
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Duration</div>
+                    <div>From: ${createEditableField(edu.startDate?.split('T')[0], 'date', `${level}-start`)}</div>
+                    <div>To: ${createEditableField(edu.endDate?.split('T')[0], 'date', `${level}-end`)}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Syllabus Type</div>
+                    ${createEditableField(edu.syllabusType, 'text', `${level}-syllabus`)}
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Grade Information</div>
+                    <div>Type: ${createEditableField(edu.gradeType, 'text', `${level}-grade-type`)}</div>
+                    <div>Grade: ${createEditableField(edu.grade, 'number', `${level}-grade`)}
+                </div>
+            `;
+        }
+
+        function createHigherEducationBlock(edu, level) {
+            if (!edu || !edu.name) return 'No data available';
+
+            return `
+                <div class="info-item">
+                    <div class="info-label">Institution Name</div>
+                    ${createEditableField(edu.name, 'text', `${level}-name`)}
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Location</div>
+                    ${createEditableField(edu.location, 'text', `${level}-location`)}
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Duration</div>
+                    <div>From: ${createEditableField(edu.startDate?.split('T')[0], 'date', `${level}-start`)}</div>
+                    <div>To: ${createEditableField(edu.endDate?.split('T')[0], 'date', `${level}-end`)}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Course</div>
+                    ${createEditableField(edu.course, 'text', `${level}-course`)}
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Specialization</div>
+                    ${createEditableField(edu.specialization, 'text', `${level}-specialization`)}
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Grade Information</div>
+                    <div>Type: ${createEditableField(edu.gradeType, 'text', `${level}-grade-type`)}</div>
+                    <div>Grade: ${createEditableField(edu.grade, 'number', `${level}-grade`)}</div>
+                </div>
+            `;
+        }
+
+        function updateExperienceSection(experiences) {
+            if (!experiences || experiences.length === 0) {
+                document.getElementById('experience-details').innerHTML = 'No experience data available';
+                return;
+            }
+
+            const experienceHtml = experiences.map((exp, index) => `
+                <div class="exp-card">
+                    <div class="info-item">
+                        <div class="info-label">Organization</div>
+                        ${createEditableField(exp.organization, 'text', `exp-${index}-org`)}
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Designation</div>
+                        ${createEditableField(exp.designation, 'text', `exp-${index}-designation`)}
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Location</div>
+                        <div>State: ${createEditableField(exp.state, 'text', `exp-${index}-state`)}</div>
+                        <div>City: ${createEditableField(exp.city, 'text', `exp-${index}-city`)}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Duration</div>
+                        <div>From: ${createEditableField(exp.joinDate?.split('T')[0], 'date', `exp-${index}-join`)}</div>
+                        <div>To: ${createEditableField(exp.relieveDate?.split('T')[0], 'date', `exp-${index}-relieve`)}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Total Duration</div>
+                        <div class="experience-duration">${exp.duration || ''}</div>
+                    </div>
+                </div>
+            `).join('<hr>');
+
+            document.getElementById('experience-details').innerHTML = experienceHtml;
+        }
+    </script>
+</body>
+</html>
