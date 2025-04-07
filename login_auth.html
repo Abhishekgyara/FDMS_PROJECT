@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Signup</title>
+    <link rel="stylesheet" href="dash_styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+    <!-- Google Sign In -->
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <meta name="google-signin-client_id" content="940020976752-ee8dupcuupmhepgsu70dcvsou7vs3rpi.apps.googleusercontent.com">
+    <meta name="google-signin-cookiepolicy" content="single_host_origin">
+    <meta name="google-signin-scope" content="profile email">
+    <style>
+        body {
+            background: #f5f5f5;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .auth-card {
+            width: 400px;
+            padding: 2rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .role-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .role-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background: #f0f0f0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .role-btn.active {
+            background: #007bff;
+            color: white;
+        }
+
+        .form-control {
+            margin-bottom: 15px;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .divider span {
+            padding: 0 10px;
+            color: #777;
+        }
+
+        .google-btn {
+            width: 100%;
+            background: white;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .password-strength {
+            color: green;
+            margin-bottom: 10px;
+            display: none;
+        }
+
+        .password-requirements {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .requirement {
+            margin-bottom: 5px;
+        }
+
+        .requirement.met {
+            color: green;
+        }
+
+        .notification {
+            position: fixed;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 15px 30px;
+            border-radius: 5px;
+            color: white;
+            z-index: 1000;
+            transition: top 0.5s ease;
+        }
+
+        .notification.success {
+            background-color: #4CAF50;
+            top: 20px;
+        }
+    </style>
+    <style>
+        body {
+          position: relative;
+          font-family: "Poppins", sans-serif;
+          overflow: hidden;
+          background: linear-gradient(to right, #cdd5db);
+        }
+    
+        header {
+          margin-bottom: 80px;
+      
+        }
+    
+        
+    
+        /* Main Card */
+        .main-card {
+          
+          display: flex;
+          justify-content: space-between;
+          /* align-items: center; */
+          background: white;
+          padding: 20px;
+          border-radius: 12px;
+          box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+          max-width: 80%;
+          margin: auto;
+        }
+    
+        .main-card .description {
+          flex: 1;
+          padding: 20px;
+        }
+    
+        .main-card h2 {
+          color: #1763d5;
+        }
+    
+        .main-card img {
+          width: 350px; /* Increased initial size */
+          height: auto;
+          border-radius: 10px;
+          transition: transform 0.3s ease-in-out;
+        }
+    
+        .main-card img:hover {
+          transform: scale(1.1); /* Zoom effect */
+        }
+    
+        /* Departments Section */
+        .departments {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+          gap: 20px;
+          padding: 40px;
+          max-width: 80%;
+          margin: auto;
+        }
+    
+        .department-card {
+          background: white;
+          padding: 20px;
+          border-radius: 12px;
+          box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+          text-align: center;
+          position: relative;
+          transition: transform 0.3s ease-in-out;
+        }
+    
+        .department-card:hover {
+          transform: translateY(-5px);
+        }
+    
+        .department-card h3 {
+          color: #e0e1e2;
+          margin-bottom: 10px;
+        }
+    
+        /* Clickable Arrow */
+        .view-more {
+          position: absolute;
+          bottom: 10px;
+          right: 10px;
+          font-size: 20px;
+          color: #2575fc;
+          cursor: pointer;
+          text-decoration: none;
+        }
+    
+        .view-more:hover {
+          color: #10a9e0;
+        }
+    
+        .stars {
+          position: absolute;
+          width: 100%;
+          height: 100vh;
+          top: 0;
+          left: 0;
+          pointer-events: none;
+          z-index: -1;
+        }
+        .stars span {
+          position: absolute;
+          bottom: -50px;
+          width: 10px;
+          height: 10px;
+          background: rgba(255, 255, 255, 0.8);
+          clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+          animation: floatUp 5s infinite linear;
+        }
+        @keyframes floatUp {
+          0% {
+            transform: translateY(0);
+            opacity: 1;
+          }
+          100% {
+            transform: translateY(-100vh);
+            opacity: 0;
+          }
+        }
+        .stars span:nth-child(odd) {
+          width: 15px;
+          height: 15px;
+          animation-duration: 7s;
+        }
+        .stars span:nth-child(even) {
+          animation-duration: 4s;
+        }
+        .stars span:nth-child(1) { background: yellow; }
+        .stars span:nth-child(2) { background: white; }
+        .stars span:nth-child(3) { background: lightblue; }
+        .stars span:nth-child(4) { background: pink; }
+        .stars span:nth-child(5) { background: violet; }
+        .stars span:nth-child(6) { background: lightyellow; }
+        .stars span:nth-child(7) { background: cyan; }
+        .stars span:nth-child(8) { background: gold; }
+        .stars span:nth-child(9) { background: silver; }
+        .stars span:nth-child(10) { background: lightgreen; }
+    
+        .departments {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+          gap: 20px;
+          padding: 40px;
+          max-width: 80%;
+          margin: auto;
+        }
+    
+        .department-card {
+          background: white;
+          padding: 20px;
+          border-radius: 12px;
+          box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+          text-align: center;
+          position: relative;
+          transition: transform 0.3s ease-in-out;
+        }
+    
+        .department-card:hover {
+          transform: translateY(-5px);
+        }
+    
+        .department-card h3 {
+          color: #26d5f0;
+          margin-bottom: 10px;
+        }
+    
+        .department-link {
+          text-decoration: none;
+          color: inherit;
+          display: block;
+        }
+    
+        .view-more {
+          position: absolute;
+          bottom: 10px;
+          right: 10px;
+          font-size: 20px;
+          color: #2575fc;
+          cursor: pointer;
+          text-decoration: none;
+        }
+    
+        .view-more:hover {
+          color: #6a11cb;
+        }
+    
+        .theme-toggle {
+          margin-left: 20px;
+          font-size: 24px;
+          cursor: pointer;
+          transition: transform 0.3s ease-in-out;
+        }
+    
+        .theme-toggle:hover {
+          transform: rotate(360deg);
+        }
+    
+        body.light-mode {
+          background: linear-gradient(to right, #1e90ee,#48daea);
+        }
+    
+        body.dark-mode {
+          background: linear-gradient(to right, #0b0b0c, #0c0d0e);
+        }
+    
+        body.dark-mode .theme-toggle {
+          color: white;
+        }
+        #p{
+          font-size: larger;
+        }
+        h3{
+          style:"background-color: #48daea";
+        }
+      </style>
+      <style>
+        .departments {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+          gap: 20px;
+          padding: 40px;
+          max-width: 80%;
+          margin: auto;
+        }
+      
+        .department-card {
+          background: white;
+          padding: 20px;
+          border-radius: 12px;
+          box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+          text-align: center;
+          position: relative;
+          transition: transform 0.3s ease-in-out;
+          opacity: 0;
+        }
+      
+        .department-card h3 {
+          color: #11cbcb;
+          margin-bottom: 10px;
+        }
+      
+        .department-card:hover {
+          transform: translateY(-5px);
+        }
+      
+        .view-more {
+          position: absolute;
+          bottom: 10px;
+          right: 10px;
+          font-size: 20px;
+          color: #2575fc;
+          cursor: pointer;
+          text-decoration: none;
+        }
+      
+        .view-more:hover {
+          color: #6a11cb;
+        }
+      
+        .department-card h3 {
+          color: #fff;
+          background-color: #4578e6;
+          padding: 10px;
+          border-radius: 8px;
+          margin-bottom: 10px;
+        }
+      
+        @keyframes slideInFromLeft {
+          from {
+            transform: translateX(-100%);
+            opacity: 0;
+          }
+          to {
+            transform: translateX(0);
+            opacity: 1;
+          }
+        }
+      
+        @keyframes slideInFromBottom {
+          from {
+            transform: translateY(100%);
+            opacity: 0;
+          }
+          to {
+            transform: translateY(0);
+            opacity: 1;
+          }
+        }
+      
+        @keyframes slideInFromTop {
+          from {
+            transform: translateY(-100%);
+            opacity: 0;
+          }
+          to {
+            transform: translateY(0);
+            opacity: 1;
+          }
+        }
+      
+        @keyframes slideInFromRight {
+          from {
+            transform: translateX(100%);
+            opacity: 0;
+          }
+          to {
+            transform: translateX(0);
+            opacity: 1;
+          }
+        }
+      
+        #card1 {
+          animation: slideInFromLeft 1s forwards;
+        }
+      
+        #card2 {
+          animation: slideInFromBottom 1s forwards;
+        }
+      
+        #card3 {
+          animation: slideInFromTop 1s forwards;
+        }
+      
+        #card4 {
+          animation: slideInFromRight 1s forwards;
+        }
+
+        /* Navbar Styles */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1.3rem 10%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, .1);
+            backdrop-filter: blur(50px);
+            z-index: -1;
+        }
+
+        .logo {
+            font-size: 2rem;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .navbar {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar a {
+            font-size: 1.15rem;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            margin-left: 2.5rem;
+        }
+
+        .navbar a:hover {
+            color: #00abf0;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .4), transparent);
+            transition: .5s;
+        }
+      </style>
+</head>
+<body>
+    <div class="auth-card" id="loginCard">
+        <h3 class="text-center mb-4">Login</h3>
+        
+        <div class="role-buttons">
+            <button class="role-btn" onclick="selectRole(this, 'Faculty')">
+                <i class="fas fa-user"></i><br>Faculty
+            </button>
+            <button class="role-btn" onclick="selectRole(this, 'HOD')">
+                <i class="fas fa-user-tie"></i><br>HOD
+            </button>
+            <button class="role-btn" onclick="selectRole(this, 'Admin')">
+                <i class="fas fa-user-shield"></i><br>Admin
+            </button>
+        </div>
+
+        <form id="loginForm">
+            <input type="email" class="form-control" placeholder="Email" required>
+            <select class="form-control" required>
+                <option value="">Department</option>
+                <option value="CSE">CSE</option>
+                <option value="DS">DS</option>
+                <option value="AIML">AIML</option>
+                <option value="IT">IT</option>
+            </select>
+            <input type="password" class="form-control" placeholder="Password" required>
+            <button type="submit" class="btn btn-primary w-100 mb-3">Login</button>
+        </form>
+
+        <div class="divider">
+            <span>OR</span>
+        </div>
+
+        <!-- Update Google Sign-In button configuration -->
+        <div id="g_id_onload"
+             data-client_id="940020976752-ee8dupcuupmhepgsu70dcvsou7vs3rpi.apps.googleusercontent.com"
+             data-callback="handleGoogleSignIn"
+             data-auto_prompt="false"
+             data-auto_select="true">
+        </div>
+        <div class="g_id_signin"
+             data-type="standard"
+             data-size="large"
+             data-theme="outline"
+             data-text="sign_in_with"
+             data-shape="rectangular"
+             data-width="330">
+        </div>
+        <br>
+
+        <p class="text-center mb-0">
+            Don't have an account? 
+            <a href="#" onclick="showSignup()">Sign up</a>
+        </p>
+    </div>
+
+    <div class="auth-card" id="signupCard" style="display: none;">
+        <h3 class="text-center mb-4">Sign Up</h3>
+        
+        <div class="role-buttons">
+            <button class="role-btn" onclick="selectRole(this, 'Faculty')">
+                <i class="fas fa-user"></i><br>Faculty
+            </button>
+            <button class="role-btn" onclick="selectRole(this, 'HOD')">
+                <i class="fas fa-user-tie"></i><br>HOD
+            </button>
+            <button class="role-btn" onclick="selectRole(this, 'Admin')">
+                <i class="fas fa-user-shield"></i><br>Admin
+            </button>
+        </div>
+
+        <form id="signupForm">
+            <input type="text" class="form-control" placeholder="Full Name" required>
+            <input type="email" class="form-control" placeholder="Email" required>
+            <select class="form-control" required>
+                <option value="">Select Department</option>
+                <option value="CSE">CSE</option>
+                <option value="DS">DS</option>
+                <option value="AIML">AIML</option>
+                <option value="IT">IT</option>
+            </select>
+            <input type="tel" class="form-control" placeholder="Phone Number" required>
+            <input type="password" class="form-control" placeholder="Password" 
+                   id="passwordInput" oninput="checkPassword()" required>
+            
+            <div class="password-requirements">
+                <div class="requirement" id="lengthReq">At least 6 characters</div>
+                <div class="requirement" id="upperReq">At least 1 uppercase letter</div>
+                <div class="requirement" id="numberReq">At least 1 number</div>
+            </div>
+
+            <div class="password-strength" id="passwordStrength">
+                Strong password!
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 mb-3" id="signupBtn" disabled>
+                Sign Up
+            </button>
+        </form>
+
+        <p class="text-center mb-0">
+            Already have an account? 
+            <a href="#" onclick="showLogin()">Login</a>
+        </p>
+    </div>
+
+    <div class="notification" id="loginNotification"></div>
+
+    <script>
+        function selectRole(btn, role) {
+            const buttons = btn.parentElement.getElementsByClassName('role-btn');
+            Array.from(buttons).forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+        function showSignup() {
+            document.getElementById('loginCard').style.display = 'none';
+            document.getElementById('signupCard').style.display = 'block';
+        }
+
+        function showLogin() {
+            document.getElementById('loginCard').style.display = 'block';
+            document.getElementById('signupCard').style.display = 'none';
+        }
+
+        function checkPassword() {
+            const password = document.getElementById('passwordInput').value;
+            const lengthReq = document.getElementById('lengthReq');
+            const upperReq = document.getElementById('upperReq');
+            const numberReq = document.getElementById('numberReq');
+            const strength = document.getElementById('passwordStrength');
+            const signupBtn = document.getElementById('signupBtn');
+
+            const hasLength = password.length >= 6;
+            const hasUpper = /[A-Z]/.test(password);
+            const hasNumber = /[0-9]/.test(password);
+
+            lengthReq.classList.toggle('met', hasLength);
+            upperReq.classList.toggle('met', hasUpper);
+            numberReq.classList.toggle('met', hasNumber);
+
+            if (hasLength && hasUpper && hasNumber) {
+                strength.style.display = 'block';
+                signupBtn.disabled = false;
+            } else {
+                strength.style.display = 'none';
+                signupBtn.disabled = true;
+            }
+        }
+
+        function handleGoogleSignIn(response) {
+            if (response.credential) {
+                // Get user info from the credential
+                fetch('http://localhost:4009/auth/google', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        token: response.credential
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        localStorage.setItem('userName', data.name);
+                        localStorage.setItem('userEmail', data.email);
+                        localStorage.setItem('userRole', data.role);
+                        localStorage.setItem('userDepartment', data.department);
+                        localStorage.setItem('profilePhoto', data.profilePhoto);
+
+                        // Redirect based on role
+                        if (data.role === 'Faculty') {
+                            window.location.href = '/faculty_dashboard';
+                        } else if (data.role === 'HOD') {
+                            window.location.href = '/hod_dashboard';
+                        } else if (data.role === 'Admin') {
+                            window.location.href = '/admin_dashboard';
+                        }
+                    } else {
+                        alert('Login failed: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Login failed. Please try again.');
+                });
+            }
+        }
+
+        document.getElementById('signupForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = {
+                name: e.target.querySelector('[placeholder="Full Name"]').value,
+                email: e.target.querySelector('[placeholder="Email"]').value,
+                password: e.target.querySelector('#passwordInput').value,
+                phoneNumber: e.target.querySelector('[placeholder="Phone Number"]').value,
+                department: e.target.querySelector('select').value,
+                role: document.querySelector('#signupCard .role-btn.active')?.getAttribute('onclick')?.match(/'([^']+)'/)?.[1] || 'Faculty'
+            };
+
+            try {
+                const response = await fetch('http://localhost:4009/signup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+                alert(data.message);
+                
+                if (data.success && data.shouldRedirect) {
+                    showLogin(); // Redirect to login form
+                }
+            } catch (error) {
+                alert('Signup failed: ' + error.message);
+            }
+        });
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = {
+                email: e.target.querySelector('[type="email"]').value,
+                password: e.target.querySelector('[type="password"]').value,
+                department: e.target.querySelector('select').value,
+                role: document.querySelector('#loginCard .role-btn.active')?.getAttribute('onclick')?.match(/'([^']+)'/)?.[1]
+            };
+
+            try {
+                const response = await fetch('http://localhost:4009/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Show success notification
+                    const notification = document.getElementById('loginNotification');
+                    notification.textContent = `Login successful as ${data.role}`;
+                    notification.classList.add('success');
+                    
+                    // Store user data
+                    localStorage.setItem('userName', data.name);
+                    localStorage.setItem('userEmail', data.email);
+                    localStorage.setItem('userRole', data.role);
+                    localStorage.setItem('userDepartment', data.department);
+                    
+                    // Redirect after notification with proper role-based routing
+                    setTimeout(() => {
+                        window.location.href = data.role === 'Admin' ? '/admin_dashboard' : 
+                                             data.role === 'HOD' ? '/hod_dashboard' : 
+                                             '/faculty_dashboard';
+                    }, 1500);
+                } else {
+                    alert(data.message);
+                }
+            } catch (error) {
+                alert('Login failed: ' + error.message);
+            }
+        });
+    </script>
+</body>
+</html>
