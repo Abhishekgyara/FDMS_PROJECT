@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Dashboard</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: "Poppins", sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #1e90ee,#48daea);
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1.3rem 10%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, .1);
+            backdrop-filter: blur(50px);
+            z-index: -1;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .4), transparent);
+            transition: .5s;
+        }
+
+        .header:hover::after {
+            left: 100%;
+        }
+
+        .logo {
+            font-size: 2rem;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .navbar a {
+            font-size: 1.15rem;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            margin-left: 2.5rem;
+        }
+
+        .navbar a:hover {
+            color: #00abf0;
+        }
+
+        #theme-toggle {
+            color: #fff;
+            font-size: 2rem;
+            cursor: pointer;
+            margin-left: 2.5rem;
+        }
+
+        .main-content {
+            margin-top: 100px;
+            padding: 20px;
+            color: #fff;
+        }
+
+        body.dark-mode {
+            background: linear-gradient(to right, #0b0b0c, #0c0d0e);
+        }
+
+        .user-info {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 10%;
+            backdrop-filter: blur(10px);
+        }
+
+        .profile-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .profile-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .dashboard-container {
+            display: flex;
+            gap: 2rem;
+            padding: 20px 10%;
+            margin-top: 40px; /* Reduced from 100px */
+        }
+
+        .profile-card {
+            flex: 1;
+            max-width: 400px;
+        }
+
+        .details-card {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem; /* Reduced padding */
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            text-align: center;
+            transform: translateX(100%);
+            opacity: 0;
+            animation: slideIn 0.5s forwards;
+            max-height: 300px; /* Added max-height */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        @keyframes slideIn {
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .details-card h2 {
+            margin: 10px 0; /* Reduced margins */
+        }
+
+        .details-card p {
+            margin: 5px 0 15px 0; /* Adjusted margins */
+        }
+
+        .details-card i {
+            font-size: 3rem; /* Reduced from 4rem */
+            margin-bottom: 0.5rem; /* Reduced margin */
+        }
+
+        .fill-details-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            margin-top: 10px; /* Reduced from 20px */
+        }
+
+        .fill-details-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="#" class="logo">TATHYA</a>
+        <nav class="navbar">
+            <a href="/faculty_dashboard">Dashboard</a>
+            <a href="/research">Research</a>
+            <a href="/publications">Publications</a>
+            <a href="/faculty_profile" id="profileLink">My Profile</a>
+            <i class='bx bx-moon' id="theme-toggle"></i>
+        </nav>
+    </header>
+
+    <div class="main-content">
+        <div class="dashboard-container">
+            <div class="profile-card" id="profileCard">
+                <h3>Profile Status</h3>
+                <p id="profileStatus">Loading...</p>
+                <button id="profileButton" onclick="handleProfileAction()">Loading...</button>
+            </div>
+
+            <div class="profile-card">
+                <div class="user-info">
+                    <div class="profile-section">
+                        <img src="default-profile.png" alt="Profile" class="profile-image" id="userPhoto">
+                        <div>
+                            <h2 id="userName">Loading...</h2>
+                            <p id="userEmail">Loading...</p>
+                            <p id="userDepartment">Loading...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="details-card">
+                <i class='bx bx-edit-alt'></i>
+                <h2>Complete Your Profile</h2>
+                <p>Please fill in your professional details and achievements</p>
+                <button class="fill-details-btn" onclick="window.location.href='/form'">
+                    Fill Details
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Theme Toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+
+        if (localStorage.getItem('theme') === 'dark') {
+            body.classList.add('dark-mode');
+            themeToggle.classList.add('bx-sun');
+            themeToggle.classList.remove('bx-moon');
+        }
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            themeToggle.classList.toggle('bx-sun');
+            themeToggle.classList.toggle('bx-moon');
+            localStorage.setItem('theme', body.classList.contains('dark-mode') ? 'dark' : 'light');
+        });
+
+        // Load user info
+        window.onload = function() {
+            const userName = localStorage.getItem('userName');
+            const userEmail = localStorage.getItem('userEmail');
+            const userDepartment = localStorage.getItem('userDepartment');
+            const profilePhoto = localStorage.getItem('profilePhoto');
+
+            document.getElementById('userName').textContent = userName || 'Faculty Name';
+            document.getElementById('userEmail').textContent = userEmail || 'faculty@example.com';
+            document.getElementById('userDepartment').textContent = userDepartment || 'Department';
+            
+            if (profilePhoto && profilePhoto !== 'default-profile.png') {
+                document.getElementById('userPhoto').src = profilePhoto;
+            }
+        };
+
+        // Add this to your existing JavaScript
+        async function checkProfileStatus() {
+            const userEmail = localStorage.getItem('userEmail');
+            try {
+                const response = await fetch(`http://localhost:4009/api/faculty/details/check?email=${userEmail}`);
+                const data = await response.json();
+                
+                const statusText = document.getElementById('profileStatus');
+                const profileButton = document.getElementById('profileButton');
+                
+                if (data.exists) {
+                    statusText.textContent = 'Profile Complete';
+                    profileButton.textContent = 'Edit Profile';
+                    profileButton.onclick = () => window.location.href = '/form?mode=edit';
+                } else {
+                    statusText.textContent = 'Profile Incomplete';
+                    profileButton.textContent = 'Complete Profile';
+                    profileButton.onclick = () => window.location.href = '/form';
+                }
+            } catch (error) {
+                console.error('Error checking profile:', error);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', checkProfileStatus);
+    </script>
+</body>
+</html>
