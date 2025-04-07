@@ -8,7 +8,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
     <style>
         body {
-            background: linear-gradient(45deg,#1e90ee,#48daea);
+            background: linear-gradient(45deg,#cccdd3);
             height: 100vh;
             display: flex;
             align-items: center;
@@ -19,7 +19,7 @@
             width: 100%;
             max-width: 450px;
             border-radius: 15px;
-            box-shadow: 0 4px 6px rgba(16, 142, 237, 0.1);
+            box-shadow: 0 4px 6px #007bff;
             padding: 2rem;
             text-align: center;
         }
@@ -33,7 +33,7 @@
             width: 100%;
             padding: 0.8rem;
             border-radius: 8px;
-            background: linear-gradient(to right, #4263eb, #47edff);
+            background: linear-gradient(to right, #8d99dd);
             border: none;
             color: rgb(255, 255, 255);
             font-weight: 500;
@@ -92,7 +92,7 @@
         opacity: 0;
         animation: fillBlock 0.5s forwards, blinkColor 1s infinite;
     }
-    @keyframes fillBlock {
+    /* @keyframes fillBlock {
         from {
             transform: scaleY(0);
             opacity: 0;
@@ -101,9 +101,9 @@
             transform: scaleY(1);
             opacity: 1;
         }
-    }
+    } */
 
-    @keyframes blinkColor {
+    /* @keyframes blinkColor {
         0% {
             color: red;
         }
@@ -118,7 +118,7 @@
         }
         100% {
             color: red;
-        }
+        } */
     }
     </style>
 </head>
@@ -126,7 +126,7 @@
 
 <div class="card">
     <div class="welcome-text" id="welcomeText">
-        <span>T</span><span>A</span><span>T</span><span>H</span><span>Y</span><span>A
+        <h2 style="font-family: cinzel;">TATHYA</h2>
     </div>
     <!-- Login Form -->
     <div id="loginForm">
@@ -292,7 +292,7 @@
                 } else if (data.role === 'HOD') {
                     window.location.href = '/dashboard2';
                 } else if (data.role === 'Faculty') {
-                    window.location.href = '/dashboard3';
+                    window.location.href = '/practise';
                 }
             }, 1000);
         }
