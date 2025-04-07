@@ -6,19 +6,27 @@
   <title>Dashboard</title>
   <link rel="stylesheet" href="dash_styles.css">
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+  <script src="theme-toggle.js" defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap" rel="stylesheet">
   <style>
     body {
       position: relative;
+      font-family: "Poppins", sans-serif;
       overflow: hidden;
-      background: linear-gradient(to right, #6a11cb, #2575fc);
+      background: linear-gradient(to right, #cdd5db);
     }
 
     header {
       margin-bottom: 80px;
+  
     }
+
+    
 
     /* Main Card */
     .main-card {
+      
       display: flex;
       justify-content: space-between;
       /* align-items: center; */
@@ -36,7 +44,7 @@
     }
 
     .main-card h2 {
-      color: #6a11cb;
+      color: #1763d5;
     }
 
     .main-card img {
@@ -75,7 +83,7 @@
     }
 
     .department-card h3 {
-      color: #6a11cb;
+      color: #e0e1e2;
       margin-bottom: 10px;
     }
 
@@ -91,7 +99,7 @@
     }
 
     .view-more:hover {
-      color: #6a11cb;
+      color: #10a9e0;
     }
 
     .stars {
@@ -165,7 +173,7 @@
     }
 
     .department-card h3 {
-      color: #6a11cb;
+      color: #26d5f0;
       margin-bottom: 10px;
     }
 
@@ -201,7 +209,7 @@
     }
 
     body.light-mode {
-      background: linear-gradient(to right, #6a11cb, #2575fc);
+      background: linear-gradient(to right, #1e90ee,#48daea);
     }
 
     body.dark-mode {
@@ -214,22 +222,29 @@
     #p{
       font-size: larger;
     }
+    h3{
+      style:"background-color: #48daea;"
+    }
   </style>
 </head>
 <body>
   <header class="header">
-    <a href="#" class="logo">Faculty Data Management System</a>
+    <a href="#" class="logo">TATHYA</a>
     <nav class="navbar">
       <a href="/dashboard">Home</a>
-      <a href="about.html">About</a>
+      <a href="/about">About</a>
       <a href="/profiles">Profiles</a>
       <a href="/contact">Contact-Us</a>
-      <a href="settings.html">Awards</a>
+      <a href="/awards">Awards</a>
+      <!-- Placeholders for role and email -->
       <i class='bx bx-moon theme-toggle' id="theme-toggle"></i>
     </nav>
   </header>
+  
 
-  <div class="stars">
+
+
+  <!-- <div class="stars">
     <span style="left: 10%; animation-delay: 0s;"></span>
     <span style="left: 20%; animation-delay: 1s;"></span>
     <span style="left: 30%; animation-delay: 2s;"></span>
@@ -240,7 +255,7 @@
     <span style="left: 80%; animation-delay: 7s;"></span>
     <span style="left: 90%; animation-delay: 8s;"></span>
     <span style="left: 95%; animation-delay: 9s;"></span>
-  </div>
+  </div> -->
 
   <!-- Main Card -->
   <div class="main-card">
@@ -250,18 +265,27 @@
     </div>
     <img src="kmit_image.jpg" alt="Faculty Image">
   </div>
+  <!-- ...existing code... -->
+</div> <!-- End of main-card -->
 
-  <div class="departments">
+<!-- View Departments Button -->
+<div style="text-align: center; margin-top: 20px;">
+  <button id="viewDepartmentsBtn" style="padding: 10px 20px; font-size: 16px; cursor: pointer;color:#0e48db;border-radius: 20px;">View Departments</button>
+</div>
+
+<!-- Departments Section -->
+<div id="departmentsSection" style="display: none;">
+  <div class="departments" >
     <a href="/ds_faculty" class="department-link" target="_blank">
-      <div class="department-card">
-        <h3>CSD Department</h3>
+      <div class="department-card" id="card1" >
+        <h3 >CSD Department</h3>
         <p>Computer Science & Design focuses on UI/UX, AI, and Software Development.</p>
         <span class="view-more">&#10132;</span>
       </div>
     </a>
 
     <a href="/aiml_profiles" class="department-link" target="_blank">
-      <div class="department-card">
+      <div class="department-card" id="card2">
         <h3>AIML Department</h3>
         <p>Artificial Intelligence & Machine Learning pioneers next-gen automation.</p>
         <span class="view-more">&#10132;</span>
@@ -269,7 +293,7 @@
     </a>
 
     <a href="/it_faculty" class="department-link" target="_blank">
-      <div class="department-card">
+      <div class="department-card" id="card3">
         <h3>IT Department</h3>
         <p>Information Technology fosters expertise in cloud computing & networks.</p>
         <span class="view-more">&#10132;</span>
@@ -277,43 +301,199 @@
     </a>
 
     <a href="/cse_profiles" class="department-link" target="_blank">
-      <div class="department-card">
+      <div class="department-card" id="card4">
         <h3>CSE Department</h3>
         <p>Computer Science Engineering drives innovation in software and systems.</p>
         <span class="view-more">&#10132;</span>
       </div>
     </a>
   </div>
-  <script>
-    const themeToggle = document.getElementById('theme-toggle');
-    const body = document.body;
+</div>
 
-    // Check for saved theme in localStorage
-    if (localStorage.getItem('theme') === 'dark') {
-      body.classList.add('dark-mode');
-      body.classList.remove('light-mode');
-      themeToggle.classList.add('bx-sun');
-      themeToggle.classList.remove('bx-moon');
-    } else {
-      body.classList.add('light-mode');
-      body.classList.remove('dark-mode');
-      themeToggle.classList.add('bx-moon');
-      themeToggle.classList.remove('bx-sun');
+<style>
+  .departments {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 40px;
+    max-width: 80%;
+    margin: auto;
+  }
+
+  .department-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    position: relative;
+    transition: transform 0.3s ease-in-out;
+    opacity: 0;
+  }
+
+  .department-card h3 {
+    color: #11cbcb;
+    margin-bottom: 10px;
+  }
+
+  .department-card:hover {
+    transform: translateY(-5px);
+  }
+
+  .view-more {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    font-size: 20px;
+    color: #2575fc;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .view-more:hover {
+    color: #6a11cb;
+  }
+
+  .department-card h3 {
+    color: #fff;
+    background-color: #4578e6;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+  }
+
+  @keyframes slideInFromLeft {
+    from {
+      transform: translateX(-100%);
+      opacity: 0;
     }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
 
+  @keyframes slideInFromBottom {
+    from {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideInFromTop {
+    from {
+      transform: translateY(-100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideInFromRight {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  #card1 {
+    animation: slideInFromLeft 1s forwards;
+  }
+
+  #card2 {
+    animation: slideInFromBottom 1s forwards;
+  }
+
+  #card3 {
+    animation: slideInFromTop 1s forwards;
+  }
+
+  #card4 {
+    animation: slideInFromRight 1s forwards;
+  }
+</style>
+
+<script>
+  
+  // Theme Toggle Script
+const themeToggle = document.getElementById('theme-toggle');
+const body = document.body;
+
+// Apply the saved theme on page load
+if (localStorage.getItem('theme') === 'dark') {
+    body.classList.add('dark-mode');
+    body.classList.remove('light-mode');
+    if (themeToggle) {
+        themeToggle.classList.add('bx-sun');
+        themeToggle.classList.remove('bx-moon');
+    }
+} else {
+    body.classList.add('light-mode');
+    body.classList.remove('dark-mode');
+    if (themeToggle) {
+        themeToggle.classList.add('bx-moon');
+        themeToggle.classList.remove('bx-sun');
+    }
+}
+
+// Add event listener for theme toggle
+if (themeToggle) {
     themeToggle.addEventListener('click', () => {
-      body.classList.toggle('dark-mode');
-      body.classList.toggle('light-mode');
-      themeToggle.classList.toggle('bx-sun');
-      themeToggle.classList.toggle('bx-moon');
+        body.classList.toggle('dark-mode');
+        body.classList.toggle('light-mode');
+        themeToggle.classList.toggle('bx-sun');
+        themeToggle.classList.toggle('bx-moon');
 
-      // Save the current theme in localStorage
-      if (body.classList.contains('dark-mode')) {
-        localStorage.setItem('theme', 'dark');
-      } else {
-        localStorage.setItem('theme', 'light');
-      }
+        // Save the current theme in localStorage
+        if (body.classList.contains('dark-mode')) {
+            localStorage.setItem('theme', 'dark');
+        } else {
+            localStorage.setItem('theme', 'light');
+        }
     });
-  </script>
+}
+
+  function openEditModal() {
+    document.getElementById("editModal").style.display = "block";
+  }
+
+  function saveMarquee() {
+    let newText = document.getElementById("editText").value;
+    let newLink = document.getElementById("editLink").value;
+
+    if (newText.trim() !== "" && newLink.trim() !== "") {
+      document.getElementById("marquee-text").innerHTML = `<a href="${newLink}" target="_blank">${newText}</a>`;
+      document.getElementById("editModal").style.display = "none";
+    }
+  }
+
+  // Toggle Departments Section
+  const viewDepartmentsBtn = document.getElementById('viewDepartmentsBtn');
+  const departmentsSection = document.getElementById('departmentsSection');
+
+  viewDepartmentsBtn.addEventListener('click', () => {
+    if (departmentsSection.style.display === 'none') {
+      departmentsSection.style.display = 'block';
+      viewDepartmentsBtn.textContent = 'Hide Departments';
+    } else {
+      departmentsSection.style.display = 'none';
+      viewDepartmentsBtn.textContent = 'View Departments';
+    }
+  });
+</script>
 </body>
+</html>
+
+ 
+ </body>
 </html>
