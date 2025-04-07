@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Reports</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to right, #1e90ee,#48daea);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .faculty-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .faculty-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #2575fc;
+        }
+
+        .view-more-btn, .download-btn {
+            background: #2575fc;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .view-more-btn:hover, .download-btn:hover {
+            background: #1957b8;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            position: relative;
+            background: white;
+            margin: 50px auto;
+            padding: 20px;
+            width: 80%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border-radius: 10px;
+        }
+
+        .close-btn {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .label {
+            font-weight: bold;
+            color: #666;
+        }
+
+        .value {
+            color: #333;
+        }
+
+        .faculty-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .faculty-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .faculty-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .faculty-basic-info {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .faculty-basic-info h3 {
+            color: #2575fc;
+            margin: 10px 0;
+        }
+
+        .view-more-btn {
+            background: #2575fc;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .view-more-btn:hover {
+            background: #1957b8;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            width: 80%;
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 20px;
+            border-radius: 10px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .close-btn {
+            float: right;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .detail-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .detail-section h4 {
+            color: #2575fc;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #2575fc;
+            padding-bottom: 5px;
+        }
+
+        .download-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .download-btn:hover {
+            background: #218838;
+        }
+
+        .search-bar {
+            margin: 20px;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .search-bar input {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 300px;
+        }
+
+        .filter-section {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 10px 0;
+        }
+
+        .filter-btn {
+            padding: 5px 15px;
+            border: 1px solid #2575fc;
+            border-radius: 20px;
+            background: white;
+            color: #2575fc;
+            cursor: pointer;
+        }
+
+        .filter-btn.active {
+            background: #2575fc;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <button class="download-btn" onclick="downloadReport()">Download Report</button>
+    
+    <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="Search by name or department..." onkeyup="filterFaculty()">
+    </div>
+
+    <div class="filter-section">
+        <button class="filter-btn active" onclick="filterByDepartment('all')">All</button>
+        <button class="filter-btn" onclick="filterByDepartment('CSE')">CSE</button>
+        <button class="filter-btn" onclick="filterByDepartment('DS')">DS</button>
+        <button class="filter-btn" onclick="filterByDepartment('AIML')">AIML</button>
+        <button class="filter-btn" onclick="filterByDepartment('IT')">IT</button>
+    </div>
+
+    <div class="faculty-grid" id="facultyGrid">
+        <!-- Faculty cards will be dynamically added here -->
+    </div>
+
+    <div class="modal" id="detailsModal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <div id="facultyDetails"></div>
+        </div>
+    </div>
+
+    <script>
+        let allFacultyData = [];
+        let currentFaculty = null;
+
+        async function loadFacultyData() {
+            try {
+                const response = await fetch('http://localhost:4009/api/faculty/all-details');
+                allFacultyData = await response.json();
+                displayFacultyCards();
+            } catch (error) {
+                console.error('Error loading faculty data:', error);
+            }
+        }
+
+        function displayFacultyCards() {
+            const grid = document.getElementById('facultyGrid');
+            grid.innerHTML = '';
+
+            allFacultyData.forEach(faculty => {
+                const card = document.createElement('div');
+                card.className = 'faculty-card';
+                card.innerHTML = `
+                    <div class="faculty-basic-info">
+                        <h3>${faculty.personal.name}</h3>
+                        <p>${faculty.personal.email}</p>
+                        <p>Department: ${faculty.personal.department || 'N/A'}</p>
+                        <button class="view-more-btn" onclick="showDetails('${faculty.personal.email}')">
+                            View Details
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function showDetails(email) {
+            const faculty = allFacultyData.find(f => f.personal.email === email);
+            if (!faculty) return;
+
+            currentFaculty = faculty;
+            const modal = document.getElementById('detailsModal');
+            const detailsDiv = document.getElementById('facultyDetails');
+
+            detailsDiv.innerHTML = `
+                <h2>Faculty Profile - ${faculty.personal.name}</h2>
+                
+                <div class="detail-section">
+                    <h4>Personal Information</h4>
+                    <p>Name: ${faculty.personal.name}</p>
+                    <p>Email: ${faculty.personal.email}</p>
+                    <p>Phone: ${faculty.personal.phone}</p>
+                    <p>Gender: ${faculty.personal.gender}</p>
+                    <p>Age: ${faculty.personal.age}</p>
+                </div>
+
+                <div class="detail-section">
+                    <h4>Educational Qualifications</h4>
+                    ${createEducationSection(faculty.education)}
+                </div>
+
+                <div class="detail-section">
+                    <h4>Professional Experience</h4>
+                    ${createExperienceSection(faculty.experience)}
+                </div>
+            `;
+
+            modal.style.display = 'block';
+        }
+
+        function createEducationSection(education) {
+            return `
+                <div class="education-details">
+                    ${Object.entries(education).map(([level, details]) => `
+                        <div class="edu-level">
+                            <h5>${level.toUpperCase()}</h5>
+                            <p>Institution: ${details.name || 'N/A'}</p>
+                            <p>Location: ${details.location || 'N/A'}</p>
+                            <p>Duration: ${details.duration || 'N/A'}</p>
+                            ${level === 'phd' ? `
+                                <p>Status: ${details.status || 'N/A'}</p>
+                                <p>Current Year: ${details.currentYear || 'N/A'}</p>
+                            ` : ''}
+                            <p>Grade: ${details.grade || 'N/A'} (${details.gradeType || 'N/A'})</p>
+                        </div>
+                    `).join('<hr>')}
+                </div>
+            `;
+        }
+
+        function createExperienceSection(experience) {
+            if (!experience || experience.length === 0) {
+                return '<p>No experience data available</p>';
+            }
+
+            return experience.map(exp => `
+                <div class="exp-item">
+                    <p>Organization: ${exp.organization}</p>
+                    <p>Designation: ${exp.designation}</p>
+                    <p>Location: ${exp.state}, ${exp.city}</p>
+                    <p>Duration: ${exp.duration}</p>
+                </div>
+            `).join('<hr>');
+        }
+
+        function closeModal() {
+            document.getElementById('detailsModal').style.display = 'none';
+        }
+
+        function filterFaculty() {
+            const searchText = document.getElementById('searchInput').value.toLowerCase();
+            const filteredFaculty = allFacultyData.filter(faculty => 
+                faculty.personal.name.toLowerCase().includes(searchText) ||
+                faculty.personal.department?.toLowerCase().includes(searchText)
+            );
+            displayFilteredFaculty(filteredFaculty);
+        }
+
+        function filterByDepartment(dept) {
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            const filteredFaculty = dept === 'all' 
+                ? allFacultyData 
+                : allFacultyData.filter(faculty => faculty.personal.department === dept);
+            displayFilteredFaculty(filteredFaculty);
+        }
+
+        function displayFilteredFaculty(facultyList) {
+            const grid = document.getElementById('facultyGrid');
+            grid.innerHTML = '';
+            facultyList.forEach(faculty => {
+                const card = document.createElement('div');
+                card.className = 'faculty-card';
+                card.innerHTML = `
+                    <div class="faculty-basic-info">
+                        <h3>${faculty.personal.name}</h3>
+                        <p>${faculty.personal.email}</p>
+                        <p>Department: ${faculty.personal.department || 'N/A'}</p>
+                        <button class="view-more-btn" onclick="showDetails('${faculty.personal.email}')">
+                            View Details
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function downloadReport() {
+            if (!currentFaculty) return;
+
+            const faculty = currentFaculty;
+            const content = `
+Faculty Report
+
+Personal Information
+-------------------
+Name: ${faculty.personal.name}
+Email: ${faculty.personal.email}
+Phone: ${faculty.personal.phone}
+Gender: ${faculty.personal.gender}
+Age: ${faculty.personal.age}
+
+Educational Information
+---------------------
+${Object.entries(faculty.education).map(([level, details]) => `
+${level.toUpperCase()}
+Institution: ${details.name || 'N/A'}
+Location: ${details.location || 'N/A'}
+Duration: ${details.duration || 'N/A'}
+Grade: ${details.grade || 'N/A'} (${details.gradeType || 'N/A'})
+`).join('\n')}
+
+Professional Experience
+---------------------
+${faculty.experience ? faculty.experience.map(exp => `
+Organization: ${exp.organization}
+Designation: ${exp.designation}
+Location: ${exp.state}, ${exp.city}
+Duration: ${exp.duration}
+`).join('\n') : 'No experience data available'}
+            `;
+
+            const blob = new Blob([content], { type: 'application/msword' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${faculty.personal.name}_report.doc`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        }
+
+        document.addEventListener('DOMContentLoaded', loadFacultyData);
+    </script>
+</body>
+</html>
