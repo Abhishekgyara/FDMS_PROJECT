@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Faculty Profiles</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="dash_styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <style>
+    /* Scrollable Table Container */
+    .table-container {
+            width: 100%;
+            overflow-x: auto; /* Enables horizontal scrolling */
+            border: 1px solid #ddd;
+        }
+
+        /* Table Styling */
+        table {
+            width: 100%;
+            min-width: 1000px; /* Ensures the table does not squeeze */
+            border-collapse: collapse;
+        }
+    body { background: linear-gradient(120deg, #1e90ee,#48daea); padding: 20px; }
+    h2 { color: white; font-weight: 600; }
+    table { background-color: white; }
+    th { background-color: #0db5f2; color: white; }
+    a { text-decoration: none; }
+    .download-excel-btn {
+      position: absolute;
+      top: 80px;
+      right: 20px;
+    }
+  </style>
+</head>
+<style>
+  #addFacultyForm {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* Four equal columns */
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  max-width: 800px;
+  margin: auto;
+}
+
+/* Input Styling */
+#addFacultyForm input {
+  padding: 8px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+  width: 100%;
+  position: relative;
+  transition: all 0.3s ease-in-out;
+  font-size: 14px;
+  
+}
+
+/* Gradient Animation on Focus */
+#addFacultyForm input:focus {
+  animation: borderAnimation 1.5s infinite linear;
+}
+
+/* Animated Gradient Border */
+@keyframes borderAnimation {
+  0% {
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+  }
+  25% {
+    box-shadow: 0 0 5px 4px rgba(0, 123, 255, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 10px 6px rgba(0, 123, 255, 0.6);
+  }
+  75% {
+    box-shadow: 0 0 5px 4px rgba(0, 123, 255, 0.4);
+  }
+  100% {
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+  }
+}
+
+/* Button Styling */
+#addFacultyForm .btn-success {
+  grid-column: span 4; /* Button spans all columns */
+  padding: 8px;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #206ff0;
+  color: white;
+  font-size: 14px;
+  border: none;
+  transition: background 0.3s ease-in-out;
+}
+
+#addFacultyForm .btn-success:hover {
+  background-color: #0e67e2;
+}
+
+.bx-filter {
+      color: #ff6347; /* Tomato color */
+      background-color: #f0f0f0; /* Light grey background */
+    padding: 5px;
+    border-radius: 5px;
+    }
+    @keyframes searchIconAnimation {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.2);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .bx-search:hover {
+      animation: searchIconAnimation 0.5s ease-in-out;
+    }
+    label {
+  display: inline-block;
+  margin-bottom: 2px; /* Reduce bottom margin */
+}
+
+select {
+  margin-top: -5px; /* Reduce space above dropdown */
+  display: inline-block;
+}
+
+</style>
+<body>
+  <header class="header">
+    <a href="#" class="logo" >TATHYA</a>
+    <input type="checkbox" id="check">
+    <label for="check" class="icons">
+      <i class="bx bx-menu" id="menu-icon"></i>
+      <i class="bx bx-x" id="close-icon"></i>
+    </label>
+    <nav class="navbar">
+      <a href="/dashboard" style="--i:0">Home</a>
+      <a href="/about" style="--i:1">About</a>
+      <a href="/profiles" style="--i:2">Profiles</a>
+      <a href="/contact" style="--i:3">Contact-us</Contact-us></a>
+      <a href="/awards" style="--i:4">Awards</a>
+    </nav>
+  </header>
+  <div class="container mt-5">
+    <h2 class="text-center">All departments faculty</h2>
+    <form id="addFacultyForm" class="mb-3">
+      <input type="text" id="name" placeholder="Name" required>
+      <input type="text" id="designation" placeholder="Designation" required>
+      <input type="text" id="qualification" placeholder="Qualification" required>
+      <input type="text" id="department" placeholder="Department" required>
+      <input type="date" id="dob" placeholder="Date of Joining" required>
+<input type="email" id="email" placeholder="Email">
+
+
+
+
+  <select id="gender">
+    <option value="">Gender</option>
+    <option value="Male">Male</option>
+    <option value="Female">Female</option>
+    <option value="Other">Other</option>
+  </select>
+  <input type="number" id="experience" placeholder="Experience">
+  <input type="number" id="mobile" placeholder="Mobile No" minlength="10" maxlength="10">
+
+  
+
+      <button type="submit" class="btn btn-success">Add Faculty</button>
+
+    </form>
+  
+    <!-- Add search bar and filter dropdown here -->
+    <div class="input-group mb-3">
+      <span class="input-group-text" id="basic-addon1"><i class="bx bx-search"></i></span>
+      <input type="text" class="form-control" id="searchInput" placeholder="Search by name...">
+      <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bx bx-filter"></i></button>
+      <ul class="dropdown-menu dropdown-menu-end">
+        <li><input type="text" class="form-control" id="searchDesignation" placeholder="Search by Designation"></li>
+        <li><input type="text" class="form-control" id="searchDepartment" placeholder="Search by Department"></li>
+        <li><input type="text" class="form-control" id="searchQualification" placeholder="Search by Qualification"></li>
+        <li><button id="clearFilters" class="btn btn-secondary w-100 mt-2">Clear Filters</button></li>
+
+      </ul>
+      <!-- Container to display active filters inside the search bar -->
+      <div id="activeFilters" class="input-group-text" style="background-color: #0d5eea; color: #ff6347; display: flex; gap: 5px;"></div>
+    </div>
+  
+    <!-- Message for no matching content -->
+    <div id="noContentMessage" class="text-center text-danger" style="display: none; font-size: larger; color: #ff6347;">No such content</div>
+  
+    <div class="table-container">
+      <table id="facultyTable" class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Designation</th>
+            <th>Qualification</th>
+            <th>Department</th>
+            <th>Date of Joining</th>
+            <th>Email</th>
+            <th>Gender</th>
+            <th>Experience</th>
+            <th>Mobile</th>
+            
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
+    </div>
+  </div>
+  
+  <button id="downloadExcel" class="btn btn-primary download-excel-btn" style="margin-top: 11.2%;margin-right: 6%;">Download Excel</button>
+  
+  <!-- filepath: c:\Users\Abhishek Bhan\OneDrive\Desktop\fdms_march3\profiles.html -->
+<script>
+  const form = document.getElementById('addFacultyForm');
+  const tableBody = document.querySelector('#facultyTable tbody');
+  const noContentMessage = document.getElementById('noContentMessage');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const profile = {
+      name: document.getElementById('name').value,
+      designation: document.getElementById('designation').value,
+      qualification: document.getElementById('qualification').value,
+      departments: [document.getElementById('department').value],
+      dob: document.getElementById('dob').value,
+      email: document.getElementById('email').value,
+      gender:document.getElementById('gender').value,
+      experience:document.getElementById('experience').value,
+      mobile:document.getElementById('mobile').value,
+
+
+    };
+    const response = await fetch('http://127.0.0.1:3000/addProfile', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(profile),
+    });
+    const result = await response.json();
+    form.reset();
+    addProfileToTable(result.profile);
+  });
+
+  function addProfileToTable(profile) {
+  const row = document.createElement('tr');
+  row.dataset.id = profile._id;
+  const url = `profile.html?id=${profile._id}&name=${encodeURIComponent(profile.name)}&designation=${encodeURIComponent(profile.designation)}&department=${encodeURIComponent(profile.departments.join(', '))}&email=${encodeURIComponent(profile.email)}&dob=${encodeURIComponent(profile.dob)}&gender=${encodeURIComponent(profile.gender)}&mobile=${encodeURIComponent(profile.mobile)}`;
+
+  row.innerHTML = `
+    <td>${tableBody.children.length + 1}</td>
+    <td><a href="${url}" target="_blank">${profile.name}</a></td>
+    <td>${profile.designation}</td>
+    <td>${profile.qualification}</td>
+    <td>${profile.departments.join(', ')}</td>
+    <td>${profile.dob}</td>
+    <td>${profile.email}</td>
+    <td>${profile.gender}</td>
+    <td>${profile.experience}</td>
+     <td>${profile.mobile}</td>
+
+
+    <td>
+      <button class="btn btn-secondary btn-sm" onclick="editProfile('${profile._id}', this)">
+        <i class='bx bx-edit'></i>
+      </button>
+      <button class="btn btn-danger btn-sm" onclick="deleteProfile('${profile._id}', this)">
+        <i class='bx bx-trash'></i>
+      </button>
+    </td>
+  `;
+  tableBody.appendChild(row);
+}
+
+document.getElementById('downloadExcel').addEventListener('click', downloadExcel);
+
+function downloadExcel() {
+  const table = document.getElementById('facultyTable');
+  const rows = table.querySelectorAll('tr');
+  const data = [];
+
+  rows.forEach(row => {
+    if (row.style.display !== 'none') {
+      const cells = row.querySelectorAll('th, td');
+      const rowData = [];
+      cells.forEach(cell => {
+        rowData.push(cell.textContent);
+      });
+      data.push(rowData);
+    }
+  });
+
+  const ws = XLSX.utils.aoa_to_sheet(data);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Faculty Data');
+
+  XLSX.writeFile(wb, 'faculty_data.xlsx');
+}
+
+  document.getElementById('searchInput').addEventListener('input', filterTable);
+  document.getElementById('searchDesignation').addEventListener('input', filterTable);
+  document.getElementById('searchDepartment').addEventListener('input', filterTable);
+  document.getElementById('searchQualification').addEventListener('input', filterTable);
+  document.getElementById('clearFilters').addEventListener('click', clearFilters);
+
+  function filterTable() {
+    const searchInput = document.getElementById('searchInput').value.toLowerCase();
+    const designation = document.getElementById('searchDesignation').value.toLowerCase();
+    const department = document.getElementById('searchDepartment').value.toLowerCase();
+    const qualification = document.getElementById('searchQualification').value.toLowerCase();
+
+    const rows = tableBody.getElementsByTagName('tr');
+    let hasVisibleRows = false;
+
+    for (let row of rows) {
+      const nameText = row.children[1].textContent.toLowerCase();
+      const designationText = row.children[2].textContent.toLowerCase();
+      const departmentText = row.children[4].textContent.toLowerCase();
+      const qualificationText = row.children[3].textContent.toLowerCase();
+      
+
+      const matchesSearchInput = searchInput === '' || nameText.includes(searchInput);
+      const matchesDesignation = designation === '' || designationText.includes(designation);
+      const matchesDepartment = department === '' || departmentText.includes(department);
+      const matchesQualification = qualification === '' || qualificationText.includes(qualification);
+
+      if (matchesSearchInput && matchesDesignation && matchesDepartment && matchesQualification) {
+        row.style.display = '';
+        hasVisibleRows = true;
+      } else {
+        row.style.display = 'none';
+      }
+    }
+
+    noContentMessage.style.display = hasVisibleRows ? 'none' : 'block';
+    updateActiveFilters();
+  }
+
+  function clearFilters() {
+    document.getElementById('searchInput').value = '';
+    document.getElementById('searchDesignation').value = '';
+    document.getElementById('searchDepartment').value = '';
+    document.getElementById('searchQualification').value = '';
+    filterTable();
+  }
+
+  function updateActiveFilters() {
+    const activeFilters = document.getElementById('activeFilters');
+    activeFilters.innerHTML = '';
+
+    const searchInput = document.getElementById('searchInput').value;
+    const designation = document.getElementById('searchDesignation').value;
+    const department = document.getElementById('searchDepartment').value;
+    const qualification = document.getElementById('searchQualification').value;
+
+    if (searchInput) {
+      const filterButton = createFilterButton('Search', searchInput);
+      activeFilters.appendChild(filterButton);
+    }
+    if (designation) {
+      const filterButton = createFilterButton('Designation', designation);
+      activeFilters.appendChild(filterButton);
+    }
+    if (department) {
+      const filterButton = createFilterButton('Department', department);
+      activeFilters.appendChild(filterButton);
+    }
+    if (qualification) {
+      const filterButton = createFilterButton('Qualification', qualification);
+      activeFilters.appendChild(filterButton);
+    }
+  }
+
+  function createFilterButton(type, value) {
+    const button = document.createElement('button');
+    button.className = 'btn btn-outline-secondary btn-sm me-2';
+    button.innerHTML = `${type}: ${value} <i class="bx bx-x"></i>`;
+    button.addEventListener('click', () => {
+      document.getElementById(`search${type}`).value = '';
+      filterTable();
+    });
+    return button;
+  }
+
+  async function deleteProfile(id, button) {
+    try {
+      const response = await fetch(`http://127.0.0.1:3000/deleteProfile/${id}`, {
+        method: 'DELETE',
+      });
+      const result = await response.json();
+      if (result.success) {
+        button.closest('tr').remove();
+        alert('Profile deleted successfully');
+      } else {
+        alert('Error deleting profile: ' + result.message);
+      }
+    } catch (error) {
+      console.error('Failed to delete profile:', error);
+      alert('Failed to delete profile');
+    }
+  }
+
+  async function editProfile(id, button) {
+    const row = button.closest('tr');
+    const nameCell = row.children[1];
+    const designationCell = row.children[2];
+    const qualificationCell = row.children[3];
+    const departmentCell = row.children[4];
+    const dobCell = row.children[5];
+  const emailCell = row.children[6];
+  const genderCell=row.children[7];
+  const experienceCell=row.children[8];
+  const mobileCell=row.children[9];
+
+
+    const nameInput = `<input type="text" value="${nameCell.textContent}" class="form-control">`;
+    const designationInput = `<input type="text" value="${designationCell.textContent}" class="form-control">`;
+    const qualificationInput = `<input type="text" value="${qualificationCell.textContent}" class="form-control">`;
+    const departmentInput = `<input type="text" value="${departmentCell.textContent}" class="form-control">`;
+
+    dobCell.innerHTML = `<input type="date" value="${dobCell.textContent}" class="form-control">`;
+    emailCell.innerHTML = `<input type="email" value="${emailCell.textContent}" class="form-control">`;
+    genderCell.innerHTML = `<input type="email" value="${genderCell.textContent}" class="form-control">`;
+    experienceCell.innerHTML = `<input type="number" value="${experienceCell.textContent}" class="form-control">`;
+    mobileCell.innerHTML = `<input type="number" value="${mobileCell.textContent}" class="form-control">`;
+    
+    nameCell.innerHTML = nameInput;
+    designationCell.innerHTML = designationInput;
+    qualificationCell.innerHTML = qualificationInput;
+    departmentCell.innerHTML = departmentInput;
+
+
+    button.innerHTML = `<i class='bx bx-save'></i>`;
+    button.classList.remove('btn-warning');
+    button.classList.add('btn-success');
+    button.setAttribute('onclick', `saveProfile('${id}', this)`);
+  }
+
+  async function saveProfile(id, button) {
+    const row = button.closest('tr');
+    const nameCell = row.children[1];
+    const designationCell = row.children[2];
+    const qualificationCell = row.children[3];
+    const departmentCell = row.children[4];
+    const dobCell = row.children[5];
+  const emailCell = row.children[6];
+  const genderCell = row.children[7];
+  const experienceCell = row.children[8];
+  const mobileCell = row.children[9];
+  
+
+    const updatedProfile = {
+      name: nameCell.children[0].value,
+      designation: designationCell.children[0].value,
+      qualification: qualificationCell.children[0].value,
+      departments: [departmentCell.children[0].value],
+      dob: dobCell.children[0].value,
+    email: emailCell.children[0].value,
+    gender: genderCell.children[0].value,
+    experience:experienceCell.children[0].value,
+    mobile:mobileCell.children[0].value,
+
+    };
+
+    try {
+      const response = await fetch(`http://127.0.0.1:3000/updateProfile/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedProfile),
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        nameCell.innerHTML = `<a href="/profile?name=${encodeURIComponent(updatedProfile.name)}&designation=${encodeURIComponent(updatedProfile.designation)}&qualification=${encodeURIComponent(updatedProfile.qualification)}" target="_blank">${
+                    updatedProfile.name}</a>`;
+        designationCell.textContent = updatedProfile.designation;
+        qualificationCell.textContent = updatedProfile.qualification;
+        departmentCell.textContent = updatedProfile.departments.join(', ');
+        dobCell.textContent = updatedProfile.dob;
+      emailCell.textContent = updatedProfile.email;
+      genderCell.textContent = updatedProfile.gender;
+      experienceCell.textContent = updatedProfile.experience;
+      mobileCell.textContent = updatedProfile.mobile;
+
+
+        button.innerHTML = `<i class='bx bx-edit'></i>`;
+        button.classList.remove('btn-success');
+        button.classList.add('btn-warning');
+        button.setAttribute('onclick', `editProfile('${id}', this)`);
+      } else {
+        alert('Error updating profile: ' + result.message);
+      }
+    } catch (error) {
+      console.error('Failed to update profile:', error);
+      alert('Failed to update profile');
+    }
+  }
+
+  async function fetchProfiles() {
+    try {
+      const response = await fetch('http://127.0.0.1:3000/getProfiles');
+      const profiles = await response.json();
+      profiles.forEach(addProfileToTable);
+    } catch (error) {
+      console.error('Error fetching profiles:', error);
+    }
+  }
+
+  window.onload = fetchProfiles;
+</script>
+  
+</body>
+</html>
