@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Research Publications</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #1e90ee;
+            --secondary: #48daea;
+            --accent: #00abf0;
+            --success: #4CAF50;
+            --danger: #f44336;
+            --warning: #ff9800;
+            --dark: #181c2f;
+            --light: #ffffff;
+            --card-bg: rgba(255, 255, 255, 0.12);
+            --text-light: #f5f5f5;
+            --text-dark: #222b45;
+            --shadow: 0 8px 32px rgba(30, 144, 238, 0.12);
+            --shadow-hover: 0 12px 40px rgba(30, 144, 238, 0.18);
+            --transition: 0.3s cubic-bezier(.4,2,.3,1);
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, var(--primary), var(--secondary) 80%);
+            color: var(--text-light);
+            min-height: 100vh;
+            transition: background 0.5s;
+        }
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 80px;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: rgba(30, 144, 238, 0.12);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.08);
+            transition: var(--transition);
+        }
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--accent), var(--light));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .logo img {
+            height: 40px;
+            width: auto;
+            border-radius: 50%;
+        }
+        .navbar {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        .navbar a {
+            font-size: 1rem;
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1.2rem;
+            border-radius: 30px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        .navbar a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s;
+        }
+        .navbar a:hover {
+            color: var(--accent);
+            background: rgba(0, 171, 240, 0.08);
+        }
+        .navbar a:hover::after {
+            width: 70%;
+        }
+        #theme-toggle {
+            color: var(--light);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-left: 1rem;
+        }
+        #theme-toggle:hover {
+            transform: rotate(30deg) scale(1.1);
+            color: var(--accent);
+        }
+        .logout-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--danger);
+            background: rgba(244, 67, 54, 0.12);
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+            transition: var(--transition);
+        }
+        .logout-btn:hover {
+            background: rgba(244, 67, 54, 0.22);
+        }
+        .chart-container {
+            width: 60%;
+            margin: 100px auto 40px auto;
+            height: 400px;
+            background: linear-gradient(120deg, var(--primary) 60%, var(--secondary));
+            border-radius: 18px;
+            box-shadow: var(--shadow);
+            padding: 2rem 1.5rem 1.5rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.8s;
+        }
+        .settings-container {
+            margin-top: 30px;
+            padding: 30px 20px 40px 20px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 18px;
+            box-shadow: var(--shadow);
+            animation: fadeInUp 0.8s;
+        }
+        .settings-container h2 {
+            color: var(--light);
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 2.2rem;
+            letter-spacing: 1px;
+            font-weight: 700;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        .settings-container h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--primary));
+            border-radius: 3px;
+        }
+        .filters {
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.13);
+            padding: 18px 20px;
+            border-radius: 12px;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.13);
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            justify-content: flex-end;
+            animation: fadeIn 1s;
+        }
+        .filter-select {
+            padding: 10px 22px;
+            border: 1px solid rgba(0, 171, 240, 0.18);
+            border-radius: 8px;
+            background: rgba(30, 144, 238, 0.13);
+            color: var(--light);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 1rem;
+            outline: none;
+        }
+        .filter-select:hover, .filter-select:focus {
+            background: rgba(0, 171, 240, 0.22);
+            border-color: var(--accent);
+            box-shadow: 0 2px 8px rgba(0, 171, 240, 0.08);
+        }
+        .publication-count {
+            color: var(--light);
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            padding: 13px 0;
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+            text-align: center;
+            font-weight: 600;
+            border: none;
+            box-shadow: 0 2px 8px rgba(30, 144, 238, 0.08);
+            letter-spacing: 1px;
+            animation: fadeIn 1.2s;
+        }
+        .publication-card {
+            background: linear-gradient(120deg, #f8fafc 60%, #e0e7ff 100%);
+            color: #2d3748;
+            padding: 28px 24px 22px 24px;
+            border-radius: 14px;
+            margin-bottom: 22px;
+            backdrop-filter: blur(8px);
+            transition: var(--transition);
+            border: 1px solid rgba(0, 171, 240, 0.13);
+            box-shadow: var(--shadow);
+            animation: fadeInUp 0.7s;
+            position: relative;
+            overflow: hidden;
+        }
+        .publication-card:hover {
+            transform: translateY(-7px) scale(1.025);
+            box-shadow: var(--shadow-hover);
+            background: linear-gradient(120deg, rgba(30, 144, 238, 0.18), rgba(72, 218, 234, 0.18));
+            border-color: var(--accent);
+        }
+        .publication-card h3 {
+            color: inherit;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .publication-card p {
+            margin-bottom: 10px;
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+        .publication-card strong {
+            color: inherit;
+            font-weight: 700;
+        }
+        .view-doc-btn {
+            background: linear-gradient(90deg, #1e90ee, #00abf0);
+            color: #fff;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+            margin-top: 15px;
+            display: inline-block;
+            box-shadow: 0 4px 15px rgba(0, 171, 240, 0.13);
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+            animation: fadeIn 1.2s;
+        }
+        .view-doc-btn:hover {
+            background: linear-gradient(90deg, #00abf0, #1e90ee);
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 171, 240, 0.18);
+        }
+        .no-publications {
+            color: var(--light);
+            text-align: center;
+            font-size: 1.2rem;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.13);
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+            animation: fadeIn 1.2s;
+        }
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .chart-container { width: 90%; }
+            .settings-container { max-width: 98vw; }
+        }
+        @media (max-width: 768px) {
+            .header { padding: 0 1rem; }
+            .chart-container { width: 100%; padding: 1rem; }
+            .settings-container { padding: 15px 5px 30px 5px; }
+            .filters { flex-direction: column; gap: 1rem; align-items: stretch; }
+        }
+        @media (max-width: 576px) {
+            .header { height: 60px; }
+            .logo { font-size: 1.2rem; }
+            .chart-container { height: 250px; }
+            .settings-container h2 { font-size: 1.3rem; }
+            .publication-card { padding: 16px 8px; }
+        }
+        /* Alternate card backgrounds and font colors */
+        .publication-card:nth-child(4n+1) {
+            background: linear-gradient(120deg, #f8fafc 60%, #e0e7ff 100%); /* blue-white */
+            color: #2d3748;
+        }
+        .publication-card:nth-child(4n+2) {
+            background: linear-gradient(120deg, #fdf6e3 60%, #ffe5d9 100%); /* peach-cream */
+            color: #7c4700;
+        }
+        .publication-card:nth-child(4n+3) {
+            background: linear-gradient(120deg, #e6fffa 60%, #d1fae5 100%); /* mint-green */
+            color: #065f46;
+        }
+        .publication-card:nth-child(4n) {
+            background: linear-gradient(120deg, #f3e8ff 60%, #fbc2eb 100%); /* lavender-pink */
+            color: #6d2777;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="#" class="logo">
+            <img src="/Tathya_icon.jpg" alt="">
+            TATHYA
+        </a>
+        
+        <i class='bx bx-menu' id="menu-toggle"></i>
+        
+        <nav class="navbar">
+            <a href="/admin_dashboard">Dashboard</a>
+            <a href="/manage_users">Manage Users</a>
+            <a href="/reports">Reports</a>
+            <a href="/view_publications">View-Researches</a>
+            <a href="/notifications">Notifications</a>
+            <a href="/login_auth.html" class="logout-btn">
+                <i class='bx bx-log-out'></i> Logout
+            </a>
+            <i class='bx bx-moon' id="theme-toggle"></i>
+        </nav>
+    </header>
+    <div class="chart-container" style="width: 60%; margin-left:20% ; margin-top: 50px;height: 400px;">
+        <canvas id="publicationsBarChart"></canvas>
+    </div>
+
+    <div class="settings-container">
+        <h2>Research & Publications</h2>
+        <div class="filters">
+            <select id="typeFilter" class="filter-select">
+                <option value="">All Types</option>
+                <option value="journal">Journal Papers</option>
+                <option value="conference">Conference Papers</option>
+                <option value="book">Book Chapters</option>
+                <option value="patent">Patents</option>
+            </select>
+        </div>
+        <div id="publicationsList">
+            <!-- Publications will be loaded here -->
+        </div>
+        
+    </div>
+    
+
+
+<script>
+    const menuToggle = document.getElementById('menu-toggle');
+        const navbar = document.querySelector('.navbar');
+
+        menuToggle.addEventListener('click', () => {
+            navbar.classList.toggle('active');
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.navbar') && !e.target.closest('#menu-toggle')) {
+                navbar.classList.remove('active');
+            }
+        });
+
+        // Theme Toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+
+        if (localStorage.getItem('theme') === 'dark') {
+            body.classList.add('dark-mode');
+            themeToggle.classList.remove('bx-moon');
+            themeToggle.classList.add('bx-sun');
+        }
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            themeToggle.classList.toggle('bx-moon');
+            themeToggle.classList.toggle('bx-sun');
+            localStorage.setItem('theme', body.classList.contains('dark-mode') ? 'dark' : 'light');
+            
+            // Reinitialize chart when theme changes
+            setTimeout(loadFacultyStats, 300);
+        });
+    
+    async function loadPublications() {
+        try {
+            const type = document.getElementById('typeFilter').value;
+            console.log('Fetching publications with type:', type);
+
+            const response = await fetch(`http://localhost:4009/api/research`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log('Received publications:', data);
+
+            const container = document.getElementById('publicationsList');
+            if (data.success && data.publications.length > 0) {
+                let filteredPubs = data.publications;
+                if (type) {
+                    filteredPubs = data.publications.filter(pub => pub.type === type);
+                }
+
+                container.innerHTML = filteredPubs.map(pub => `
+                    <div class="publication-card">
+                        <h3>${pub.title}</h3>
+                        <p><strong>Authors:</strong> ${pub.authors}</p>
+                        <p><strong>Type:</strong> ${pub.type}</p>
+                        <p><strong>Published in:</strong> ${pub.publication}</p>
+                        <p><strong>Date:</strong> ${new Date(pub.date).toLocaleDateString()}</p>
+                        ${pub.abstract ? `<p><strong>Abstract:</strong> ${pub.abstract}</p>` : ''}
+                        ${pub.documentPath ? `
+                            <button class="view-doc-btn" onclick="viewDocument('${pub.documentPath}')">
+                                View Document
+                            </button>
+                        ` : '<p>No document available</p>'}
+                    </div>
+                `).join('');
+
+                const countDiv = document.createElement('div');
+                countDiv.className = 'publication-count';
+                countDiv.textContent = `Total Publications: ${filteredPubs.length}`;
+                container.prepend(countDiv);
+            } else {
+                container.innerHTML = '<p class="no-publications">No publications found</p>';
+            }
+        } catch (error) {
+            console.error('Error loading publications:', error);
+            document.getElementById('publicationsList').innerHTML = 
+                `<p class="no-publications">Error loading publications: ${error.message}</p>`;
+        }
+    }
+
+    function viewDocument(filename) {
+        if (!filename) {
+            alert('Document not available');
+            return;
+        }
+        
+        // Create modal container
+        const modal = document.createElement('div');
+        modal.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        `;
+
+        // Create PDF viewer iframe
+        const pdfViewer = document.createElement('iframe');
+        pdfViewer.style.cssText = `
+            width: 80%;
+            height: 80%;
+            border: none;
+            background: white;
+        `;
+        
+        // Use the correct endpoint
+        pdfViewer.src = `http://localhost:4009/api/research/document/${encodeURIComponent(filename)}`;
+
+        // Create close button
+        const closeBtn = document.createElement('button');
+        closeBtn.textContent = '×';
+        closeBtn.style.cssText = `
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #ff4444;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 24px;
+            cursor: pointer;
+        `;
+        
+        closeBtn.onclick = () => modal.remove();
+        
+        modal.appendChild(pdfViewer);
+        modal.appendChild(closeBtn);
+        document.body.appendChild(modal);
+    }
+
+    async function loadPublicationCounts() {
+        try {
+            const response = await fetch('http://localhost:4009/api/research');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            if (data.success && data.publications.length > 0) {
+                const publicationCounts = {2023:0, 2024: 0, 2025: 0 };
+                data.publications.forEach(pub => {
+                    const year = new Date(pub.date).getFullYear();
+                    if (publicationCounts[year] !== undefined) {
+                        publicationCounts[year]++;
+                    }
+                });
+
+                renderBarGraph(publicationCounts);
+            } else {
+                console.error('No publications found');
+            }
+        } catch (error) {
+            console.error('Error loading publication counts:', error);
+        }
+    }
+
+    function renderBarGraph(publicationCounts) {
+        const ctx = document.getElementById('publicationsBarChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: [2023,'2024', '2025'],
+                datasets: [{
+                    label: 'Publications Count',
+                    data: [publicationCounts[2023],publicationCounts[2024], publicationCounts[2025]],
+                    backgroundColor: ['#008000', '#008000','#008000'],
+                    borderColor: ['#1e90ee', '#48daea'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    },
+                    tooltip: {
+                        enabled: true
+                    }
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Year'
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Number of Publications'
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // Event listeners
+    document.getElementById('typeFilter').addEventListener('change', loadPublications);
+    document.addEventListener('DOMContentLoaded', () => {
+        loadPublications();
+        loadPublicationCounts();
+    });
+</script>
+
+
+    
+    
+</body>
+</html>
