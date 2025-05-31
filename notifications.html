@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Notifications</title>
+    
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        :root {
+            --primary: #1e90ee;
+            --secondary: #48daea;
+            --accent: #00abf0;
+            --success: #4CAF50;
+            --danger: #f44336;
+            --warning: #ff9800;
+            --dark: #181c2f;
+            --light: #f9f9f9;
+            --card-bg: rgba(255, 255, 255, 0.1);
+            --shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            --transition: 0.3s ease;
+        }
+    
+        body {
+            font-family: "Poppins", sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: var(--light);
+            min-height: 100vh;
+            transition: background 0.4s ease;
+        }
+    
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1rem 2rem;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+    
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--accent), white);
+            -webkit-background-clip: text;
+            color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+    
+        .logo img {
+            height: 40px;
+            border-radius: 50%;
+        }
+    
+        .navbar {
+            display: flex;
+            gap: 1.2rem;
+            align-items: center;
+        }
+    
+        .navbar a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: var(--transition);
+        }
+    
+        .navbar a:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: var(--accent);
+        }
+    
+        .logout-btn {
+            background-color: rgba(255, 50, 50, 0.15);
+            color: #f44336;
+            padding: 8px 14px;
+            border-radius: 30px;
+            transition: var(--transition);
+        }
+    
+        .logout-btn:hover {
+            background-color: rgba(255, 50, 50, 0.3);
+        }
+    
+        #theme-toggle {
+            font-size: 1.6rem;
+            cursor: pointer;
+            transition: transform 0.4s ease;
+            color: var(--light);
+        }
+    
+        #theme-toggle:hover {
+            transform: rotate(180deg);
+            color: var(--accent);
+        }
+    
+        .notification-container {
+            margin-top: 100px;
+            padding: 30px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            color: #1a237e !important;
+        }
+        <style>
+/* ...existing styles... */
+@media (max-width: 900px) {
+  .navbar {
+    position: fixed;
+    top: 80px;
+    right: -100%;
+    width: 250px;
+    height: calc(100vh - 80px);
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(20px);
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 2rem 1.5rem;
+    gap: 1.2rem;
+    transition: right 0.4s cubic-bezier(.4,2,.3,1);
+    z-index: 9999;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+  }
+  .navbar.active {
+    right: 0;
+  }
+  .navbar a {
+    width: 100%;
+    text-align: left;
+    padding: 1rem 0.5rem;
+    font-size: 1.1rem;
+    border-radius: 10px;
+  }
+  #menu-icon {
+    display: block;
+    font-size: 2.2rem;
+    color: var(--light);
+    cursor: pointer;
+    margin-left: 1.2rem;
+    z-index: 10001;
+  }
+  .header {
+    padding: 1rem 1.2rem;
+  }
+}
+#menu-icon {
+  display: none;
+  transition: color 0.3s;
+}
+.navbar-backdrop {
+  display: none;
+}
+@media (max-width: 900px) {
+  .navbar-backdrop {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.3);
+    z-index: 9998;
+    transition: opacity 0.3s;
+  }
+  .navbar.active ~ .navbar-backdrop {
+    display: block;
+    opacity: 1;
+  }
+}
+
+
+
+    
+        .notification-form {
+            padding: 20px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.08);
+            margin-bottom: 30px;
+            color: #1a237e !important;
+        }
+    
+        .notification-form h2 {
+            color: var(--accent);
+            margin-bottom: 16px;
+        }
+    
+        .form-group label {
+            color: var(--light);
+            font-weight: 500;
+            margin-bottom: 6px;
+            display: block;
+        }
+    
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            resize: vertical;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+    
+        .form-group textarea:focus {
+            background: #fff;
+            color: #000;
+            border-color: var(--accent);
+            outline: none;
+        }
+    
+        .notification-options {
+            display: flex;
+            gap: 1.5rem;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+    
+        .submit-btn {
+            background: linear-gradient(90deg, var(--success), #66bb6a);
+            color: #fff;
+            padding: 12px 24px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+        }
+    
+        .submit-btn:hover {
+            background: linear-gradient(90deg, #388e3c, var(--success));
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+        }
+    
+        .notifications-list h2 {
+            color: var(--accent);
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+    
+        .notification-card {
+            background: linear-gradient(to right, #ffffffcc, #e0e7ffcc);
+            color: #1a1a1a;
+            padding: 16px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 5px solid var(--primary);
+            transition: var(--transition);
+            color: #1a237e !important;
+        }
+    
+        .notification-card.important {
+            border-left: 5px solid var(--danger);
+            background: linear-gradient(to right, #fff1f1cc, #ffe5e5cc);
+            color: #b71c1c !important;
+        }
+    
+        .notification-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 24px rgba(0, 171, 240, 0.2);
+        }
+    
+        .notification-content {
+            font-weight: 500;
+            font-size: 1.05rem;
+        }
+    
+        .notification-meta {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 10px;
+        }
+    
+        /* Dark Mode */
+        body.dark-mode {
+            background: linear-gradient(to right, #0e0e0f, #1a1a1c);
+            color: #f0f0f0;
+        }
+    
+        body.dark-mode .notification-form,
+        body.dark-mode .notification-card,
+        body.dark-mode .notification-container {
+            background: rgba(0, 0, 0, 0.5);
+            color: #eee !important;
+        }
+    
+        body.dark-mode .form-group textarea {
+            background: #1e1e1e;
+            color: #eee;
+            border-color: #444;
+        }
+    
+        body.dark-mode .notification-card.important {
+            background: #330000;
+            color: #ffb3b3 !important;
+        }
+    
+        body.dark-mode .notification-card {
+            background: #1b1b1d;
+            color: #ddd !important;
+        }
+    
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+    
+            .notification-container {
+                padding: 15px;
+            }
+        }
+    </style>
+    
+</head>
+<body>
+    <header class="header">
+        <a href="#" class="logo">
+            <img src="/Tathya_icon.jpg" alt="">
+            TATHYA
+        </a>
+        
+        <i class='bx bx-menu' id="menu-toggle"></i>
+        
+        <nav class="navbar">
+            <a href="/admin_dashboard">Dashboard</a>
+            <!-- <a href="/manage_users">Manage Users</a>
+            <a href="/reports">Reports</a> -->
+            <a href="/view_publications">View-Researches</a>
+            <a href="/notifications">Notifications</a>
+            <a href="/login_auth.html" class="logout-btn">
+                <i class='bx bx-log-out'></i> Logout
+            </a>
+            <i class='bx bx-moon' id="theme-toggle"></i>
+        </nav>
+    </header>
+
+    <div class="notification-container">
+        <div class="notification-form">
+            <h2 style="color:aqua">Post New Notification</h2>
+            <form id="notificationForm">
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" rows="4" required></textarea>
+                </div>
+
+                <div class="notification-options">
+                    <label>
+                        <input type="checkbox" id="important">
+                        Mark as Important
+                    </label>
+
+                    <label>
+                        <input type="datetime-local" id="expiryDate">
+                        Set Expiry Date/Time
+                    </label>
+                </div>
+
+                <button type="submit" class="submit-btn">Post Notification</button>
+            </form>
+        </div>
+
+        <div class="notifications-list">
+            <h2>Active Notifications</h2>
+            <div id="notificationsList"></div>
+        </div>
+    </div>
+
+    <script>
+        
+        document.getElementById('notificationForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            try {
+                const adminEmail = localStorage.getItem('userEmail');
+                const notification = {
+                    message: document.getElementById('message').value,
+                    important: document.getElementById('important').checked,
+                    expiresAt: document.getElementById('expiryDate').value || null,
+                    createdBy: adminEmail
+                };
+
+                console.log('Sending notification:', notification);
+
+                const response = await fetch('http://localhost:4009/api/notifications', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(notification)
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    alert('Notification posted successfully!');
+                    document.getElementById('notificationForm').reset();
+                    loadNotifications();
+                } else {
+                    throw new Error(data.message);
+                }
+            } catch (error) {
+                console.error('Error posting notification:', error);
+                alert('Failed to post notification: ' + error.message);
+            }
+        });
+
+        async function loadNotifications() {
+            try {
+                const response = await fetch('http://localhost:4009/api/notifications/active');
+                const data = await response.json();
+
+                const container = document.getElementById('notificationsList');
+                if (data.success && data.notifications.length > 0) {
+                    container.innerHTML = data.notifications.map(notif => `
+                        <div class="notification-card ${notif.important ? 'important' : ''}">
+                            <div class="notification-content">${notif.message}</div>
+                            <div class="notification-meta">
+                                Posted: ${new Date(notif.createdAt).toLocaleString()}
+                                ${notif.expiresAt ? `<br>Expires: ${new Date(notif.expiresAt).toLocaleString()}` : ''}
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    container.innerHTML = '<p>No active notifications</p>';
+                }
+            } catch (error) {
+                console.error('Error loading notifications:', error);
+                document.getElementById('notificationsList').innerHTML = 
+                    '<p>Error loading notifications</p>';
+            }
+        }
+
+        // Load notifications when page loads
+        document.addEventListener('DOMContentLoaded', loadNotifications);
+
+
+        const menuToggle = document.getElementById('menu-toggle');
+        const navbar = document.querySelector('.navbar');
+
+        menuToggle.addEventListener('click', () => {
+            navbar.classList.toggle('active');
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.navbar') && !e.target.closest('#menu-toggle')) {
+                navbar.classList.remove('active');
+            }
+        });
+
+        // Theme Toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+
+        if (localStorage.getItem('theme') === 'dark') {
+            body.classList.add('dark-mode');
+            themeToggle.classList.remove('bx-moon');
+            themeToggle.classList.add('bx-sun');
+        }
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            themeToggle.classList.toggle('bx-moon');
+            themeToggle.classList.toggle('bx-sun');
+            localStorage.setItem('theme', body.classList.contains('dark-mode') ? 'dark' : 'light');
+            
+            // Reinitialize chart when theme changes
+            setTimeout(loadFacultyStats, 300);
+        });
+    // Listen for theme changes from other pages
+    window.addEventListener('storage', (e) => {
+        if (e.key === 'theme') {
+            applyTheme();
+        }
+    });
+    </script>
+</body>
+</html>
