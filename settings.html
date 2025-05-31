@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Publications</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        body {
+            font-family: "Poppins", sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #1e90ee, #48daea);
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1.3rem 5%;
+            background: rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(50px);
+            z-index: 100;
+        }
+
+        .navbar {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+        }
+
+        .navbar a:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .container {
+            margin-top: 100px;
+            padding: 20px;
+        }
+
+        .research-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 8px;
+            overflow: hidden;
+            color: white;
+            margin-top: 20px;
+        }
+
+        .research-table th,
+        .research-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .research-table th {
+            background: rgba(0, 0, 0, 0.2);
+            font-weight: 600;
+        }
+
+        .view-btn {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .view-btn:hover {
+            background: #1976D2;
+        }
+
+        .filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .filter-select {
+            padding: 8px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            cursor: pointer;
+        }
+
+        #researchCount {
+            color: white;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: white;
+        }
+
+        .error {
+            color: #ff4444;
+            background: rgba(255, 68, 68, 0.1);
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <a href="/admin_dashboard">Dashboard</a>
+            <a href="/manage-users">Manage Users</a>
+            <a href="/settings" class="active">Research Publications</a>
+            <a href="/notifications">Notifications</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div id="researchCount"></div>
+        
+        <div class="filters">
+            <select id="departmentFilter" class="filter-select">
+                <option value="">All Departments</option>
+                <option value="CSE">CSE</option>
+                <option value="DS">DS</option>
+                <option value="AIML">AIML</option>
+                <option value="IT">IT</option>
+            </select>
+
+            <select id="typeFilter" class="filter-select">
+                <option value="">All Types</option>
+                <option value="journal">Journal Papers</option>
+                <option value="conference">Conference Papers</option>
+                <option value="book">Book Chapters</option>
+                <option value="patent">Patents</option>
+            </select>
+        </div>
+
+        <table class="research-table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Authors</th>
+                    
+                    <th>Type</th>
+                    <th>Publication</th>
+                    <th>Date</th>
+                    
+                </tr>
+            </thead>
+            <tbody id="researchTableBody">
+                <tr>
+                    <td colspan="7" class="loading">Loading research publications...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        async function loadResearch() {
+            try {
+                const department = document.getElementById('departmentFilter').value;
+                const type = document.getElementById('typeFilter').value;
+                
+                console.log('Fetching research with filters:', { department, type });
+
+                const response = await fetch(`http://localhost:4009/api/research/all?department=${department}&type=${type}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log('Received research data:', data);
+
+                document.getElementById('researchCount').textContent = 
+                    `Total Publications: ${data.publications?.length || 0}`;
+
+                const tableBody = document.getElementById('researchTableBody');
+
+                if (data.success && data.publications && data.publications.length > 0) {
+                    tableBody.innerHTML = data.publications.map(pub => `
+                        <tr>
+                            <td>${pub.title || 'N/A'}</td>
+                            <td>${pub.authors || 'N/A'}</td>
+                            
+                            <td>${pub.type || 'N/A'}</td>
+                            <td>${pub.publication || 'N/A'}</td>
+                            <td>${new Date(pub.date).toLocaleDateString()}</td>
+                            <td
+                            </td>
+                        </tr>
+                    `).join('');
+                } else {
+                    tableBody.innerHTML = `
+                        <tr>
+                            <td colspan="7" style="text-align: center">No publications found</td>
+                        </tr>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading research:', error);
+                document.getElementById('researchTableBody').innerHTML = `
+                    <tr>
+                        <td colspan="7" class="error">Error loading research: ${error.message}</td>
+                    </tr>
+                `;
+            }
+        }
+
+        function viewDocument(filename) {
+            if (!filename) {
+                alert('Document not available');
+                return;
+            }
+            const url = `http://localhost:4009/uploads/research/${filename}`;
+            window.open(url, '_blank');
+        }
+
+        // Add event listeners
+        document.getElementById('departmentFilter').addEventListener('change', loadResearch);
+        document.getElementById('typeFilter').addEventListener('change', loadResearch);
+        document.addEventListener('DOMContentLoaded', loadResearch);
+    </script>
+</body>
+</html>
