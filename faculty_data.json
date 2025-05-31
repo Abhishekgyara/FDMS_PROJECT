@@ -1,0 +1,36 @@
+[
+    {
+        "name": "Dr. Anil Kumar",
+        "qualification": "M.Tech in Data Science",
+        "experience": "10 years in AI research",
+        "description": "Dr. Anil Kumar is a faculty member in the Computer Science department.",
+        "seminars": [
+            {
+                "topic": "AI and Deep Learning",
+                "objective": "To discuss the advancements in AI research.",
+                "date": "2023-05-15",
+                "status": "Organized"
+            },
+            {
+                "topic": "Machine Learning Basics",
+                "objective": "Introduction to Machine Learning",
+                "date": "2023-08-20",
+                "status": "Attended"
+            }
+        ]
+    },
+    {
+        "name": "Dr. Priya Sharma",
+        "qualification": "M.Tech in Data Science",
+        "experience": "5 years in Data Science and Analytics",
+        "description": "Dr. Priya Sharma specializes in Big Data and Machine Learning.",
+        "seminars": [
+            {
+                "topic": "Data Science Fundamentals",
+                "objective": "Overview of Data Science concepts.",
+                "date": "2023-06-10",
+                "status": "Organized"
+            }
+        ]
+    }
+]
