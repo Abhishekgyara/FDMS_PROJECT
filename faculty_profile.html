@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Profile</title>
+    <link rel="stylesheet" href="dash_styles.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 20px;
+    }
+
+    .nav-links {
+        display: flex;
+        gap: 10px; /* Reduced from default spacing */
+    }
+
+    .navbar a {
+        color: white;
+        text-decoration: none;
+        padding: 5px 10px; /* Reduced padding */
+        border-radius: 5px;
+        margin: 0; /* Removed margin */
+    }
+
+    #theme-toggle {
+        margin-left: 20px; /* Maintain space between last nav item and icon */
+        padding-left: 10px;
+        padding-right: 20px; /* Reduced padding */
+    }
+        .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 20px; /* Added right padding */
+    }
+
+    .nav-links {
+        display: flex;
+    }
+
+    #theme-toggle {
+        margin-left: auto; /* Pushes icon to the right */
+        padding-left: 20px; /* Space between last nav item and icon */
+    }
+        .profile-container {
+            max-width: 1200px;
+            margin: 100px auto;
+            padding: 20px;
+        }
+
+        .profile-section {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            padding: 20px;
+        }
+
+        .section-title {
+            color: #2575fc;
+            border-bottom: 2px solid #2575fc;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .info-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .info-label {
+            font-weight: bold;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            color: #333;
+        }
+
+        .edit-btn {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: #2575fc;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .edit-btn:hover {
+            background: #1957b8;
+        }
+
+        .navbar {
+            background: linear-gradient(to right, #1e90ee, #48daea);
+            padding: 15px 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .navbar a:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .navbar a.active {
+            background: #2575fc;
+        }
+
+        .education-block {
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        .education-block h3 {
+            color: #2575fc;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #2575fc;
+        }
+
+        .education-divider {
+            height: 2px;
+            background: linear-gradient(to right, transparent, #ccc, transparent);
+            margin: 30px 0;
+        }
+
+        .edit-mode .info-value {
+            display: none;
+        }
+
+        .edit-mode .edit-input {
+            display: block;
+        }
+
+        .edit-input {
+            display: none;
+            width: 100%;
+            padding: 5px;
+            margin-top: 5px;
+            border: 1px solid #2575fc;
+            border-radius: 4px;
+        }
+
+        .button-group {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;  /* Changed from row to column */
+            gap: 10px;
+        }
+
+        .action-btn {
+            background: #2575fc;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 120px;  /* Added fixed width for consistent button size */
+        }
+
+        .save-btn {
+            display: none;
+            background: #4CAF50;
+        }
+
+        .action-btn:hover {
+            opacity: 0.9;
+        }
+        #theme-toggle {
+        margin-left: 1rem;
+        color: white;
+        font-size: 1.8rem;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+        display: flex;
+        align-items: center;
+    }
+
+    #theme-toggle:hover {
+        transform: rotate(180deg);
+        color: #00abf0;
+    }
+
+    body.dark-mode {
+        background: linear-gradient(to right, #0b0b0c, #0c0d0e);
+    }
+
+    body.dark-mode .profile-section,
+    body.dark-mode .info-item {
+        background: #1e1e1e;
+        color: #fff;
+    }
+
+    body.dark-mode .info-label {
+        color: #aaa;
+    }
+
+    body.dark-mode .info-value {
+        color: #fff;
+    }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-links">
+            <a href="/faculty_dashboard">Dashboard</a>
+            <a href="/research">Research</a>
+            <a href="/settings">View Researches</a>
+            <a href="/faculty_profile" class="active">My Profile</a>
+        </div>
+        <i class='bx bx-moon' id="theme-toggle"></i>
+    </nav>
+
+    <div class="button-group">
+        <button class="action-btn edit-btn" onclick="toggleEditMode()">Edit</button>
+        <br><br>
+        <button class="action-btn save-btn" onclick="saveChanges()">Save Changes</button>
+    </div>
+
+    <div class="profile-container">
+        <div class="profile-section" id="personal-info">
+            <h2 class="section-title">Personal Information</h2>
+            <div class="info-grid" id="personal-details">Loading...</div>
+        </div>
+
+        <div class="profile-section">
+            <h2 class="section-title">Educational Details</h2>
+            <div class="education-block">
+                <h3>School Education</h3>
+                <div class="info-grid" id="school-details">Loading...</div>
+            </div>
+
+            <div class="education-divider"></div>
+
+            <div class="education-block">
+                <h3>Intermediate Education</h3>
+                <div class="info-grid" id="intermediate-details">Loading...</div>
+            </div>
+
+            <div class="education-divider"></div>
+
+            <div class="education-block">
+                <h3>Under Graduate</h3>
+                <div class="info-grid" id="ug-details">Loading...</div>
+            </div>
+
+            <div class="education-divider"></div>
+
+            <div class="education-block">
+                <h3>Post Graduate</h3>
+                <div class="info-grid" id="pg-details">Loading...</div>
+            </div>
+
+            <div class="education-divider"></div>
+
+            <div class="education-block">
+                <h3>Ph.D</h3>
+                <div class="info-grid" id="phd-details">Loading...</div>
+            </div>
+        </div>
+
+        <div class="profile-section">
+            <h2 class="section-title">Professional Experience</h2>
+            <div id="experience-details">Loading...</div>
+        </div>
+    </div>
+
+    <script>
+        const backendUrl = window.location.hostname === 'localhost' 
+            ? 'http://localhost:4009' 
+            : 'https://fdms-kmit.vercel.app';
+        let experiences = [];
+        let currentProfileData = null;
+
+        async function loadProfileData() {
+            try {
+                const userEmail = localStorage.getItem('userEmail');
+                if (!userEmail) {
+                    throw new Error('No user email found in local storage');
+                }
+
+                console.log('Fetching profile for email:', userEmail);
+                
+                const response = await fetch(`${backendUrl}/api/faculty/details/byEmail/${userEmail}`); 
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                console.log('Received profile data:', data);
+
+                if (data.success) {
+                    currentProfileData = data.data;
+
+                    // Update sections with the fetched data
+                    if (currentProfileData.personal) {
+                        displayPersonalInfo(currentProfileData.personal);
+                    }
+                    
+                    if (currentProfileData.education) {
+                        displayEducationInfo(currentProfileData.education);
+                    }
+                    
+                    if (currentProfileData.experience) {
+                        displayExperienceInfo(currentProfileData.experience);
+                    }
+                } else {
+                    throw new Error(data.message || 'Failed to load profile data');
+                }
+            } catch (error) {
+                console.error('Error loading profile:', error);
+                // Update UI to show error
+                document.getElementById('personal-details').innerHTML = 
+                    `<div class="error-message">Error loading profile: ${error.message}</div>`;
+                document.getElementById('school-details').innerHTML = 
+                    `<div class="error-message">Error loading education details</div>`;
+                document.getElementById('experience-details').innerHTML = 
+                    `<div class="error-message">Error loading experience details</div>`;
+            }
+        }
+
+        function createEditableField(value, type = 'text', field) {
+            const displayValue = type === 'date' && value ? value.split('T')[0] : value;
+            return `
+                <div class="info-value" data-field="${field}">${displayValue || ''}</div>
+                <input type="${type}" class="edit-input" data-field="${field}" value="${displayValue || ''}" />
+            `;
+
+        }
+
+        function displayPersonalInfo(personal) {
+            const personalHTML = `
+                <div class="info-item">
+                    <div class="info-label">Name</div>
+                    ${createEditableField(personal.name, 'text', 'name')}
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Gender</div>
+                    ${createEditableField(personal.gender, 'text', 'gender')}
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Date of Birth</div>
+                    ${createEditableField(personal.dob?.split('T')[0], 'date', 'dob')}
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Age</div>
+                    ${createEditableField(personal.age, 'number', 'age')}
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Email</div>
+                    ${createEditableField(personal.email, 'email', 'email')}
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Phone</div>
+                    ${createEditableField(personal.phone, 'tel', 'phone')}
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Temporary Address</div>
+                    <div class="nested-info">
+                        <div>State: ${createEditableField(personal.tempAddress?.state, 'text', 'temp-state')}</div>
+                        <div>City: ${createEditableField(personal.tempAddress?.city, 'text', 'temp-city')}</div>
+                        <div>Pincode: ${createEditableField(personal.tempAddress?.pincode, 'text', 'temp-pincode')}</div>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Permanent Address</div>
+                    <div class="nested-info">
+                        <div>State: ${createEditableField(personal.permAddress?.state, 'text', 'perm-state')}</div>
+                        <div>City: ${createEditableField(personal.permAddress?.city, 'text', 'perm-city')}</div>
+                        <div>Pincode: ${createEditableField(personal.permAddress?.pincode, 'text', 'perm-pincode')}</div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('personal-details').innerHTML = personalHTML;
+        }
+
+        function displayEducationInfo(education) {
+            console.log('Education data received:', education); // Debug log
+
+            // Display School Details
+            document.getElementById('school-details').innerHTML = education.school ? `
+                <div class="info-item">
+                    <div class="info-label">Institution Name</div>
+                    ${createEditableField(education.school.name, 'text', 'school-name')}
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Location</div>
+                    ${createEditableField(education.school.location, 'text', 'school-location')}
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Duration</div>
+                    <div>From: ${createEditableField(education.school.startDate?.split('T')[0], 'date', 'school-start')}</div>
+                    <div>To: ${createEditableField(education.school.endDate?.split('T')[0], 'date', 'school-end')}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Grade Information</div>
+                    <div>Type: ${createEditableField(education.school.gradeType, 'text', 'school-grade-type')}</div>
+                    <div>Grade: ${createEditableField(education.school.grade, 'number', 'school-grade')}</div>
+                </div>
+            ` : 'No school data available';
+
+            // Display Intermediate Details
+            document.getElementById('intermediate-details').innerHTML = education.intermediate ? `
+                <div class="info-item">
+                    <div class="info-label">Institution Name</div>
+                    ${createEditableField(education.intermediate.name, 'text', 'inter-name')}
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Location</div>
+                    ${createEditableField(education.intermediate.location, 'text', 'inter-location')}
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Duration</div>
+                    <div>From: ${createEditableField(education.intermediate.startDate?.split('T')[0], 'date', 'inter-start')}</div>
+                    <div>To: ${createEditableField(education.intermediate.endDate?.split('T')[0], 'date', 'inter-end')}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Grade Information</div>
+                    <div>Type: ${createEditableField(education.intermediate.gradeType, 'text', 'inter-grade-type')}</div>
+                    <div>Grade: ${createEditableField(education.intermediate.grade, 'number', 'inter-grade')}</div>
+                </div>
+            ` : 'No intermediate data available';
+
+            // Display UG Details
+            document.getElementById('ug-details').innerHTML = education.ug ? `
+                <div class="info-item">
+                    <div class="info-label">Institution Name</div>
+                    ${createEditableField(education.ug.name, 'text', 'ug-name')}
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Location</div>
+                    ${createEditableField(education.ug.location, 'text', 'ug-location')}
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Course & Specialization</div>
+                    <div>Course: ${createEditableField(education.ug.course, 'text', 'ug-course')}</div>
+                    <div>Specialization: ${createEditableField(education.ug.specialization, 'text', 'ug-specialization')}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Grade Information</div>
+                    <div>Type: ${createEditableField(education.ug.gradeType, 'text', 'ug-grade-type')}</div>
+                    <div>Grade: ${createEditableField(education.ug.grade, 'number', 'ug-grade')}</div>
+                </div>
+            ` : 'No UG data available';
+
+            // Display PG Details (similar structure as UG)
+            document.getElementById('pg-details').innerHTML = education.pg ? `
+                <div class="info-item">
+                    <div class="info-label">Institution Name</div>
+                    ${createEditableField(education.pg.name, 'text', 'pg-name')}
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Location</div>
+                    ${createEditableField(education.pg.location, 'text', 'pg-location')}
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Course & Specialization</div>
+                    <div>Course: ${createEditableField(education.pg.course, 'text', 'pg-course')}</div>
+                    <div>Specialization: ${createEditableField(education.pg.specialization, 'text', 'pg-specialization')}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Grade Information</div>
+                    <div>Type: ${createEditableField(education.pg.gradeType, 'text', 'pg-grade-type')}</div>
+                    <div>Grade: ${createEditableField(education.pg.grade, 'number', 'pg-grade')}</div>
+                </div>
+            ` : 'No PG data available';
+
+            // Display PhD Details
+            document.getElementById('phd-details').innerHTML = education.phd ? `
+                <div class="info-item">
+                    <div class="info-label">Institution Name</div>
+                    ${createEditableField(education.phd.name, 'text', 'phd-name')}
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Location</div>
+                    ${createEditableField(education.phd.location, 'text', 'phd-location')}
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Duration</div>
+                    <div>From: ${createEditableField(education.phd.startDate?.split('T')[0], 'date', 'phd-start')}</div>
+                    <div>To: ${createEditableField(education.phd.endDate?.split('T')[0], 'date', 'phd-end')}</div>
+                    <div>Total Duration: ${education.phd.duration || ''}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Institute Type</div>
+                    ${createEditableField(education.phd.instituteType, 'text', 'phd-type')}
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Status</div>
+                    ${createEditableField(education.phd.status, 'text', 'phd-status')}
+                </div>
+                ${education.phd.status === 'pursuing' ? `
+                    <div class="info-item">
+                        <div class="info-label">Current Year</div>
+                        ${createEditableField(education.phd.currentYear, 'number', 'phd-year')}
+                    </div>
+                ` : ''}
+                <div class="info-item">
+                    <div class="info-label">Grade Information</div>
+                    <div>Type: ${createEditableField(education.phd.gradeType, 'text', 'phd-grade-type')}</div>
+                    <div>Grade: ${createEditableField(education.phd.grade, 'number', 'phd-grade')}</div>
+                </div>
+            ` : 'No PhD data available';
+
+            // Update the date value setting to preserve dates
+            function formatDateForInput(dateString) {
+                if (!dateString) return '';
+                const date = new Date(dateString);
+                if (isNaN(date.getTime())) return '';
+                return date.toISOString().split('T')[0];
+            }
+
+            document.querySelectorAll('input[type="date"]').forEach(input => {
+                const value = input.value;
+                if (!value) {
+                    const field = input.getAttribute('data-field');
+                    const section = field.split('-')[0];
+                    const type = field.split('-')[1];
+                    if (education[section] && education[section][type + 'Date']) {
+                        input.value = formatDateForInput(education[section][type + 'Date']);
+                    }
+                }
+            });
+        }
+
+        function displayExperienceInfo(experiences) {
+            const experienceContainer = document.getElementById('experience-details');
+            if (!experiences || experiences.length === 0) {
+                experienceContainer.innerHTML = 'No experience data available';
+                return;
+            }
+        
+            const experienceHTML = experiences.map((exp, index) => `
+                <div class="exp-card" data-exp-index="${index}">
+                    <div class="info-item">
+                        <div class="info-label">Organization</div>
+                        ${createEditableField(exp.organization, 'text', `exp-${index}-org`)}
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Designation</div>
+                        ${createEditableField(exp.designation, 'text', `exp-${index}-designation`)}
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Location</div>
+                        ${createEditableField(exp.state, 'text', `exp-${index}-state`)}
+                        ${createEditableField(exp.city, 'text', `exp-${index}-city`)}
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Duration</div>
+                        ${createEditableField(exp.joinDate?.split('T')[0], 'date', `exp-${index}-join`)}
+                        ${createEditableField(exp.relieveDate?.split('T')[0], 'date', `exp-${index}-relieve`)}
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Total Duration</div>
+                        <div class="experience-duration">${exp.duration || calculateDuration(exp.joinDate, exp.relieveDate)}</div>
+                    </div>
+                </div>
+            `).join('');
+        
+            experienceContainer.innerHTML = experienceHTML;
+        }
+
+        let isEditMode = false;
+        let currentData = null;
+
+        function toggleEditMode() {
+            isEditMode = !isEditMode;
+            document.body.classList.toggle('edit-mode', isEditMode);
+            document.querySelector('.save-btn').style.display = isEditMode ? 'block' : 'none';
+            document.querySelector('.edit-btn').textContent = isEditMode ? 'Cancel' : 'Edit';
+        }
+
+        async function saveChanges() {
+            try {
+                // Get the email either from edit mode or current user
+                const editEmail = localStorage.getItem('editFacultyEmail');
+                const userEmail = editEmail || localStorage.getItem('userEmail');
+
+                // Only collect data from edited fields
+                const updatedData = {
+                    personalDetails: collectEditedPersonalData(),
+                    educationDetails: {
+                        school: collectEditedEducationData('school'),
+                        intermediate: collectEditedEducationData('intermediate'),
+                        ug: collectEditedEducationData('ug'),
+                        pg: collectEditedEducationData('pg'),
+                        phd: collectEditedEducationData('phd')
+                    },
+                    experiences: collectEditedExperienceData()
+                };
+
+                // Remove empty sections from update
+                Object.keys(updatedData.educationDetails).forEach(key => {
+                    if (!updatedData.educationDetails[key] || Object.keys(updatedData.educationDetails[key]).length === 0) {
+                        delete updatedData.educationDetails[key];
+                    }
+                });
+
+                if (Object.keys(updatedData.personalDetails).length === 0) {
+                    delete updatedData.personalDetails;
+                }
+
+                if (!updatedData.experiences || updatedData.experiences.length === 0) {
+                    delete updatedData.experiences;
+                }
+
+                // Only send update if there are changes
+                if (Object.keys(updatedData).length > 0) {
+                    const response = await fetch(`${backendUrl}/api/faculty/details/update`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            email: userEmail,
+                            updates: updatedData
+                        })
+                    });
+
+                    const result = await response.json();
+                    if (result.success) {
+                        alert('Changes saved successfully!');
+                        localStorage.removeItem('editFacultyEmail');
+                        if (window.location.search.includes('mode=edit')) {
+                            window.location.href = '/reports';
+                        } else {
+                            toggleEditMode();
+                            await loadProfileData();
+                        }
+                    } else {
+                        throw new Error(result.message);
+                    }
+                } else {
+                    alert('No changes detected');
+                    toggleEditMode();
+                }
+            } catch (error) {
+                console.error('Error saving changes:', error);
+                alert('Failed to save changes: ' + error.message);
+            }
+        }
+
+        function collectEditedPersonalData() {
+            const data = {};
+            const personalSection = document.getElementById('personal-details');
+            personalSection.querySelectorAll('.edit-input').forEach(input => {
+                // Only collect changed values
+                if (input.value !== input.defaultValue) {
+                    const field = input.getAttribute('data-field');
+                    if (field.includes('-')) {
+                        const [parent, child] = field.split('-');
+                        if (!data[parent + 'Address']) data[parent + 'Address'] = {};
+                        data[parent + 'Address'][child] = input.value;
+                    } else {
+                        data[field] = input.value;
+                    }
+                }
+            });
+            return data;
+        }
+
+        function collectEditedEducationData(level) {
+            const section = document.getElementById(`${level}-details`);
+            if (!section) return null;
+
+            const data = {};
+            section.querySelectorAll('.edit-input').forEach(input => {
+                // Only collect changed values
+                if (input.value !== input.defaultValue) {
+                    const field = input.getAttribute('data-field').replace(`${level}-`, '');
+                    if (input.type === 'date') {
+                        data[field + 'Date'] = input.value ? new Date(input.value).toISOString() : null;
+                    } else if (input.type === 'number') {
+                        data[field] = parseFloat(input.value) || 0;
+                    } else {
+                        data[field] = input.value;
+                    }
+                }
+            });
+
+            return Object.keys(data).length > 0 ? data : null;
+        }
+
+        function collectEditedExperienceData() {
+            const experiences = [];
+            const expCards = document.querySelectorAll('.exp-card');
+            
+            expCards.forEach(card => {
+                const expData = {};
+                let hasChanges = false;
+                
+                card.querySelectorAll('.edit-input').forEach(input => {
+                    if (input.value !== input.defaultValue) {
+                        const field = input.getAttribute('data-field').split('-').pop();
+                        expData[field] = input.value;
+                        hasChanges = true;
+                    }
+                });
+
+                if (hasChanges) {
+                    experiences.push(expData);
+                }
+            });
+
+            return experiences.length > 0 ? experiences : null;
+        }
+
+        function calculateDuration(startDate, endDate) {
+            if (!startDate || !endDate) return '';
+            const start = new Date(startDate);
+            const end = new Date(endDate);
+            const years = end.getFullYear() - start.getFullYear();
+            const months = end.getMonth() - start.getMonth();
+            return `${years} years ${months} months`;
+        }
+
+        function collectPersonalData() {
+            const data = {};
+            const personalSection = document.getElementById('personal-details');
+            personalSection.querySelectorAll('.edit-input').forEach(input => {
+                const field = input.getAttribute('data-field');
+                if (field.includes('-')) {
+                    const [parent, child] = field.split('-');
+                    if (!data[parent + 'Address']) data[parent + 'Address'] = {};
+                    data[parent + 'Address'][child] = input.value;
+                } else {
+                    data[field] = input.value;
+                }
+            });
+            return data;
+        }
+
+        function collectEducationLevelData(level) {
+            const section = document.getElementById(`${level}-details`);
+            if (!section) return null;
+
+            const inputs = section.querySelectorAll('.edit-input');
+            if (inputs.length === 0) {
+                // Return existing data if no inputs found (section not being edited)
+                return currentProfileData?.education?.[level] || null;
+            }
+
+            const data = {};
+            inputs.forEach(input => {
+                const field = input.getAttribute('data-field').replace(`${level}-`, '');
+                if (input.type === 'date') {
+                    data[field + 'Date'] = input.value ? new Date(input.value).toISOString() : null;
+                } else if (input.type === 'number') {
+                    data[field] = parseFloat(input.value) || 0;
+                } else {
+                    data[field] = input.value;
+                }
+            });
+
+            // Preserve existing data for fields that might not be in the current view
+            const existingData = currentProfileData?.education?.[level] || {};
+            return { ...existingData, ...data };
+        }
+
+        function collectExperienceData() {
+            const experiences = [];
+            const expCards = document.querySelectorAll('.exp-card');
+            
+            expCards.forEach(card => {
+                const index = card.getAttribute('data-exp-index');
+                const exp = {
+                    organization: card.querySelector(`[data-field="exp-${index}-org"]`)?.value || 
+                                 card.querySelector(`[data-field="exp-${index}-org"]`)?.textContent,
+                    designation: card.querySelector(`[data-field="exp-${index}-designation"]`)?.value || 
+                                card.querySelector(`[data-field="exp-${index}-designation"]`)?.textContent,
+                    state: card.querySelector(`[data-field="exp-${index}-state"]`)?.value || 
+                           card.querySelector(`[data-field="exp-${index}-state"]`)?.textContent,
+                    city: card.querySelector(`[data-field="exp-${index}-city"]`)?.value || 
+                          card.querySelector(`[data-field="exp-${index}-city"]`)?.textContent,
+                    joinDate: card.querySelector(`[data-field="exp-${index}-join"]`)?.value || 
+                             card.querySelector(`[data-field="exp-${index}-join"]`)?.textContent,
+                    relieveDate: card.querySelector(`[data-field="exp-${index}-relieve"]`)?.value || 
+                                card.querySelector(`[data-field="exp-${index}-relieve"]`)?.textContent
+                };
+        
+                if (Object.values(exp).some(val => val)) {
+                    exp.duration = calculateDuration(exp.joinDate, exp.relieveDate);
+                    experiences.push(exp);
+                }
+            });
+        
+            return experiences;
+        }
+
+        document.addEventListener('DOMContentLoaded', loadProfileData);
+
+        function displayExperience(experiences) {
+            if (!experiences || experiences.length === 0) {
+                return 'No experience data available';
+            }
+        
+            return experiences.map(exp => `
+                <div class="exp-item">
+                    <h4>Organization: ${createEditableField(exp.organization, 'text', 'org-name')}</h4>
+                    <div class="exp-details">
+                        <div>Designation: ${createEditableField(exp.designation, 'text', 'designation')}</div>
+                        <div>Location: ${createEditableField(exp.state, 'text', 'state')} - ${createEditableField(exp.city, 'text', 'city')}</div>
+                        <div class="date-range">
+                            <div>From: ${createEditableField(exp.joinDate?.split('T')[0], 'date', 'join-date')}</div>
+                            <div>To: ${createEditableField(exp.relieveDate?.split('T')[0], 'date', 'relieve-date')}</div>
+                        </div>
+                        <div>Duration: ${exp.duration}</div>
+                    </div>
+                </div>
+            `).join('<div class="experience-divider"></div>');
+        }
+
+        // Add some additional CSS for better layout
+        document.head.insertAdjacentHTML('beforeend', `
+        <style>
+            .nested-info {
+                padding-left: 15px;
+                margin-top: 5px;
+            }
+            
+            .date-range {
+                display: flex;
+                gap: 20px;
+            }
+            
+            .exp-item {
+                background: #f8f9fa;
+                padding: 15px;
+                border-radius: 8px;
+                margin-bottom: 15px;
+            }
+            
+            .exp-details {
+                margin-left: 15px;
+                margin-top: 10px;
+            }
+            
+            .experience-divider {
+                height: 1px;
+                background: #ddd;
+                margin: 20px 0;
+            }
+        
+            .info-value {
+                color: #333;
+                font-weight: 500;
+                margin-top: 5px;
+            }
+        </style>
+        `);
+
+        function updateEducationSections(education) {
+            // Update School Details
+            const schoolHtml = createEducationBlock(education.school, 'school');
+            document.getElementById('school-details').innerHTML = schoolHtml;
+
+            // Update Intermediate Details
+            const interHtml = createEducationBlock(education.intermediate, 'intermediate');
+            document.getElementById('intermediate-details').innerHTML = interHtml;
+
+            // Update UG Details
+            const ugHtml = createHigherEducationBlock(education.ug, 'ug');
+            document.getElementById('ug-details').innerHTML = ugHtml;
+
+            // Update PG Details
+            const pgHtml = createHigherEducationBlock(education.pg, 'pg');
+            document.getElementById('pg-details').innerHTML = pgHtml;
+
+            // Update PhD Details
+            const phdHtml = createPhDBlock(education.phd);
+            document.getElementById('phd-details').innerHTML = phdHtml;
+        }
+
+        function createEducationBlock(edu, level) {
+            if (!edu || !edu.name) return 'No data available';
+
+            return `
+                <div class="info-item">
+                    <div class="info-label">Institution Name</div>
+                    ${createEditableField(edu.name, 'text', `${level}-name`)}
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Location</div>
+                    ${createEditableField(edu.location, 'text', `${level}-location`)}
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Duration</div>
+                    <div>From: ${createEditableField(edu.startDate?.split('T')[0], 'date', `${level}-start`)}</div>
+                    <div>To: ${createEditableField(edu.endDate?.split('T')[0], 'date', `${level}-end`)}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Syllabus Type</div>
+                    ${createEditableField(edu.syllabusType, 'text', `${level}-syllabus`)}
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Grade Information</div>
+                    <div>Type: ${createEditableField(edu.gradeType, 'text', `${level}-grade-type`)}</div>
+                    <div>Grade: ${createEditableField(edu.grade, 'number', `${level}-grade`)}
+                </div>
+            `;
+        }
+
+        function createHigherEducationBlock(edu, level) {
+            if (!edu || !edu.name) return 'No data available';
+
+            return `
+                <div class="info-item">
+                    <div class="info-label">Institution Name</div>
+                    ${createEditableField(edu.name, 'text', `${level}-name`)}
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Location</div>
+                    ${createEditableField(edu.location, 'text', `${level}-location`)}
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Duration</div>
+                    <div>From: ${createEditableField(edu.startDate?.split('T')[0], 'date', `${level}-start`)}</div>
+                    <div>To: ${createEditableField(edu.endDate?.split('T')[0], 'date', `${level}-end`)}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Course</div>
+                    ${createEditableField(edu.course, 'text', `${level}-course`)}
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Specialization</div>
+                    ${createEditableField(edu.specialization, 'text', `${level}-specialization`)}
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Grade Information</div>
+                    <div>Type: ${createEditableField(edu.gradeType, 'text', `${level}-grade-type`)}</div>
+                    <div>Grade: ${createEditableField(edu.grade, 'number', `${level}-grade`)}</div>
+                </div>
+            `;
+        }
+
+        function updateExperienceSection(experiences) {
+            if (!experiences || experiences.length === 0) {
+                document.getElementById('experience-details').innerHTML = 'No experience data available';
+                return;
+            }
+
+            const experienceHtml = experiences.map((exp, index) => `
+                <div class="exp-card">
+                    <div class="info-item">
+                        <div class="info-label">Organization</div>
+                        ${createEditableField(exp.organization, 'text', `exp-${index}-org`)}
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Designation</div>
+                        ${createEditableField(exp.designation, 'text', `exp-${index}-designation`)}
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Location</div>
+                        <div>State: ${createEditableField(exp.state, 'text', `exp-${index}-state`)}</div>
+                        <div>City: ${createEditableField(exp.city, 'text', `exp-${index}-city`)}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Duration</div>
+                        <div>From: ${createEditableField(exp.joinDate?.split('T')[0], 'date', `exp-${index}-join`)}</div>
+                        <div>To: ${createEditableField(exp.relieveDate?.split('T')[0], 'date', `exp-${index}-relieve`)}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Total Duration</div>
+                        <div class="experience-duration">${exp.duration || ''}</div>
+                    </div>
+                </div>
+            `).join('<hr>');
+
+            document.getElementById('experience-details').innerHTML = experienceHtml;
+        }
+
+        // Update error message styling
+        document.head.insertAdjacentHTML('beforeend', `
+            <style>
+                .error-message {
+                    color: #dc3545;
+                    padding: 10px;
+                    background: rgba(220, 53, 69, 0.1);
+                    border-radius: 4px;
+                    margin: 10px 0;
+                }
+            </style>
+        `);
+
+        // Call loadProfileData when the page loads
+        document.addEventListener('DOMContentLoaded', loadProfileData);
+
+
+
+
+        const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+
+    // Check theme on page load
+    function applyTheme() {
+        const currentTheme = localStorage.getItem('theme');
+        if (currentTheme === 'dark') {
+            body.classList.add('dark-mode');
+            themeToggle.classList.remove('bx-moon');
+            themeToggle.classList.add('bx-sun');
+        } else {
+            body.classList.remove('dark-mode');
+            themeToggle.classList.add('bx-moon');
+            themeToggle.classList.remove('bx-sun');
+        }
+    }
+
+    // Apply theme on page load
+    applyTheme();
+
+    // Toggle theme
+    themeToggle.addEventListener('click', () => {
+        body.classList.toggle('dark-mode');
+        const isDark = body.classList.contains('dark-mode');
+        
+        // Update localStorage
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        
+        // Update icon
+        if (isDark) {
+            themeToggle.classList.remove('bx-moon');
+            themeToggle.classList.add('bx-sun');
+        } else {
+            themeToggle.classList.add('bx-moon');
+            themeToggle.classList.remove('bx-sun');
+        }
+    });
+
+    // Listen for theme changes from other pages
+    window.addEventListener('storage', (e) => {
+        if (e.key === 'theme') {
+            applyTheme();
+        }
+    });
+    </script>
+</body>
+</html>
