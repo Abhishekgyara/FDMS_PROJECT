@@ -1,0 +1,1420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="dash_styles.css">
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+  <script src="theme-toggle.js" defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    /* body {
+      position: relative;
+      font-family: "Poppins", sans-serif;
+      overflow: hidden;
+      background: linear-gradient(to right, #cdd5db);
+    } */
+
+    header {
+      margin-bottom: 80px;
+  
+    }
+
+    
+
+    /* Main Card */
+    .main-card {
+      
+      display: flex;
+      justify-content: space-between;
+      /* align-items: center; */
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      max-width: 80%;
+      margin: auto;
+    }
+
+    .main-card .description {
+      flex: 1;
+      padding: 20px;
+    }
+
+    .main-card h2 {
+      color: #1763d5;
+    }
+
+    .main-card img {
+      width: 350px; /* Increased initial size */
+      height: auto;
+      border-radius: 10px;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .main-card img:hover {
+      transform: scale(1.1); /* Zoom effect */
+    }
+
+    /* Departments Section */
+    .departments {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 40px;
+      max-width: 80%;
+      margin: auto;
+    }
+
+    .department-card {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      position: relative;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .department-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .department-card h3 {
+      color: #e0e1e2;
+      margin-bottom: 10px;
+    }
+
+    /* Clickable Arrow */
+    .view-more {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      font-size: 20px;
+      color: #2575fc;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .view-more:hover {
+      color: #10a9e0;
+    }
+
+    .stars {
+      position: absolute;
+      width: 100%;
+      height: 100vh;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: -1;
+    }
+    .stars span {
+      position: absolute;
+      bottom: -50px;
+      width: 10px;
+      height: 10px;
+      background: rgba(255, 255, 255, 0.8);
+      clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+      animation: floatUp 5s infinite linear;
+    }
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-100vh);
+        opacity: 0;
+      }
+    }
+    .stars span:nth-child(odd) {
+      width: 15px;
+      height: 15px;
+      animation-duration: 7s;
+    }
+    .stars span:nth-child(even) {
+      animation-duration: 4s;
+    }
+    .stars span:nth-child(1) { background: yellow; }
+    .stars span:nth-child(2) { background: white; }
+    .stars span:nth-child(3) { background: lightblue; }
+    .stars span:nth-child(4) { background: pink; }
+    .stars span:nth-child(5) { background: violet; }
+    .stars span:nth-child(6) { background: lightyellow; }
+    .stars span:nth-child(7) { background: cyan; }
+    .stars span:nth-child(8) { background: gold; }
+    .stars span:nth-child(9) { background: silver; }
+    .stars span:nth-child(10) { background: lightgreen; }
+
+    .departments {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 40px;
+      max-width: 80%;
+      margin: auto;
+    }
+
+    .department-card {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      position: relative;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .department-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .department-card h3 {
+      color: #26d5f0;
+      margin-bottom: 10px;
+    }
+
+    .department-link {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    .view-more {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      font-size: 20px;
+      color: #2575fc;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .view-more:hover {
+      color: #6a11cb;
+    }
+
+    .theme-toggle {
+      margin-left: 20px;
+      font-size: 24px;
+      cursor: pointer;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .theme-toggle:hover {
+      transform: rotate(360deg);
+    }
+
+    body.light-mode {
+      background: linear-gradient(to right, #1e90ee,#48daea);
+    }
+
+    body.dark-mode {
+      background: linear-gradient(to right, #0b0b0c, #0c0d0e);
+    }
+
+    body.dark-mode .theme-toggle {
+      color: white;
+    }
+    #p{
+      font-size: larger;
+    }
+    h3{
+      style:"background-color: #48daea;"
+    }
+    <!---------------------------------------------------------------------------------------------------------->
+
+
+
+
+
+
+
+
+    body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to bottom, #007bff, #60c0ff);
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 90%;
+    margin: auto;
+    padding-top: 20px;
+}
+
+/* Header Styling */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #007bff;
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.title {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+}
+
+nav ul li {
+    margin: 0 10px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+}
+
+/* Profile Section */
+.profile-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.profile-container {
+    display: flex;
+    align-items: center;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    max-width: 800px;
+    width: 100%;
+}
+
+/* Profile Info on Left */
+.profile-info {
+    flex: 1;
+}
+
+.profile-photo {
+    margin-left: 20px;
+    margin-right: 5%;
+    
+}
+
+.profile-photo img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 3px solid #007bff;
+   
+}
+
+/* Buttons */
+.button-container {
+    margin-top: 15px;
+}
+
+.tab-btn {
+    padding: 10px 15px;
+    margin: 5px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background: #f0f0f0;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.tab-btn:hover {
+    background: #dcdcdc;
+}
+
+.tab-btn.active {
+    background: #007bff;
+    color: white;
+}
+
+/* Content Section */
+.content-container {
+    margin-top: 20px;
+}
+
+.content-card {
+    display: none;
+    background: white;
+    padding: 20px;
+    width:75%;
+    margin:auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin-top: 10px;
+}
+
+.content-card.active {
+    display: block;
+}
+.button-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Two buttons per row */
+    gap: 10px; /* Space between buttons */
+    width: 100%;
+    max-width: 500px; /* Adjust as needed */
+    /* margin: 0 auto; Center the button group */
+}
+.content-card {
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    max-width: 800px; /* Increased Width */
+    width: 100%;
+}
+
+.content-card input {
+    width: 100%;
+    padding: 8px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.toggle-address {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    margin-top: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.toggle-address:hover {
+    background-color: #0056b3;
+}
+
+/* Address Container */
+.address-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    display: none; /* Initially hidden */
+    margin-top: 10px;
+}
+
+/* Address Blocks */
+.address-block {
+    flex: 1;
+    padding: 10px;
+}
+
+/* Separator between addresses */
+.separator {
+    width: 2px;
+    background: #ccc;
+    height: auto;
+    margin: 0 15px;
+}
+.address-container {
+        display: flex;
+        gap: 20px;
+    }
+    .address-block {
+        width: 50%;
+    }
+    .separator {
+        width: 2px;
+        background-color: #ccc;
+    }
+    input[type="radio"] {
+    margin-right: 5px;
+}
+label {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 15px;
+}
+
+
+
+
+
+
+
+  </style>
+
+  <style>
+  .departments {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 40px;
+    max-width: 80%;
+    margin: auto;
+  }
+
+  .department-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    position: relative;
+    transition: transform 0.3s ease-in-out;
+    opacity: 0;
+  }
+
+  .department-card h3 {
+    color: #11cbcb;
+    margin-bottom: 10px;
+  }
+
+  .department-card:hover {
+    transform: translateY(-5px);
+  }
+
+  .view-more {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    font-size: 20px;
+    color: #2575fc;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .view-more:hover {
+    color: #6a11cb;
+  }
+
+  .department-card h3 {
+    color: #fff;
+    background-color: #4578e6;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+  }
+
+  @keyframes slideInFromLeft {
+    from {
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideInFromBottom {
+    from {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideInFromTop {
+    from {
+      transform: translateY(-100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideInFromRight {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  #card1 {
+    animation: slideInFromLeft 1s forwards;
+  }
+
+  #card2 {
+    animation: slideInFromBottom 1s forwards;
+  }
+
+  #card3 {
+    animation: slideInFromTop 1s forwards;
+  }
+
+  #card4 {
+    animation: slideInFromRight 1s forwards;
+  }
+  .experience-card {
+    border: 1px solid #ccc;
+    padding: 15px;
+    background: #f9f9f9;
+    transition: all 0.3s ease;
+}
+.experience-card span {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+button {
+    margin: 5px;
+}
+#research-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+#research-table th, #research-table td {
+    padding: 8px;
+    text-align: left;
+}
+.remove-row-btn {
+    background: red;
+    color: white;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+}
+
+
+</style>
+</head>
+<body>
+  <header class="header">
+    <a href="#" class="logo">TATHYA</a>
+    <nav class="navbar">
+      <a href="practise.html">Home</a>
+      <a href="/about">About</a>
+      <a href="/contact">Contact-Us</a>
+      <a href="my_profile.html">My-Profile</a>
+      <!-- Placeholders for role and email -->
+      <i class='bx bx-moon theme-toggle' id="theme-toggle"></i>
+    </nav>
+  </header>
+  <div class="profile-wrapper">
+    <div class="profile-container">
+        <div class="profile-info">
+            <h2>Abhishek Bhan Gyara </h2>
+            <p>Subject: Data Science | Faculty at Keshav Memorial Institute of Technology<br>
+               Hyderabad, Telangana, India</p>
+            <div class="button-container">
+                <button class="tab-btn active" data-section="personal">Personal details</button>
+                <button class="tab-btn" data-section="education">Educational qualifications</button>
+                <button class="tab-btn" data-section="professional">Professional qualifications</button>
+                <button class="tab-btn" data-section="research">Researches & Publications</button>
+            </div>
+        </div>
+        <div class="profile-photo">
+            <img src="profile.jpg" alt="">
+            
+        </div>
+    </div>
+</div>
+
+<div class="content-container">
+    
+    <div id="personal" class="content-card active" style="margin-bottom: 20px;">
+        <h3>Personal Details</h3>
+    
+        <!-- Display Mode (Text) -->
+        <div id="personal-info">
+            <p><strong>Gender:</strong> <span id="gender-text">N/A</span></p><br>
+            <p><strong>Date of Birth:</strong> <span id="dob-text">N/A</span></p><br>
+            <p><strong>Age:</strong> <span id="age-text">N/A</span></p><br>
+            <p><strong>Email:</strong> <span id="email-text">N/A</span></p><br>
+            <p><strong>Phone Number:</strong> <span id="phone-text">N/A</span></p><br>
+    
+            <!-- Address Display -->
+            <h4>Temporary Address:</h4>
+            <p id="temp-address-text">N/A</p>
+    
+            <h4>Permanent Address:</h4>
+            <p id="perm-address-text">N/A</p>
+        </div>
+    <br>
+
+        <button id="edit-btn-personal" style="width:100px;background-color: #11cbcb;border-radius: 10px;height: 30px;margin-left:1%">Edit</button>
+    
+        <!-- Edit Mode (Input Fields) -->
+        <div id="edit-fields-personal" style="display: none;">
+            <label>Gender:</label>
+            <input type="radio" id="male" name="gender" value="Male">
+            <label for="male">Male</label>
+            <input type="radio" id="female" name="gender" value="Female">
+            <label for="female">Female</label>
+            <br><br>
+    
+            <label for="dob">Date of Birth:</label>
+            <input type="date" id="dob" name="dob">
+            <br><br>
+    
+            <label for="age">Age:</label>
+            <input type="number" id="age" name="age" min="1">
+            <br><br>
+    
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email">
+            <br><br>
+    
+            <label for="phone">Phone Number:</label>
+            <input type="tel" id="phone" name="phone" pattern="[0-9]{10}" placeholder="Enter 10-digit phone number">
+            <br><br>
+    
+            <!-- Address Section -->
+            <div class="address-container">
+                <div class="address-block">
+                    <h4>Temporary Address</h4>
+                    <input type="text" id="temp-area" placeholder="Area">
+                    <input type="text" id="temp-city" placeholder="City">
+                    <input type="text" id="temp-state" placeholder="State">
+                    <input type="text" id="temp-pincode" placeholder="Pincode">
+                </div>
+    
+                <div class="separator"></div>
+    
+                <div class="address-block">
+                    <h4>Permanent Address</h4>
+                    <input type="text" id="perm-area" placeholder="Area">
+                    <input type="text" id="perm-city" placeholder="City">
+                    <input type="text" id="perm-state" placeholder="State">
+                    <input type="text" id="perm-pincode" placeholder="Pincode">
+                </div>
+            </div>
+    
+            <button id="save-btn-personal">Save</button>
+        </div>
+    </div>
+    
+    <div id="education" class="content-card">
+      <h3>Education Details</h3>
+  
+      <!-- Display Mode (Text) -->
+      <div id="education-info">
+          <!-- UG Section -->
+          <h4>Undergraduate (UG)</h4>
+          <p><strong>Name of University:</strong> <span id="ug-university-text">N/A</span></p>
+          <p><strong>Duration:</strong> <span id="ug-duration-text">N/A - N/A</span></p>
+          <p><strong>Location:</strong> <span id="ug-location-text">N/A</span></p>
+          <p><strong>State:</strong> <span id="ug-state-text">N/A</span></p>
+          <p><strong>Grade:</strong> <span id="ug-grade-text">N/A</span></p>
+          <br>
+          <hr>
+          <br>
+  
+          <!-- PG Section -->
+          <h4>Postgraduate (PG)</h4>
+          <p><strong>Name of University:</strong> <span id="pg-university-text">N/A</span></p>
+          <p><strong>Duration:</strong> <span id="pg-duration-text">N/A - N/A</span></p>
+          <p><strong>Location:</strong> <span id="pg-location-text">N/A</span></p>
+          <p><strong>State:</strong> <span id="pg-state-text">N/A</span></p>
+          <p><strong>Grade:</strong> <span id="pg-grade-text">N/A</span></p>
+          <br>
+          <hr>
+          <br>
+  
+          <!-- PhD Section -->
+          <h4>Doctorate (PhD)</h4>
+          <p><strong>Name of University:</strong> <span id="phd-university-text">N/A</span></p>
+          <p><strong>Duration:</strong> <span id="phd-duration-text">N/A - N/A</span></p>
+          <p><strong>Location:</strong> <span id="phd-location-text">N/A</span></p>
+          <p><strong>State:</strong> <span id="phd-state-text">N/A</span></p>
+          <p><strong>Grade:</strong> <span id="phd-grade-text">N/A</span></p>
+      </div>
+  
+      <button id="edit-btn-education" style="width:100px;background-color: #11cbcb;border-radius: 10px;height: 30px;margin-left:50%">Edit</button>
+  
+      <!-- Edit Mode (Input Fields) -->
+      <div id="edit-fields-education" style="display: none;">
+          <!-- UG Section -->
+          <h4>Undergraduate (UG)</h4>
+          <label for="ug-university">Name of University:</label>
+          <input type="text" id="ug-university" value="N/A">
+  
+          <label for="ug-duration-from">Duration:</label>
+          <input type="date" id="ug-duration-from"> to 
+          <input type="date" id="ug-duration-to">
+  
+          <label for="ug-location">Location:</label>
+          <input type="text" id="ug-location" value="N/A">
+  
+          <label for="ug-state">State:</label>
+          <input type="text" id="ug-state" value="N/A">
+  
+          <label for="ug-grade">Grade:</label>
+          <input type="text" id="ug-grade" value="N/A">
+          <hr>
+  
+          <!-- PG Section -->
+          <h4>Postgraduate (PG)</h4>
+          <label for="pg-university">Name of University:</label>
+          <input type="text" id="pg-university" value="N/A">
+  
+          <label for="pg-duration-from">Duration:</label>
+          <input type="date" id="pg-duration-from"> to 
+          <input type="date" id="pg-duration-to">
+  
+          <label for="pg-location">Location:</label>
+          <input type="text" id="pg-location" value="N/A">
+  
+          <label for="pg-state">State:</label>
+          <input type="text" id="pg-state" value="N/A">
+  
+          <label for="pg-grade">Grade:</label>
+          <input type="text" id="pg-grade" value="N/A">
+          <hr>
+  
+          <!-- PhD Section -->
+          <h4>Doctorate (PhD)</h4>
+          <label for="phd-university">Name of University:</label>
+          <input type="text" id="phd-university" value="N/A">
+  
+          <label for="phd-duration-from">Duration:</label>
+          <input type="date" id="phd-duration-from"> to 
+          <input type="date" id="phd-duration-to">
+  
+          <label for="phd-location">Location:</label>
+          <input type="text" id="phd-location" value="N/A">
+  
+          <label for="phd-state">State:</label>
+          <input type="text" id="phd-state" value="N/A">
+  
+          <label for="phd-grade">Grade:</label>
+          <input type="text" id="phd-grade" value="N/A">
+  
+          <button id="save-btn-education">Save</button>
+          <div class="form-group">
+            <label for="certificate">Upload Certificate:</label>
+            <input type="file" id="certificate" name="certificate" accept=".pdf,.jpg,.png" required>
+        </div>
+      </div>
+  </div>
+    
+  <div id="professional" class="content-card">
+    <h2>Professional Experience</h2>
+    
+    <div id="experience-container"></div>
+
+</div>
+<button id="add-experience-btn">Add Experience</button>
+
+
+<div id="research" class="content-card">
+  <h3>Research & Publications</h3>
+  <button id="add-research-btn">Add Research</button>
+  <table id="research-table" border="1">
+      <thead>
+          <tr>
+              <th>Title of Research</th>
+              <th>Duration (From)</th>
+              <th>Duration (To)</th>
+              <th>Action</th>
+          </tr>
+      </thead>
+      <tbody></tbody>
+  </table>
+</div>
+
+
+</div>
+</div>
+  
+
+
+
+  
+
+  
+
+
+
+<script>
+  const API_URL = "http://localhost:9001/profile";
+
+  // Save profile data
+  async function saveProfileData() {
+    const gender = document.querySelector('input[name="gender"]:checked')?.value;
+    const dob = document.getElementById("dob").value;
+    const age = document.getElementById("age").value;
+    const email = document.getElementById("email").value;
+    const phone = document.getElementById("phone").value;
+
+    const tempAddress = {
+      area: document.getElementById("temp-area").value,
+      city: document.getElementById("temp-city").value,
+      state: document.getElementById("temp-state").value,
+      pincode: document.getElementById("temp-pincode").value,
+    };
+
+    const permAddress = {
+      area: document.getElementById("perm-area").value,
+      city: document.getElementById("perm-city").value,
+      state: document.getElementById("perm-state").value,
+      pincode: document.getElementById("perm-pincode").value,
+    };
+
+    // Collect education data
+    const education = [];
+    document.querySelectorAll("#edit-fields-education .education-entry").forEach((entry) => {
+      education.push({
+        level: entry.querySelector(".education-level").value,
+        university: entry.querySelector(".education-university").value,
+        duration: {
+          from: entry.querySelector(".education-from").value,
+          to: entry.querySelector(".education-to").value,
+        },
+        location: entry.querySelector(".education-location").value,
+        state: entry.querySelector(".education-state").value,
+        grade: entry.querySelector(".education-grade").value,
+      });
+    });
+
+    // Collect experience data
+    const professionalExperience = [];
+    document.querySelectorAll("#experience-container .experience-card").forEach((card) => {
+      professionalExperience.push({
+        organization: card.querySelector(".experience-organization").value,
+        joiningDate: card.querySelector(".experience-joining-date").value,
+        relieveDate: card.querySelector(".experience-relieve-date").value,
+        experienceYears: card.querySelector(".experience-years").value,
+        location: card.querySelector(".experience-location").value,
+      });
+    });
+
+    const profileData = {
+      personalDetails: { gender, dob, age, email, phone, tempAddress, permAddress },
+      education,
+      professionalExperience,
+    };
+
+    try {
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(profileData),
+      });
+
+      const result = await response.json();
+      alert(result.message);
+      fetchProfileData(); // Refresh the displayed data
+    } catch (error) {
+      console.error("Error saving profile:", error);
+      alert("Failed to save profile");
+    }
+  }
+
+  // Add event listener for the save button
+  document.getElementById("save-btn-personal").addEventListener("click", saveProfileData);
+</script>
+
+<script>
+// Call fetchProfileData without adding another DOMContentLoaded event listener
+fetchProfileData();
+
+document.getElementById("edit-btn-personal").addEventListener("click", () => {
+    document.getElementById("edit-fields-personal").style.display = "block";
+});
+
+document.getElementById("save-btn-personal").addEventListener("click", async () => {
+    const gender = document.querySelector('input[name="gender"]:checked')?.value;
+    const dob = document.getElementById("dob").value;
+    const age = document.getElementById("age").value;
+    const email = document.getElementById("email").value;
+    const phone = document.getElementById("phone").value;
+
+    const tempAddress = {
+        area: document.getElementById("temp-area").value,
+        city: document.getElementById("temp-city").value,
+        state: document.getElementById("temp-state").value,
+        pincode: document.getElementById("temp-pincode").value,
+    };
+
+    const permAddress = {
+        area: document.getElementById("perm-area").value,
+        city: document.getElementById("perm-city").value,
+        state: document.getElementById("perm-state").value,
+        pincode: document.getElementById("perm-pincode").value,
+    };
+
+    const profileData = { gender, dob, age, email, phone, tempAddress, permAddress };
+
+    try {
+        const response = await fetch("http://localhost:9001/profile", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(profileData),
+        });
+
+        const result = await response.json();
+        alert(result.message);
+        document.getElementById("edit-fields-personal").style.display = "none"; // Hide edit fields after saving
+    } catch (error) {
+        console.error("Error saving profile:", error);
+        alert("Failed to save profile");
+    }
+});
+
+// Function to Fetch and Display Existing Profile Data
+async function fetchProfileData() {
+    try {
+        const response = await fetch("http://localhost:9001/profile");
+        if (!response.ok) throw new Error("Profile not found");
+
+        const profile = await response.json();
+
+        if (profile) {
+            document.querySelector(`input[name="gender"][value="${profile.gender}"]`)?.setAttribute("checked", "checked");
+            document.getElementById("dob").value = profile.dob || "";
+            document.getElementById("age").value = profile.age || "";
+            document.getElementById("email").value = profile.email || "";
+            document.getElementById("phone").value = profile.phone || "";
+
+            document.getElementById("temp-area").value = profile.tempAddress?.area || "";
+            document.getElementById("temp-city").value = profile.tempAddress?.city || "";
+            document.getElementById("temp-state").value = profile.tempAddress?.state || "";
+            document.getElementById("temp-pincode").value = profile.tempAddress?.pincode || "";
+
+            document.getElementById("perm-area").value = profile.permAddress?.area || "";
+            document.getElementById("perm-city").value = profile.permAddress?.city || "";
+            document.getElementById("perm-state").value = profile.permAddress?.state || "";
+            document.getElementById("perm-pincode").value = profile.permAddress?.pincode || "";
+        }
+    } catch (error) {
+        console.warn("No profile data found.");
+    }
+}
+
+
+
+
+
+
+document.getElementById("add-research-btn").addEventListener("click", function () {
+    let tableBody = document.querySelector("#research-table tbody");
+
+    // Create a new row
+    let newRow = document.createElement("tr");
+
+    // Add table cells with input fields and buttons
+    newRow.innerHTML = `
+        <td><input type="text" name="research-title" placeholder="Enter Research Title"></td>
+        <td><input type="date" name="research-from"></td>
+        <td><input type="date" name="research-to"></td>
+        <td>
+            <button class="save-btn">Save</button>
+            <button class="remove-row-btn">Remove</button>
+        </td>
+    `;
+
+    // Append row to the table
+    tableBody.appendChild(newRow);
+
+    // Add event listener to Save button
+    newRow.querySelector(".save-btn").addEventListener("click", function () {
+        let titleInput = newRow.querySelector("input[name='research-title']");
+        let fromInput = newRow.querySelector("input[name='research-from']");
+        let toInput = newRow.querySelector("input[name='research-to']");
+
+        // Replace input fields with text
+        newRow.innerHTML = `
+            <td>${titleInput.value}</td>
+            <td>${fromInput.value}</td>
+            <td>${toInput.value}</td>
+            <td>
+                <button class="remove-row-btn">Remove</button>
+            </td>
+        `;
+
+        // Add remove functionality after replacing content
+        newRow.querySelector(".remove-row-btn").addEventListener("click", function () {
+            newRow.remove();
+        });
+    });
+
+    // Add event listener to Remove button
+    newRow.querySelector(".remove-row-btn").addEventListener("click", function () {
+        newRow.remove();
+    });
+});
+
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("add-experience-btn").addEventListener("click", function (event) {
+        event.stopPropagation(); // Prevent double event firing
+
+        // Create a new experience card
+        let experienceCard = document.createElement("div");
+        experienceCard.classList.add("experience-card");
+
+        // Add input fields and buttons
+        experienceCard.innerHTML = `
+            <label>Organization Name:</label>
+            <input type="text" name="organization" placeholder="Enter Organization Name">
+
+            <label>Date of Joining:</label>
+            <input type="date" name="joining-date">
+
+            <label>Experience (Years):</label>
+            <input type="number" name="experience" placeholder="Enter Years of Experience">
+
+            <label>Location:</label>
+            <input type="text" name="location" placeholder="Enter Location">
+
+            <label>Relieve Date:</label>
+            <input type="date" name="relieve-date">
+
+            <button class="submit-btn">Submit</button>
+            <button class="remove-btn">Remove</button>
+            <hr>
+        `;
+
+        // Append the new card inside the container with spacing
+        let container = document.getElementById("experience-container");
+        if (container.children.length > 0) {
+            experienceCard.style.marginTop = "20px"; // Add space between cards
+        }
+        container.appendChild(experienceCard);
+
+        // Handle submit button functionality
+        experienceCard.querySelector(".submit-btn").addEventListener("click", function () {
+            let inputs = experienceCard.querySelectorAll("input");
+            inputs.forEach(input => {
+                let span = document.createElement("span");
+                span.textContent = input.value;
+                input.replaceWith(span); // Replace input with text
+            });
+            this.remove(); // Remove submit button after submitting
+        });
+
+        // Handle remove button functionality
+        experienceCard.querySelector(".remove-btn").addEventListener("click", function () {
+            experienceCard.remove();
+        });
+    }, { once: false }); // Ensures event is only attached once
+});
+
+
+
+
+document.getElementById("add-research-btn").addEventListener("click", function () {
+    let tableBody = document.querySelector("#research-table tbody");
+
+    // Create a new row
+    let newRow = document.createElement("tr");
+
+    // Add table cells with input fields
+    newRow.innerHTML = `
+        <td><input type="text" name="research-title" placeholder="Enter Research Title"></td>
+        <td><input type="date" name="research-from"></td>
+        <td><input type="date" name="research-to"></td>
+        <td><button class="remove-row-btn">Remove</button></td>
+    `;
+
+    // Append row to the table
+    tableBody.appendChild(newRow);
+
+    // Add event listener to remove button inside this row
+    newRow.querySelector(".remove-row-btn").addEventListener("click", function () {
+        newRow.remove();
+    });
+});
+
+
+
+
+
+document.getElementById("add-experience-btn").addEventListener("click", function () {
+    // Create a new experience card
+    let experienceCard = document.createElement("div");
+    experienceCard.classList.add("experience-card");
+
+    // Add input fields and buttons
+    experienceCard.innerHTML = `
+        <label>Organization Name:</label>
+        <input type="text" name="organization" placeholder="Enter Organization Name">
+        
+        <label>Date of Joining:</label>
+        <input type="date" name="joining-date">
+        
+        <label>Experience (Years):</label>
+        <input type="number" name="experience" placeholder="Enter Years of Experience">
+        
+        <label>Location:</label>
+        <input type="text" name="location" placeholder="Enter Location">
+        
+        <label>Relieve Date:</label>
+        <input type="date" name="relieve-date">
+        
+        <button class="submit-btn">Submit</button>
+        <button class="remove-btn">Remove</button>
+        <hr>
+    `;
+
+    // Append the new card inside the container with spacing
+    let container = document.getElementById("experience-container");
+    if (container.children.length > 0) {
+        experienceCard.style.marginTop = "20px"; // Add space between cards
+    }
+    container.appendChild(experienceCard);
+
+    // Handle submit button functionality
+    experienceCard.querySelector(".submit-btn").addEventListener("click", function () {
+        let inputs = experienceCard.querySelectorAll("input");
+        inputs.forEach(input => {
+            let span = document.createElement("span");
+            span.textContent = input.value;
+            input.replaceWith(span); // Replace input with text
+        });
+        this.remove(); // Remove submit button after submitting
+    });
+
+    // Handle remove button functionality
+    experienceCard.querySelector(".remove-btn").addEventListener("click", function () {
+        experienceCard.remove();
+    });
+});
+
+
+
+
+
+
+
+document.getElementById("edit-btn-education").addEventListener("click", function () {
+    document.getElementById("education-info").style.display = "none";
+    document.getElementById("edit-fields-education").style.display = "block";
+    this.style.display = "none"; // Hide edit button
+});
+
+document.getElementById("save-btn-education").addEventListener("click", function () {
+    // Update the text view
+    document.getElementById("ug-university-text").innerText = document.getElementById("ug-university").value;
+    document.getElementById("ug-duration-text").innerText = document.getElementById("ug-duration-from").value + " - " + document.getElementById("ug-duration-to").value;
+    document.getElementById("ug-location-text").innerText = document.getElementById("ug-location").value;
+    document.getElementById("ug-state-text").innerText = document.getElementById("ug-state").value;
+    document.getElementById("ug-grade-text").innerText = document.getElementById("ug-grade").value;
+
+    document.getElementById("pg-university-text").innerText = document.getElementById("pg-university").value;
+    document.getElementById("pg-duration-text").innerText = document.getElementById("pg-duration-from").value + " - " + document.getElementById("pg-duration-to").value;
+    document.getElementById("pg-location-text").innerText = document.getElementById("pg-location").value;
+    document.getElementById("pg-state-text").innerText = document.getElementById("pg-state").value;
+    document.getElementById("pg-grade-text").innerText = document.getElementById("pg-grade").value;
+
+    document.getElementById("phd-university-text").innerText = document.getElementById("phd-university").value;
+    document.getElementById("phd-duration-text").innerText = document.getElementById("phd-duration-from").value + " - " + document.getElementById("phd-duration-to").value;
+    document.getElementById("phd-location-text").innerText = document.getElementById("phd-location").value;
+    document.getElementById("phd-state-text").innerText = document.getElementById("phd-state").value;
+    document.getElementById("phd-grade-text").innerText = document.getElementById("phd-grade").value;
+
+    // Show the text view, hide the edit fields
+    document.getElementById("education-info").style.display = "block";
+    document.getElementById("edit-fields-education").style.display = "none";
+    document.getElementById("edit-btn-education").style.display = "inline"; // Show edit button again
+});
+
+
+
+
+
+
+
+
+
+
+ document.getElementById("edit-btn-personal").addEventListener("click", function() {
+        document.getElementById("personal-info").style.display = "none";
+        document.getElementById("edit-fields-personal").style.display = "block";
+        
+        // Pre-fill input fields with existing values
+        document.getElementById("dob").value = "1990-01-01";
+        document.getElementById("age").value = "34";
+        document.getElementById("email").value = "abhishek@example.com";
+        document.getElementById("phone").value = "9876543210";
+        
+        let genderText = document.getElementById("gender-text").textContent;
+        document.getElementById(genderText.toLowerCase()).checked = true;
+
+        let tempAddressText = document.getElementById("temp-address-text")?.textContent || "";
+let tempAddressParts = tempAddressText.split(", ");
+document.getElementById("temp-area").value = tempAddressParts[0] || "";
+document.getElementById("temp-city").value = tempAddressParts[1] || "";
+document.getElementById("temp-state").value = tempAddressParts[2] || "";
+document.getElementById("temp-pincode").value = tempAddressParts[3] || "";
+
+
+        let permAddressParts = document.getElementById("perm-address-text").textContent.split(", ");
+        document.getElementById("perm-area").value = permAddressParts[0];
+        document.getElementById("perm-city").value = permAddressParts[1];
+        document.getElementById("perm-state").value = permAddressParts[2];
+        document.getElementById("perm-pincode").value = permAddressParts[3];
+    });
+
+    document.getElementById("save-btn-personal").addEventListener("click", function() {
+        // Save updated values
+        document.getElementById("gender-text").textContent = document.querySelector('input[name="gender"]:checked').value;
+        document.getElementById("dob-text").textContent = document.getElementById("dob").value;
+        document.getElementById("age-text").textContent = document.getElementById("age").value;
+        document.getElementById("email-text").textContent = document.getElementById("email").value;
+        document.getElementById("phone-text").textContent = document.getElementById("phone").value;
+        
+        // Save updated addresses
+        document.getElementById("temp-address-text").textContent = 
+            `${document.getElementById("temp-area").value}, ` +
+            `${document.getElementById("temp-city").value}, ` +
+            `${document.getElementById("temp-state").value}, ` +
+            `${document.getElementById("temp-pincode").value}`;
+        
+        document.getElementById("perm-address-text").textContent = 
+            `${document.getElementById("perm-area").value}, ` +
+            `${document.getElementById("perm-city").value}, ` +
+            `${document.getElementById("perm-state").value}, ` +
+            `${document.getElementById("perm-pincode").value}`;
+
+        document.getElementById("personal-info").style.display = "block";
+        document.getElementById("edit-fields-personal").style.display = "none";
+    });
+
+
+
+
+    document.addEventListener("DOMContentLoaded", function() {
+    const buttons = document.querySelectorAll(".tab-btn");
+    const contentCards = document.querySelectorAll(".content-card");
+
+    buttons.forEach(button => {
+        button.addEventListener("click", function() {
+            // Remove active class from all buttons
+            buttons.forEach(btn => btn.classList.remove("active"));
+            this.classList.add("active");
+
+            // Hide all content sections
+            contentCards.forEach(card => card.classList.remove("active"));
+
+            // Show the selected content section
+            const sectionId = this.getAttribute("data-section");
+            document.getElementById(sectionId).classList.add("active");
+        });
+    });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!------------------------------------------------------------------->
+
+
+
+  
+  // Theme Toggle Script
+const themeToggle = document.getElementById('theme-toggle');
+const body = document.body;
+
+// Apply the saved theme on page load
+if (localStorage.getItem('theme') === 'dark') {
+    body.classList.add('dark-mode');
+    body.classList.remove('light-mode');
+    if (themeToggle) {
+        themeToggle.classList.add('bx-sun');
+        themeToggle.classList.remove('bx-moon');
+    }
+} else {
+    body.classList.add('light-mode');
+    body.classList.remove('dark-mode');
+    if (themeToggle) {
+        themeToggle.classList.add('bx-moon');
+        themeToggle.classList.remove('bx-sun');
+    }
+}
+
+// Add event listener for theme toggle
+if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+        body.classList.toggle('dark-mode');
+        body.classList.toggle('light-mode');
+        themeToggle.classList.toggle('bx-sun');
+        themeToggle.classList.toggle('bx-moon');
+
+        // Save the current theme in localStorage
+        if (body.classList.contains('dark-mode')) {
+            localStorage.setItem('theme', 'dark');
+        } else {
+            localStorage.setItem('theme', 'light');
+        }
+    });
+}
+
+  function openEditModal() {
+    document.getElementById("editModal").style.display = "block";
+  }
+
+  function saveMarquee() {
+    let newText = document.getElementById("editText").value;
+    let newLink = document.getElementById("editLink").value;
+
+    if (newText.trim() !== "" && newLink.trim() !== "") {
+      document.getElementById("marquee-text").innerHTML = `<a href="${newLink}" target="_blank">${newText}</a>`;
+      document.getElementById("editModal").style.display = "none";
+    }
+  }
+
+  // Toggle Departments Section
+  const viewDepartmentsBtn = document.getElementById('viewDepartmentsBtn');
+  const departmentsSection = document.getElementById('departmentsSection');
+
+  viewDepartmentsBtn.addEventListener('click', () => {
+    if (departmentsSection.style.display === 'none') {
+      departmentsSection.style.display = 'block';
+      viewDepartmentsBtn.textContent = 'Hide Departments';
+    } else {
+      departmentsSection.style.display = 'none';
+      viewDepartmentsBtn.textContent = 'View Departments';
+    }
+  });
+</script>
+</body>
+</html>
+
+ 
+ </body>
+</html>
