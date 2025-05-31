@@ -6,6 +6,59 @@
     <title>Form with Personal and Educational Details</title>
     <style>
         body {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Changed from center to allow scrolling */
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f4f9;
+    font-family: Arial, sans-serif;
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+}
+
+.card {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%; /* Changed from fixed width */
+    max-width: 800px; /* Added max-width instead of fixed width */
+    margin: 20px auto; /* Added margin for spacing */
+    overflow-y: auto; /* Allow vertical scrolling within the card if needed */
+}
+
+/* Add responsive adjustments for smaller screens */
+@media (max-width: 850px) {
+    .card {
+        width: 95%;
+        padding: 15px;
+    }
+    
+    .field-row {
+        flex-direction: column;
+    }
+    
+    .address-container {
+        flex-direction: column;
+    }
+    
+    .address-container::after {
+        display: none; /* Remove divider on small screens */
+    }
+    
+    .same-address-btn {
+        position: static;
+        margin: 10px 0;
+    }
+}
+
+/* Ensure form elements don't overflow */
+input, select, textarea {
+    max-width: 100%;
+    box-sizing: border-box;
+}
+        body {
             display: flex;
             justify-content: center;
             align-items: center;
@@ -699,14 +752,15 @@
         }
 
         function noExperience() {
-            experiences = [{type: 'none'}];
+            experiences = [];  // Just set it to empty array instead of adding a dummy object
             document.getElementById('addExpBtn').disabled = true;
             document.getElementById('noExpBtn').disabled = true;
             validateExperience();
         }
 
         function validateExperience() {
-            document.getElementById('exp-next-button').disabled = experiences.length === 0;
+            // Remove this function entirely or modify it to always enable the next button
+            document.getElementById('exp-next-button').disabled = false;
         }
 
         function setupCertificateSection() {
@@ -754,75 +808,97 @@
             document.getElementById('finalSubmitBtn').disabled = !document.getElementById('termsCheck').checked;
         }
 
+        function collectPhDData() {
+            const status = document.getElementById('phd-status').value;
+            if (status === 'no') return { status: 'no' };
+
+            return {
+                name: document.getElementById('phd-name').value,
+                location: document.getElementById('phd-location').value,
+                startDate: document.getElementById('phd-start').value,
+                endDate: document.getElementById('phd-end').value,
+                instituteType: document.getElementById('phd-type').value,
+                course: document.getElementById('phd-course')?.value || '',
+                specialization: document.getElementById('phd-specialization')?.value || '',
+                status: status,
+                currentYear: status === 'pursuing' ? 
+                    parseInt(document.getElementById('phd-current-year').value) : null,
+                gradeType: document.getElementById('phd-grade-type').value,
+                grade: parseFloat(document.getElementById(`phd-${document.getElementById('phd-grade-type').value}`)?.value) || 0
+            };
+        }
+
+        function collectPersonalData() {
+            const data = {
+                name: document.getElementById('name').value,
+                gender: document.getElementById('gender').value,
+                dob: document.getElementById('dob').value,
+                age: document.getElementById('age').value,
+                tempAddress: {
+                    state: document.getElementById('temp-state').value,
+                    city: document.getElementById('temp-city').value,
+                    pincode: document.getElementById('temp-pincode').value
+                },
+                permAddress: {
+                    state: document.getElementById('perm-state').value,
+                    city: document.getElementById('perm-city').value,
+                    pincode: document.getElementById('perm-pincode').value
+                },
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value
+            };
+            return data;
+        }
+
         async function submitForm() {
-            if (!document.getElementById('termsCheck').checked) {
-                alert('Please agree to the terms and conditions.');
-                return;
-            }
-
             try {
-                const formData = new FormData();
+                // Get user info from localStorage
+                const userEmail = localStorage.getItem('userEmail');
+                const userDepartment = localStorage.getItem('userDepartment');
+                const userRole = localStorage.getItem('userRole'); // Get user role
 
-                // Use the logged-in user's ID from localStorage
-                const userId = localStorage.getItem('userId') || sessionStorage.getItem('userId');
-                formData.append('userId', userId);
-                
-                // Build personalDetails object
-                const personalDetails = {
-                    name: document.getElementById('name').value,
-                    gender: document.getElementById('gender').value,
-                    dob: document.getElementById('dob').value,
-                    age: document.getElementById('age').value,
-                    tempAddress: {
-                        state: document.getElementById('temp-state').value,
-                        city: document.getElementById('temp-city').value,
-                        pincode: document.getElementById('temp-pincode').value
-                    },
-                    permAddress: {
-                        state: document.getElementById('perm-state').value,
-                        city: document.getElementById('perm-city').value,
-                        pincode: document.getElementById('perm-pincode').value
-                    },
-                    email: document.getElementById('email').value || localStorage.getItem('userEmail'), // Use stored email
-                    phone: document.getElementById('phone').value
+                if (!userEmail || !userDepartment) {
+                    throw new Error('User session not found. Please login again.');
+                }
+
+                // Collect education details without PhD validation
+                const educationDetails = {
+                    school: collectEducationData('school'),
+                    intermediate: collectEducationData('intermediate'),
+                    ug: collectEducationData('ug'),
+                    pg: collectEducationData('pg'),
+                    // Make PhD optional
+                    phd: document.getElementById('phd-status')?.value === 'no' ? 
+                         { status: 'no' } : 
+                         collectEducationData('phd')
                 };
 
-                // Add personal, education, and experience details
-                formData.append('personalDetails', JSON.stringify(personalDetails));
-                formData.append('educationDetails', JSON.stringify(educationData));
-                formData.append('experiences', JSON.stringify(experiences));
-
-                // Add files
-                const fileInputs = {
-                    'schoolCert': document.getElementById('school-cert').files[0],
-                    'interCert': document.getElementById('inter-cert').files[0],
-                    'ugCert': document.getElementById('ug-cert').files[0],
-                    'pgCert': document.getElementById('pg-cert').files[0],
-                    'phdCert': document.getElementById('phd-cert').files[0]
+                const formPayload = {
+                    personalDetails: collectPersonalData(),
+                    educationDetails,
+                    experiences: experiences || [] // Use empty array if no experience
                 };
 
-                // Only append files that exist
-                Object.entries(fileInputs).forEach(([key, file]) => {
-                    if (file) formData.append(key, file);
-                });
-
-                console.log('Submitting form data:', {
-                    personalDetails,
-                    educationData,
-                    experiences
-                });
+                console.log('Submitting form data:', formPayload);
 
                 const response = await fetch('http://localhost:4009/api/faculty/submit-form', {
                     method: 'POST',
-                    body: formData
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formPayload)
                 });
 
                 const data = await response.json();
-                console.log('Server response:', data);
-
+                
                 if (data.success) {
                     alert('Form submitted successfully!');
-                    window.location.href = '/faculty_dashboard';
+                    // Redirect based on user role
+                    if (userRole === 'HOD') {
+                        window.location.href = '/hod_dashboard';
+                    } else {
+                        window.location.href = '/faculty_dashboard';
+                    }
                 } else {
                     throw new Error(data.message || 'Form submission failed');
                 }
@@ -831,6 +907,45 @@
                 alert(`Error submitting form: ${error.message}`);
             }
         }
+
+        function collectEducationData(level) {
+            try {
+                // If it's PhD and status is 'no', return minimal data
+                if (level === 'phd') {
+                    const status = document.getElementById('phd-status')?.value || 'no';
+                    if (status === 'no') {
+                        return { status: 'no' };
+                    }
+                }
+
+                // For other levels or if PhD with status other than 'no'
+                return {
+                    name: document.getElementById(`${level}-name`)?.value || '',
+                    location: document.getElementById(`${level}-location`)?.value || '',
+                    startDate: document.getElementById(`${level}-start`)?.value || '',
+                    endDate: document.getElementById(`${level}-end`)?.value || '',
+                    instituteType: document.getElementById(`${level}-type`)?.value || '',
+                    course: document.getElementById(`${level}-course`)?.value || '',
+                    specialization: document.getElementById(`${level}-specialization`)?.value || '',
+                    gradeType: document.getElementById(`${level}-grade-type`)?.value || '',
+                    grade: document.getElementById(`${level}-${document.getElementById(`${level}-grade-type`)?.value}`)?.value || '',
+                    status: level === 'phd' ? document.getElementById('phd-status')?.value : undefined
+                };
+            } catch (error) {
+                console.warn(`Could not collect ${level} education data:`, error);
+                return level === 'phd' ? { status: 'no' } : {};
+            }
+        }
+
+        // Add this to load email when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            const userEmail = localStorage.getItem('userEmail');
+            if (userEmail) {
+                document.getElementById('email').value = userEmail;
+                document.getElementById('email').readOnly = true; // Make email field readonly
+            }
+            // ...existing code...
+        });
 
         // Add event listeners when page loads
         document.addEventListener('DOMContentLoaded', function() {
@@ -982,7 +1097,8 @@
                     <select id="intermediate-syllabus" required>
                         <option value="">Select</option>
                         <option value="cbse">CBSE</option>
-                        <option value="ssc">SSC</option>
+                        <option value="ssc">TSBIE</option>
+                        <input type="text" placeholder="Other">
                     </select>
 
                     <div class="grade-container">
