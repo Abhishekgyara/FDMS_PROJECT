@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FDP Details</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(to right, #1e90ee, #48daea);
+            min-height: 100vh;
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1.3rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(50px);
+        }
+
+        .logo {
+            font-size: 2rem;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 700;
+            margin-right: auto;
+        }
+
+        .navbar {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            padding-right: 2rem;
+        }
+        .card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 20px;
+        height: 100%;
+    }
+
+    .card-title {
+        color: #fff;
+        font-size: 1.25rem;
+        margin-bottom: 15px;
+    }
+
+    .card-text {
+        color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 10px;
+    }
+
+    .btn-primary {
+        background: #007bff;
+        border: none;
+        margin-top: 10px;
+    }
+
+    .text-muted {
+        color: rgba(255, 255, 255, 0.5) !important;
+    }
+        .navbar a {
+            font-size: 1.15rem;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .navbar a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #00abf0;
+        }
+
+        .navbar a.active {
+            background: #2575fc;
+            color: white;
+        }
+
+        .container {
+            margin-top: 100px;
+            max-width: 800px;
+        }
+
+        #fdpForm {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-label {
+            color: #fff;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .form-control, .form-select {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-weight: 500;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+            transition: all 0.3s ease;
+            width: 200px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+        }
+
+        h2 {
+            color: #fff;
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .alert {
+            display: none;
+            backdrop-filter: blur(10px);
+            border: none;
+            margin-top: 20px;
+        }
+
+        .participants-count {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="#" class="logo">TATHYA</a>
+        <nav class="navbar">
+            <a href="/faculty_dashboard">Dashboard</a>
+            <a href="/faculty_profile">My Profile</a>
+            <a href="/research">Research</a>
+            <a href="/faculty_notifications">Notifications</a>
+            <i class='bx bx-moon' id="theme-toggle"></i>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h2>Faculty Development Program Details</h2>
+        <form id="fdpForm">
+            <div class="mb-3">
+                <label class="form-label">FDP Title</label>
+                <input type="text" class="form-control" id="title" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Type</label>
+                <select class="form-select" id="type" required>
+                    <option value="">Select Type</option>
+                    <option value="attended">Attended</option>
+                    <option value="conducted">Conducted</option>
+                </select>
+            </div>
+
+            <div class="mb-3 participants-count">
+                <label class="form-label">Number of Participants</label>
+                <input type="number" class="form-control" id="participantsCount" min="1">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Name</label>
+                <input type="text" class="form-control" id="name" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Department</label>
+                <input type="text" class="form-control" id="department" required>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">From Date</label>
+                    <input type="date" class="form-control" id="fromDate" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">To Date</label>
+                    <input type="date" class="form-control" id="toDate" required>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Organized By</label>
+                <input type="text" class="form-control" id="organizedBy" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Location Type</label>
+                <select class="form-select" id="locationType" required>
+                    <option value="">Select Location Type</option>
+                    <option value="online">Online</option>
+                    <option value="offline">Offline</option>
+                    <option value="hybrid">Hybrid</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Level</label>
+                <select class="form-select" id="level" required>
+                    <option value="">Select Level</option>
+                    <option value="institute">Institute</option>
+                    <option value="national">National</option>
+                    <option value="international">International</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Funding Agency (Optional)</label>
+                <input type="text" class="form-control" id="fundingAgency">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Objectives/Outcomes</label>
+                <textarea class="form-control" id="objectives" rows="4" required></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="certificate" class="form-label text-white">Upload Certificate (PDF only, max 5MB)</label>
+                <input type="file" class="form-control" id="certificate" name="certificate" accept=".pdf">
+            </div>
+
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-submit">Submit</button>
+            </div>
+        </form>
+
+        <div class="alert alert-success" id="successAlert">
+            FDP details submitted successfully!
+        </div>
+        <div class="alert alert-danger" id="errorAlert">
+            Error in submission. Please try again.
+        </div>
+    </div>
+    <div class="container mt-5">
+        <h2 class="text-white mb-4">Submitted FDPs</h2>
+        <div class="row" id="fdpsContainer">
+            <!-- FDP cards will be dynamically inserted here -->
+        </div>
+    </div>
+
+    <script>
+
+
+// Keep the rest of your existing code (participants count, date validation, etc.)
+
+    // Update the fetchFDPs display function
+   // ... existing code ...
+
+// ... existing code ...
+
+async function fetchFDPs() {
+    try {
+        const userEmail = localStorage.getItem('userEmail');
+        if (!userEmail) {
+            throw new Error('User email not found');
+        }
+
+        const response = await fetch(`http://localhost:4009/api/fdp/${userEmail}`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch FDPs');
+        }
+
+        const data = await response.json();
+        
+        if (!data.success || !data.fdps) {
+            throw new Error(data.message || 'No FDPs found');
+        }
+
+        const container = document.getElementById('fdpsContainer');
+        container.innerHTML = data.fdps.map(fdp => `
+            <div class="col-md-6 mb-4">
+                <div class="card bg-transparent border-light">
+                    <div class="card-body text-white">
+                        <h5 class="card-title">${fdp.title}</h5>
+                        <p class="card-text">Type: ${fdp.type}</p>
+                        <p class="card-text">Organized By: ${fdp.organizedBy}</p>
+                        <p class="card-text">Duration: ${new Date(fdp.fromDate).toLocaleDateString()} to ${new Date(fdp.toDate).toLocaleDateString()}</p>
+                        <p class="card-text">Level: ${fdp.level}</p>
+                        ${fdp.type === 'conducted' ? `<p class="card-text">Participants: ${fdp.participantsCount}</p>` : ''}
+                        ${fdp.certificatePath ? 
+                            `<a href="http://localhost:4009/api/fdp/certificate/${fdp.certificatePath}" 
+                                class="btn btn-primary" target="_blank">View Certificate</a>` : 
+                            '<p class="text-muted">No certificate uploaded</p>'
+                        }
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    } catch (error) {
+        console.error('Error:', error);
+        const container = document.getElementById('fdpsContainer');
+        container.innerHTML = `
+            <div class="col-12">
+                <div class="alert alert-danger">
+                    <h5>Error loading FDPs</h5>
+                    <p>${error.message}</p>
+                    <button onclick="fetchFDPs()" class="btn btn-warning mt-2">
+                        <i class="bx bx-refresh"></i> Try Again
+                    </button>
+                </div>
+            </div>`;
+    }
+}
+
+// Ensure this is called on page load
+document.addEventListener('DOMContentLoaded', fetchFDPs);
+
+// ... existing code ...
+
+// Update form submission handler// ... existing code ...
+
+document.getElementById('fdpForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const submitButton = document.querySelector('button[type="submit"]');
+    submitButton.disabled = true;
+    submitButton.textContent = 'Submitting...';
+    
+    try {
+        // Initialize FormData
+        const formData = new FormData();
+        
+        // Add form fields to FormData
+        formData.append('title', document.getElementById('title').value);
+        formData.append('type', document.getElementById('type').value);
+        formData.append('name', document.getElementById('name').value);
+        formData.append('department', document.getElementById('department').value);
+        formData.append('fromDate', document.getElementById('fromDate').value);
+        formData.append('toDate', document.getElementById('toDate').value);
+        formData.append('organizedBy', document.getElementById('organizedBy').value);
+        formData.append('locationType', document.getElementById('locationType').value);
+        formData.append('level', document.getElementById('level').value);
+        formData.append('objectives', document.getElementById('objectives').value);
+        formData.append('facultyEmail', localStorage.getItem('userEmail'));
+
+        // ... rest of the submission code ...
+    } catch (error) {
+        // ... error handling ...
+    } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = 'Submit';
+    }
+});
+
+// ... existing code ...
+
+
+// ... existing code ...
+
+        // Call fetchFDPs on page load and after successful submission
+        document.addEventListener('DOMContentLoaded', fetchFDPs);
+        
+        // Update form submission handler to refresh FDP list
+        document.getElementById('fdpForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // ... existing form submission code ...
+
+            if (responseData.success) {
+                document.getElementById('successAlert').style.display = 'block';
+                document.getElementById('errorAlert').style.display = 'none';
+                document.getElementById('fdpForm').reset();
+                fetchFDPs(); // Refresh the FDP list
+                setTimeout(() => {
+                    document.getElementById('successAlert').style.display = 'none';
+                }, 3000);
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+    fetchFDPs();
+});
+        // Show/hide participants count based on type selection
+        document.getElementById('type').addEventListener('change', function() {
+            const participantsDiv = document.querySelector('.participants-count');
+            if (this.value === 'conducted') {
+                participantsDiv.style.display = 'block';
+                document.getElementById('participantsCount').required = true;
+            } else {
+                participantsDiv.style.display = 'none';
+                document.getElementById('participantsCount').required = false;
+            }
+        });
+
+        // Date validation
+        document.getElementById('toDate').addEventListener('change', function() {
+            const fromDate = document.getElementById('fromDate').value;
+            const toDate = this.value;
+            
+            if (fromDate && toDate && fromDate > toDate) {
+                alert('End date cannot be earlier than start date');
+                this.value = '';
+            }
+        });
+
+        // Form submission
+       // Update the form submission handler
+
+        // Add this after your existing script tags
+
+   
+    // Single form submission handler
+    // ... existing code ...
+
+document.getElementById('fdpForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const formData = new FormData();
+    formData.append('title', document.getElementById('title').value);
+    formData.append('type', document.getElementById('type').value);
+    formData.append('name', document.getElementById('name').value);
+    formData.append('department', document.getElementById('department').value);
+    formData.append('fromDate', document.getElementById('fromDate').value);
+    formData.append('toDate', document.getElementById('toDate').value);
+    formData.append('organizedBy', document.getElementById('organizedBy').value);
+    formData.append('locationType', document.getElementById('locationType').value);
+    formData.append('level', document.getElementById('level').value);
+    formData.append('objectives', document.getElementById('objectives').value);
+    formData.append('facultyEmail', localStorage.getItem('userEmail'));
+
+    // Add participantsCount if type is conducted
+    if (document.getElementById('type').value === 'conducted') {
+        const participantsCount = document.getElementById('participantsCount').value;
+        if (!participantsCount) {
+            alert('Participants count is required for conducted FDPs');
+            return;
+        }
+        formData.append('participantsCount', participantsCount);
+    }
+
+    // Add certificate if uploaded
+    const certificateFile = document.getElementById('certificate').files[0];
+    if (certificateFile) {
+        formData.append('certificate', certificateFile);
+    }
+
+    try {
+        const response = await fetch('http://localhost:4009/api/fdp/submit', {
+            method: 'POST',
+            body: formData
+        });
+
+        const responseData = await response.json();
+        
+        if (responseData.success) {
+            document.getElementById('successAlert').style.display = 'block';
+            document.getElementById('errorAlert').style.display = 'none';
+            document.getElementById('fdpForm').reset();
+            setTimeout(() => {
+                document.getElementById('successAlert').style.display = 'none';
+            }, 3000);
+        } else {
+            throw new Error(responseData.message || 'Submission failed');
+        }
+    } catch (error) {
+        document.getElementById('errorAlert').style.display = 'block';
+        document.getElementById('successAlert').style.display = 'none';
+        console.error('Error:', error);
+        setTimeout(() => {
+            document.getElementById('errorAlert').style.display = 'none';
+        }, 3000);
+    }
+});
+
+// ... existing code ...
+
+    // Certificate file validation
+    document.getElementById('certificate').addEventListener('change', function() {
+        const file = this.files[0];
+        const maxSize = 5 * 1024 * 1024; // 5MB
+
+        if (file && file.size > maxSize) {
+            alert('Certificate file size must be less than 5MB');
+            this.value = '';
+        }
+
+        if (file && !file.type.includes('pdf')) {
+            alert('Only PDF files are allowed');
+            this.value = '';
+        }
+    });
+
+    // Participants count visibility
+    document.getElementById('type').addEventListener('change', function() {
+        const participantsDiv = document.querySelector('.participants-count');
+        if (this.value === 'conducted') {
+            participantsDiv.style.display = 'block';
+            document.getElementById('participantsCount').required = true;
+        } else {
+            participantsDiv.style.display = 'none';
+            document.getElementById('participantsCount').required = false;
+        }
+    });
+
+    // Date validation
+    document.getElementById('toDate').addEventListener('change', function() {
+        const fromDate = document.getElementById('fromDate').value;
+        const toDate = this.value;
+        
+        if (fromDate && toDate && fromDate > toDate) {
+            alert('End date cannot be earlier than start date');
+            this.value = '';
+        }
+    });
+
+    </script>
+</body>
+</html>
