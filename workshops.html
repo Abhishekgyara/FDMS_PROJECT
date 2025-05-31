@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workshop Details</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(to right, #1e90ee, #48daea);
+            min-height: 100vh;
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1.3rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(50px);
+        }
+
+        .logo {
+            font-size: 2rem;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 700;
+            margin-right: auto;
+        }
+
+        .navbar {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            padding-right: 2rem;
+        }
+
+        .navbar a {
+            font-size: 1.15rem;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .navbar a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #00abf0;
+        }
+
+        .navbar a.active {
+            background: #2575fc;
+            color: white;
+        }
+
+        .container {
+            margin-top: 100px;
+            max-width: 800px;
+        }
+
+        #workshopForm {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-label {
+            color: #fff;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .form-control, .form-select {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        h2 {
+            color: #fff;
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-weight: 500;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+        }
+
+        .alert {
+            display: none;
+            backdrop-filter: blur(10px);
+            border: none;
+            margin-top: 20px;
+        }
+
+        .alert-success {
+            background: rgba(5, 232, 12, 0.2);
+            color: #fff;
+        }
+
+        .alert-danger {
+            background: rgba(244, 67, 54, 0.2);
+            color: #fff;
+        }
+        
+        /* ... existing styles ... */
+
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+
+        .card-title {
+            color: #4CAF50;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #45a049, #3d8b40);
+        }
+    
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="#" class="logo">TATHYA</a>
+        <nav class="navbar">
+            <a href="/faculty_dashboard">Dashboard</a>
+            <a href="/faculty_profile">My Profile</a>
+            <a href="/research">Research</a>
+            <a href="/faculty_notifications">Notifications</a>
+            <i class='bx bx-moon' id="theme-toggle"></i>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h2>Workshop Details</h2>
+        <form id="workshopForm">
+            <div class="mb-3">
+                <label class="form-label">Workshop Title</label>
+                <input type="text" class="form-control" id="title" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Organized By</label>
+                <input type="text" class="form-control" id="organizedBy" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Type</label>
+                <select class="form-select" id="type" required>
+                    <option value="">Select Type</option>
+                    <option value="attended">Attended</option>
+                    <option value="conducted">Conducted</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Name</label>
+                <input type="text" class="form-control" id="name" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Department</label>
+                <input type="text" class="form-control" id="department" required>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label class="form-label">From Date</label>
+                    <input type="date" class="form-control" id="fromDate" required>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">To Date</label>
+                    <input type="date" class="form-control" id="toDate" required>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Duration (Days)</label>
+                    <input type="number" class="form-control" id="duration" readonly>
+                </div>
+            </div>
+
+
+            <div class="mb-3">
+                <label class="form-label">Location</label>
+                <input type="text" class="form-control" id="location" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Level</label>
+                <select class="form-select" id="level" required>
+                    <option value="">Select Level</option>
+                    <option value="institute">Institute</option>
+                    <option value="national">National</option>
+                    <option value="international">International</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Outcomes</label>
+                <textarea class="form-control" id="outcomes" rows="4" required></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Certificate/Supporting Documents</label>
+                <input type="file" class="form-control" id="certificate" accept=".pdf">
+                <small class="text-muted">Upload PDF file only (Max size: 5MB)</small>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Other Description</label>
+                <textarea class="form-control" id="description" rows="4"></textarea>
+            </div>
+
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-submit">Submit</button>
+            </div>
+        </form>
+
+        <div class="alert alert-success" id="successAlert">
+            Workshop details submitted successfully!
+        </div>
+        <div class="alert alert-danger" id="errorAlert">
+            Error in submission. Please try again.
+        </div>
+    </div>
+    <!-- Add this new section -->
+    <div class="container mt-5">
+        <h3 class="text-center mb-4">My Workshops</h3>
+        <div id="workshopsContainer" class="row">
+            <!-- Workshops will be displayed here -->
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // Theme toggle functionality
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+
+    themeToggle.addEventListener('click', () => {
+        body.classList.toggle('dark-mode');
+        themeToggle.classList.toggle('bx-sun');
+        themeToggle.classList.toggle('bx-moon');
+    });
+
+    // Duration calculation functions
+    function calculateDuration(fromDate, toDate) {
+        const start = new Date(fromDate);
+        const end = new Date(toDate);
+        const diffTime = Math.abs(end - start);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+        return diffDays;
+    }
+
+    function updateDuration() {
+        const fromDate = document.getElementById('fromDate').value;
+        const toDate = document.getElementById('toDate').value;
+        
+        if (fromDate && toDate) {
+            if (fromDate > toDate) {
+                alert('End date cannot be earlier than start date');
+                document.getElementById('toDate').value = '';
+                document.getElementById('duration').value = '';
+                return;
+            }
+            const duration = calculateDuration(fromDate, toDate);
+            document.getElementById('duration').value = duration;
+        }
+    }
+
+    // Add event listeners for date inputs
+    document.getElementById('fromDate').addEventListener('change', updateDuration);
+    document.getElementById('toDate').addEventListener('change', updateDuration);
+
+    // Workshop display function
+        // Workshop display function
+           // Workshop display function
+       // ... existing code ...
+
+async function fetchAndDisplayWorkshops() {
+    try {
+        const userEmail = localStorage.getItem('userEmail');
+        const response = await fetch(`http://localhost:4009/api/workshops/email/${userEmail}`);
+        const data = await response.json();
+
+        if (!data.success) {
+            throw new Error(data.message);
+        }
+
+        const workshopsContainer = document.getElementById('workshopsContainer');
+        
+        if (!data.workshops || data.workshops.length === 0) {
+            workshopsContainer.innerHTML = `
+                <div class="col-12">
+                    <p class="text-white text-center">No workshops found</p>
+                </div>`;
+            return;
+        }
+
+        workshopsContainer.innerHTML = data.workshops.map(workshop => `
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">${workshop.title}</h5>
+                        <p class="card-text">
+                            <strong>Type:</strong> ${workshop.type}<br>
+                            <strong>Organized By:</strong> ${workshop.instituteName}<br>
+                            <strong>Duration:</strong> ${workshop.duration} days<br>
+                            <strong>Dates:</strong> ${workshop.fromDate} to ${workshop.toDate}<br>
+                            <strong>Location:</strong> ${workshop.location}
+                        </p>
+                        ${workshop.documentPath ? `
+                            <a href="/api/workshops/certificate/${encodeURIComponent(workshop.documentPath)}" 
+                               target="_blank" class="btn btn-primary">
+                                View Certificate
+                            </a>
+                        ` : ''}
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    } catch (error) {
+        console.error('Error fetching workshops:', error);
+        workshopsContainer.innerHTML = `
+            <div class="col-12">
+                <div class="alert alert-danger">
+                    <h5>Error loading workshops</h5>
+                    <p>${error.message}</p>
+                    <button onclick="fetchAndDisplayWorkshops()" class="btn btn-warning mt-2">
+                        <i class="bx bx-refresh"></i> Try Again
+                    </button>
+                </div>
+            </div>`;
+    }
+}
+
+// ... existing code ...
+
+    // Load workshops on page load
+    document.addEventListener('DOMContentLoaded', fetchAndDisplayWorkshops);
+
+    // Form submission
+    document.getElementById('workshopForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const userEmail = localStorage.getItem('userEmail');
+        if (!userEmail) {
+            document.getElementById('errorAlert').textContent = 'Please login first';
+            document.getElementById('errorAlert').style.display = 'block';
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('title', document.getElementById('title').value);
+        formData.append('type', document.getElementById('type').value);
+        formData.append('name', document.getElementById('name').value);
+        formData.append('department', document.getElementById('department').value);
+        formData.append('fromDate', document.getElementById('fromDate').value);
+        formData.append('toDate', document.getElementById('toDate').value);
+        formData.append('duration', document.getElementById('duration').value);
+        formData.append('location', document.getElementById('location').value);
+        formData.append('instituteName', document.getElementById('organizedBy').value);
+        formData.append('level', document.getElementById('level').value);
+        formData.append('outcomes', document.getElementById('outcomes').value);
+        formData.append('description', document.getElementById('description').value);
+        formData.append('facultyEmail', userEmail);
+        
+        const certificateFile = document.getElementById('certificate').files[0];
+        if (certificateFile) {
+            formData.append('certificate', certificateFile);
+        }
+
+        try {
+            const response = await fetch('http://localhost:4009/api/workshops/submit', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Submission failed');
+            }
+
+            document.getElementById('successAlert').textContent = data.message || 'Workshop details submitted successfully!';
+            document.getElementById('successAlert').style.display = 'block';
+            document.getElementById('errorAlert').style.display = 'none';
+            document.getElementById('workshopForm').reset();
+            await fetchAndDisplayWorkshops();
+            
+            setTimeout(() => {
+                document.getElementById('successAlert').style.display = 'none';
+            }, 3000);
+        } catch (error) {
+            document.getElementById('errorAlert').textContent = error.message || 'Error in submission. Please try again.';
+            document.getElementById('errorAlert').style.display = 'block';
+            document.getElementById('successAlert').style.display = 'none';
+            console.error('Error:', error);
+            setTimeout(() => {
+                document.getElementById('errorAlert').style.display = 'none';
+            }, 3000);
+        }
+    });
+</script>
+</body>
+</html>
