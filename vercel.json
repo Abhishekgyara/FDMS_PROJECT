@@ -1,0 +1,134 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "logauth.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "*.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "*.css",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/auth/google/callback",
+      "dest": "/logauth.js"
+    },
+    {
+      "src": "/api/(.*)",
+      "dest": "/logauth.js"
+    },
+    {
+      "src": "/auth/(.*)",
+      "dest": "/logauth.js"
+    },
+    {
+      "src": "/login",
+      "dest": "/logauth.js"
+    },
+    {
+      "src": "/signup",
+      "dest": "/logauth.js"
+    },
+    {
+      "src": "/reset-password",
+      "dest": "/logauth.js"
+    },
+    {
+      "src": "/check-email/(.*)",
+      "dest": "/logauth.js"
+    },
+    {
+      "src": "/get-security-questions/(.*)",
+      "dest": "/logauth.js"
+    },
+    {
+      "src": "/verify-answers",
+      "dest": "/logauth.js"
+    },
+    {
+      "src": "/send-otp",
+      "dest": "/logauth.js"
+    },
+    {
+      "src": "/(admin|faculty|hod)_dashboard",
+      "dest": "/$1_dashboard.html"
+    },
+    {
+      "src": "/manage_users",
+      "dest": "/manage_users.html"
+    },
+    {
+      "src": "/reports",
+      "dest": "/reports.html"
+    },
+    {
+      "src": "/view_publications",
+      "dest": "/view_publications.html"
+    },
+    {
+      "src": "/form",
+      "dest": "/form.html"
+    },
+    {
+      "src": "/faculty_profile",
+      "dest": "/faculty_profile.html"
+    },
+    {
+      "src": "/research",
+      "dest": "/research.html"
+    },
+    {
+      "src": "/patents",
+      "dest": "/patents.html"
+    },
+    {
+      "src": "/fdps",
+      "dest": "/fdps.html"
+    },
+    {
+      "src": "/workshops",
+      "dest": "/workshops.html"
+    },
+    {
+      "src": "/rpft",
+      "dest": "/rpft.html"
+    },
+    {
+      "src": "/notifications",
+      "dest": "/notifications.html"
+    },
+    {
+      "src": "/view_faculty",
+      "dest": "/view_faculty.html"
+    },
+    {
+      "src": "/settings",
+      "dest": "/settings.html"
+    },
+    {
+      "src": "/attendamnce",
+      "dest": "/attendamnce.html"
+    },
+    {
+      "src": "/summary",
+      "dest": "/summary.html"
+    },
+    {
+      "src": "/",
+      "dest": "/login_auth.html"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
+  ],
+  "env": {
+    "NODE_ENV": "production"
+  }
+}
