@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance System - KMIT Campus</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1e90ee;
+            --secondary: #48daea;
+            --accent: #00abf0;
+            --success: #4CAF50;
+            --danger: #f44336;
+            --warning: #ff9800;
+            --dark: #0b0b0c;
+            --light: #ffffff;
+            --card-bg: rgba(255, 255, 255, 0.1);
+            --text-light: #f5f5f5;
+            --text-dark: #333333;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            font-family: "Poppins", sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--text-light);
+            min-height: 100vh;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode {
+            background: linear-gradient(135deg, #10cef0, #0f84e3);
+        }
+
+        /* Header Styles */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1.3rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(50px);
+            z-index: -1;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 700;
+            margin-right: auto;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            font-size: 1.5rem;
+            color: var(--accent);
+        }
+
+        .navbar {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .navbar a {
+            font-size: 1rem;
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .navbar a:hover {
+            color: var(--accent);
+        }
+
+        .navbar a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        .navbar a:hover::after {
+            width: 70%;
+        }
+
+        #theme-toggle {
+            color: var(--light);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        #theme-toggle:hover {
+            transform: rotate(30deg) scale(1.1);
+            color: var(--accent);
+        }
+
+        #menu-icon {
+            font-size: 2rem;
+            color: var(--light);
+            cursor: pointer;
+            display: none;
+            transition: all 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            #menu-icon {
+                display: block;
+            }
+            
+            .navbar {
+                position: fixed;
+                top: 80px;
+                right: -100%;
+                width: 250px;
+                height: calc(100vh - 80px);
+                background: rgba(0, 0, 0, 0.9);
+                backdrop-filter: blur(20px);
+                flex-direction: column;
+                padding: 2rem;
+                transition: all 0.5s ease;
+                z-index: 998;
+            }
+            
+            .navbar.active {
+                right: 0;
+            }
+            
+            .navbar a {
+                width: 100%;
+                text-align: center;
+                padding: 0.8rem;
+            }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 100px auto 2rem;
+            padding: 2rem;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--secondary);
+            margin-bottom: 2rem;
+            font-size: 2.5rem;
+            font-weight: 600;
+        }
+
+        .attendance-form {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            max-width: 600px;
+            margin: 0 auto;
+            transition: all 0.3s ease;
+        }
+
+        .attendance-form:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--secondary);
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e1e1e1;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus {
+            border-color: var(--accent);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 171, 240, 0.1);
+        }
+
+        button {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        button:hover:not(:disabled) {
+            background: #0084d8;
+            transform: translateY(-2px);
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .message {
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .success {
+            background: var(--success);
+            color: white;
+        }
+
+        .error {
+            background: var(--danger);
+            color: white;
+        }
+
+        .warning {
+            background: var(--warning);
+            color: var(--secondary);
+        }
+
+        .date-selector {
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .date-selector input {
+            padding: 0.5rem;
+            border: 2px solid #e1e1e1;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .date-selector input:focus {
+            border-color: var(--accent);
+            outline: none;
+        }
+
+        .attendance-status-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .attendance-status-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .attendance-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .attendance-trend {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .attendance-trend.up {
+            color: var(--success);
+        }
+
+        .attendance-trend.down {
+            color: var(--danger);
+        }
+
+        .success-message-container {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(76, 175, 80, 0.95);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .success-message-container.show {
+            opacity: 1;
+            visibility: visible;
+            animation: slideUp 0.5s ease forwards;
+        }
+
+        .success-message-container .tick-icon {
+            font-size: 1.5rem;
+            animation: tickAnimation 0.5s ease forwards;
+        }
+
+        @keyframes slideUp {
+            0% {
+                transform: translate(-50%, 100%);
+                opacity: 0;
+            }
+            100% {
+                transform: translate(-50%, 0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes tickAnimation {
+            0% {
+                transform: scale(0);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="#" class="logo">
+            <i class='bx bxs-dashboard'></i>
+            <span>TATHYA</span>
+        </a>
+        <div class="bx bx-menu" id="menu-icon"></div>
+        <nav class="navbar">
+            <a href="/faculty_dashboard"><i class='bx bxs-dashboard'></i> Dashboard</a>
+            <a href="/faculty_profile"><i class='bx bxs-user'></i> My Profile</a>
+            <a href="/rpft"><i class='bx bxs-bar-chart-alt-2'></i> RPFT</a>
+            <a href="/attendamnce" class="active"><i class='bx bxs-calendar-check'></i> Attendance</a>
+            <a href="/login_auth.html" style="color: #ff6b6b;"><i class='bx bx-log-out'></i> <b>Logout</b></a>
+            <i class='bx bx-moon' id="theme-toggle"></i>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h1>KMIT Campus Attendance System</h1>
+        
+        <!-- Add Attendance Status Card -->
+        <div class="attendance-status-card">
+            <div class="card-header">
+                <h3>Your Attendance Status</h3>
+                <i class='bx bxs-calendar-check card-icon'></i>
+            </div>
+            <div class="attendance-stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="totalAttendance">0</div>
+                    <div class="stat-label">Total Days</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="attendancePercentage">0%</div>
+                    <div class="stat-label">Attendance Rate</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="lastMarked">-</div>
+                    <div class="stat-label">Last Marked</div>
+                </div>
+            </div>
+            <div class="attendance-trend" id="attendanceTrend">
+                <i class='bx bx-loader-alt bx-spin'></i> Loading...
+            </div>
+        </div>
+        
+        <div class="date-selector">
+            <input type="date" id="attendanceDate" disabled>
+        </div>
+        
+        <div id="locationMessage" class="message warning">
+            Attendance can only be marked from within KMIT Narayanaguda campus premises.
+        </div>
+        
+        <div id="successMessage" class="message success" style="display: none;">
+            Attendance marked successfully!
+        </div>
+        
+        <div id="errorMessage" class="message error" style="display: none;">
+            Error marking attendance. Please try again.
+        </div>
+        
+        <form id="attendanceForm" class="attendance-form">
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" required placeholder="Enter your full name">
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" required placeholder="Enter your college email">
+            </div>
+            
+            <button type="submit" id="submitBtn" disabled>Mark Attendance</button>
+        </form>
+
+        <!-- Attendance Statistics Section -->
+        <div class="attendance-stats">
+            <!-- ... (keep existing stats structure) ... -->
+        </div>
+    </div>
+
+    <div class="success-message-container" id="successMessageContainer">
+        <i class='bx bx-check-circle tick-icon'></i>
+        <span>Attendance marked successfully!</span>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set today's date
+            const today = new Date();
+            document.getElementById('attendanceDate').value = today.toISOString().split('T')[0];
+            
+            // Initialize system
+            checkLocation();
+            setupFormHandlers();
+            loadAttendanceData();
+            setupThemeToggle();
+        });
+
+        // KMIT Narayanaguda coordinates (17.3850° N, 78.4867° E)
+        const KMIT_COORDINATES = {
+            lat: 17.3850,
+            lon: 78.486
+            // lat: 17.3688,
+            // lon: 78.5247
+        };
+        const CAMPUS_RADIUS_KM = 4.0; // 500 meter radius
+
+        function checkLocation() {
+            const locationMessage = document.getElementById('locationMessage');
+            const submitBtn = document.getElementById('submitBtn');
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => handleGeolocationSuccess(position, locationMessage, submitBtn),
+                    (error) => handleGeolocationError(error, locationMessage, submitBtn)
+                );
+            } else {
+                checkIPLocation(locationMessage, submitBtn);
+            }
+        }
+
+        function handleGeolocationSuccess(position, locationMessage, submitBtn) {
+            const userCoords = {
+                lat: position.coords.latitude,
+                lon: position.coords.longitude
+            };
+            
+            const distance = calculateDistance(userCoords, KMIT_COORDINATES);
+            
+            if (distance <= CAMPUS_RADIUS_KM) {
+                locationMessage.style.display = 'none';
+                submitBtn.disabled = false;
+            } else {
+                locationMessage.textContent = `You're ${distance.toFixed(2)}km from KMIT campus. Attendance disabled.`;
+                locationMessage.style.display = 'block';
+                locationMessage.style.color='Red';
+                submitBtn.disabled = true;
+            }
+        }
+
+        function handleGeolocationError(error, locationMessage, submitBtn) {
+            console.error('Geolocation error:', error);
+            locationMessage.textContent = "Enable GPS for attendance marking";
+            checkIPLocation(locationMessage, submitBtn);
+        }
+
+        function calculateDistance(pos1, pos2) {
+            const toRad = x => x * Math.PI / 180;
+            const R = 6371; // Earth radius in km
+            
+            const dLat = toRad(pos2.lat - pos1.lat);
+            const dLon = toRad(pos2.lon - pos1.lon);
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                      Math.cos(toRad(pos1.lat)) * Math.cos(toRad(pos2.lat)) *
+                      Math.sin(dLon/2) * Math.sin(dLon/2);
+            return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        }
+
+        function checkIPLocation(locationMessage, submitBtn) {
+            fetch('https://ipapi.co/json/')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.postal && data.postal.startsWith('500029')) {
+                        locationMessage.textContent = "Approximate KMIT location detected. Enable GPS for accuracy.";
+                        submitBtn.disabled = true;
+                    } else {
+                        locationMessage.textContent = "Attendance restricted to KMIT Narayanaguda campus";
+                        submitBtn.disabled = true;
+                    }
+                })
+                .catch(() => {
+                    locationMessage.textContent = "Location verification unavailable";
+                    submitBtn.disabled = true;
+                });
+        }
+
+        function setupFormHandlers() {
+            document.getElementById('attendanceForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                await markAttendance();
+            });
+        }
+
+        async function markAttendance() {
+            const formData = {
+                name: document.getElementById('name').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                date: document.getElementById('attendanceDate').value
+            };
+
+            if (!validateEmail(formData.email)) {
+                showMessage("Use valid KMIT email address", "error");
+                return;
+            }
+
+            try {
+                const position = await getCurrentPosition();
+                const response = await submitAttendance({...formData, ...position});
+                
+                if (response.success) {
+                    // Show success message with animation
+                    const successContainer = document.getElementById('successMessageContainer');
+                    successContainer.classList.add('show');
+                    
+                    // Hide the message after 3 seconds
+                    setTimeout(() => {
+                        successContainer.classList.remove('show');
+                    }, 3000);
+
+                    localStorage.setItem('lastAttendanceEmail', formData.email);
+                    clearForm();
+                    await loadAttendanceStatus();
+                } else {
+                    handleSubmissionError(response);
+                }
+            } catch (error) {
+                showMessage("Attendance failed: " + error.message, "error");
+            }
+        }
+
+        function getCurrentPosition() {
+            return new Promise((resolve, reject) => {
+                navigator.geolocation.getCurrentPosition(
+                    position => resolve({
+                        lat: position.coords.latitude,
+                        lon: position.coords.longitude
+                    }),
+                    error => reject(new Error("Location access required"))
+                );
+            });
+        }
+
+        
+
+        // ... (keep remaining functions for loading data, theme toggle, etc) ...
+
+        const menuIcon = document.querySelector('#menu-icon');
+        const navbar = document.querySelector('.navbar');
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+
+        // Toggle Mobile Menu
+        menuIcon.onclick = () => {
+            navbar.classList.toggle('active');
+            menuIcon.classList.toggle('bx-x');
+        };
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!menuIcon.contains(e.target) && !navbar.contains(e.target)) {
+                navbar.classList.remove('active');
+                menuIcon.classList.remove('bx-x');
+            }
+        });
+
+        // Theme Toggle Functionality
+        function applyTheme() {
+            const currentTheme = localStorage.getItem('theme');
+            if (currentTheme === 'dark') {
+                body.classList.add('dark-mode');
+                themeToggle.classList.remove('bx-moon');
+                themeToggle.classList.add('bx-sun');
+            } else {
+                body.classList.remove('dark-mode');
+                themeToggle.classList.add('bx-moon');
+                themeToggle.classList.remove('bx-sun');
+            }
+        }
+
+        // Apply theme on page load
+        applyTheme();
+
+        // Toggle theme
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            const isDark = body.classList.contains('dark-mode');
+            
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            
+            if (isDark) {
+                themeToggle.classList.remove('bx-moon');
+                themeToggle.classList.add('bx-sun');
+            } else {
+                themeToggle.classList.add('bx-moon');
+                themeToggle.classList.remove('bx-sun');
+            }
+        });
+
+        // Listen for theme changes from other pages
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'theme') {
+                applyTheme();
+            }
+        });
+
+        // Fetch attendance stats for the logged-in faculty
+        async function fetchAttendanceStats(email) {
+            const response = await fetch(`http://localhost:4009/api/attendance/stats/${encodeURIComponent(email)}`);
+            if (!response.ok) throw new Error('Failed to fetch attendance stats');
+            const data = await response.json();
+            if (!data.success) throw new Error('Failed to fetch attendance stats');
+            return data.data.records;
+        }
+
+        // Calculate attendance percentage from May 1, 2025
+        function calculateAttendancePercentage(records) {
+            const startDate = new Date('2025-05-01');
+            const today = new Date();
+            // Only consider up to today
+            let totalDays = 0;
+            let attendedDays = 0;
+            let lastMarked = null;
+
+            // Create a Set of attended dates (YYYY-MM-DD)
+            const attendedSet = new Set(records.map(r => new Date(r.date).toISOString().split('T')[0]));
+
+            // Loop from startDate to today (excluding weekends if needed)
+            for (let d = new Date(startDate); d <= today; d.setDate(d.getDate() + 1)) {
+                // Optionally skip weekends:
+                // if (d.getDay() === 0 || d.getDay() === 6) continue;
+                const dateStr = d.toISOString().split('T')[0];
+                totalDays++;
+                if (attendedSet.has(dateStr)) {
+                    attendedDays++;
+                    lastMarked = dateStr;
+                }
+            }
+
+            const percentage = totalDays > 0 ? Math.round((attendedDays / totalDays) * 100) : 100;
+            return { totalDays: attendedDays, percentage, lastMarked };
+        }
+
+        // Update the loadAttendanceStatus function
+        async function submitAttendance(data) {
+    try {
+        const response = await fetch('http://localhost:4009/api/attendance/mark', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(result.message || 'Failed to mark attendance');
+        }
+        
+        return result;
+    } catch (error) {
+        console.error('Submission error:', error);
+        throw error;
+    }
+}
+
+async function loadAttendanceData() {
+    const userEmail = document.getElementById('email').value.trim();
+    if (!userEmail) return;
+
+    try {
+        const response = await fetch(`http://localhost:4009/api/attendance/stats/${encodeURIComponent(userEmail)}`);
+        const data = await response.json();
+        
+        if (data.success) {
+            const stats = data.data.stats;
+            document.getElementById('totalAttendance').textContent = stats.totalDays;
+            document.getElementById('attendancePercentage').textContent = `${stats.attendancePercentage}%`;
+            document.getElementById('lastMarked').textContent = stats.lastMarked ? 
+                new Date(stats.lastMarked).toLocaleDateString() : '-';
+            
+            const trendElement = document.getElementById('attendanceTrend');
+            trendElement.className = `attendance-trend ${stats.trend}`;
+            trendElement.innerHTML = stats.trend === 'up' ? 
+                '<i class="bx bx-trending-up"></i> Attendance trend positive' : 
+                '<i class="bx bx-trending-down"></i> Attendance needs improvement';
+        }
+    } catch (error) {
+        console.error('Error loading attendance data:', error);
+        document.getElementById('attendanceTrend').innerHTML = 
+            `<i class='bx bx-error'></i> Error loading attendance data`;
+    }
+}
+
+// Update the markAttendance function
+async function markAttendance() {
+    const formData = {
+        name: document.getElementById('name').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        date: document.getElementById('attendanceDate').value
+    };
+
+    try {
+        const position = await getCurrentPosition();
+        const response = await submitAttendance({
+            ...formData,
+            lat: position.lat,
+            lon: position.lon
+        });
+
+        if (response.success) {
+            const successContainer = document.getElementById('successMessageContainer');
+            successContainer.classList.add('show');
+            
+            setTimeout(() => {
+                successContainer.classList.remove('show');
+            }, 3000);
+
+            await loadAttendanceData();
+        }
+    } catch (error) {
+        showMessage("Attendance failed: " + error.message, "error");
+    }
+}
+       
+        // Function to show messages
+        function showMessage(message, type) {
+            const messageElement = document.getElementById(`${type}Message`);
+            if (messageElement) {
+                messageElement.textContent = message;
+                messageElement.style.display = 'block';
+                setTimeout(() => {
+                    messageElement.style.display = 'none';
+                }, 5000);
+            }
+        }
+
+        // Add this function to check if the backend is accessible
+        async function checkBackendStatus() {
+            try {
+                const response = await fetch('http://localhost:4009/api/health', {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    },
+                    timeout: 5000 // 5 second timeout
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Backend service returned an error');
+                }
+                
+                const data = await response.json();
+                return data.status === 'ok';
+            } catch (error) {
+                console.error('Backend health check failed:', error);
+                return false;
+            }
+        }
+
+        // Update the DOMContentLoaded event listener
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                // Check if backend is accessible
+                const isBackendAvailable = await checkBackendStatus();
+                if (!isBackendAvailable) {
+                    document.getElementById('attendanceTrend').innerHTML = 
+                        `<i class='bx bx-error'></i> Backend service unavailable. Please try again later.`;
+                    document.getElementById('totalAttendance').textContent = '-';
+                    document.getElementById('attendancePercentage').textContent = '-';
+                    document.getElementById('lastMarked').textContent = '-';
+                    return;
+                }
+                
+                // Load attendance status
+                await loadAttendanceStatus();
+                // Refresh attendance status every 5 minutes
+                setInterval(loadAttendanceStatus, 300000);
+            } catch (error) {
+                console.error('Error during initialization:', error);
+                document.getElementById('attendanceTrend').innerHTML = 
+                    `<i class='bx bx-error'></i> Loading. Fetching the data. It might take a few seconds.`;
+            }
+        });
+    </script>
+</body>
+</html>
