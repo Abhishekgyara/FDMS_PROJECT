@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Faculty</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            background: linear-gradient(to right, #1e90ee,#48daea);
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1.3rem 5%;
+            background: rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(50px);
+            z-index: 100;
+        }
+
+        .navbar {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        .navbar a {
+            font-size: 1.15rem;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .navbar a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #00abf0;
+        }
+
+        .navbar a.active {
+            background: #2575fc;
+            color: white;
+        }
+
+        .container {
+            margin-top: 120px;
+            padding: 0 5%;
+        }
+
+        .filters {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .filter-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .filter-item select, .filter-item input {
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .faculty-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .faculty-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .faculty-card h3 {
+            margin: 0 0 10px 0;
+            color: #2575fc;
+        }
+
+        .faculty-card p {
+            margin: 5px 0;
+            color: #666;
+        }
+
+        .view-btn {
+            background: #2575fc;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .view-btn:hover {
+            background: #1957b8;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            border-radius: 10px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .detail-section {
+            margin-bottom: 20px;
+        }
+
+        .detail-section h4 {
+            margin-bottom: 10px;
+            color: #2575fc;
+        }
+
+        .edu-level, .exp-item {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <a href="/hod_dashboard">Dashboard</a>
+            <a href="/view_faculty" class="active">View Faculty</a>
+            <a href="/notifications">Notifications</a>
+            <a href="/settings">View Researches</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="filters">
+            <div class="filter-item">
+                <label>Search:</label>
+                <input type="text" id="searchInput" placeholder="Search by name or email">
+            </div>
+            <div class="filter-item">
+                <label>Sort By:</label>
+                <select id="sortSelect">
+                    <option value="name">Name</option>
+                    <option value="email">Email</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="facultyGrid" class="faculty-grid">
+            <!-- Faculty cards will be populated here -->
+        </div>
+    </div>
+
+    <div id="detailsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="document.getElementById('detailsModal').style.display='none'">&times;</span>
+            <div id="facultyDetails"></div>
+        </div>
+    </div>
+
+    <script>
+        let facultyData = [];
+        const hodDepartment = localStorage.getItem('userDepartment');
+        async function loadFacultyMembers() {
+        try {
+            const hodDepartment = localStorage.getItem('userDepartment');
+            const response = await fetch(`http://localhost:4009/api/faculty/department/${hodDepartment}`);
+            const data = await response.json();
+
+            const container = document.getElementById('facultyContainer');
+            
+            if (data.success && data.faculty.length > 0) {
+                container.innerHTML = data.faculty.map(faculty => `
+                    <div class="faculty-card">
+                        <h3>${faculty.name}</h3>
+                        <p>Department: ${faculty.department}</p>
+                        <p>Email: ${faculty.email}</p>
+                    </div>
+                `).join('');
+            } else {
+                container.innerHTML = '<p>No faculty members found in your department.</p>';
+            }
+        } catch (error) {
+            console.error('Error loading faculty:', error);
+            document.getElementById('facultyContainer').innerHTML = 
+                '<p>Error loading faculty members.</p>';
+        }
+    }
+
+    // Load faculty members when page loads
+    document.addEventListener('DOMContentLoaded', loadFacultyMembers);
+    // Update the loadUserInfo function:
+window.onload = async function() {
+    // ...existing user info loading code...
+
+    // Add this after loading user info
+    await loadFacultyCount();
+    checkProfileStatus();
+};
+
+// Add this new function in the script section
+async function loadFacultyCount() {
+    try {
+        const userDepartment = localStorage.getItem('userDepartment');
+        const response = await fetch(`http://localhost:4009/api/faculty/count/${userDepartment}`);
+        const data = await response.json();
+
+        if (data.success) {
+            document.getElementById('facultyCount').textContent = data.count;
+        } else {
+            document.getElementById('facultyCount').textContent = 'Error';
+        }
+    } catch (error) {
+        console.error('Error loading faculty count:', error);
+        document.getElementById('facultyCount').textContent = 'Error';
+    }
+}
+
+
+        async function loadFacultyData() {
+            try {
+                // First get all users who are faculty
+                const usersResponse = await fetch('http://localhost:4009/api/users');
+                const allUsers = await usersResponse.json();
+                
+                // Filter faculty by HOD's department
+                const departmentFaculty = allUsers.filter(user => 
+                    user.role === 'Faculty' && 
+                    user.department === hodDepartment
+                );
+
+                // Get details for each faculty member
+                const facultyDetailsPromises = departmentFaculty.map(async (faculty) => {
+                    try {
+                        const detailsResponse = await fetch(`http://localhost:4009/api/faculty/details/byEmail/${faculty.email}`);
+                        const detailsData = await detailsResponse.json();
+                        return {
+                            ...faculty,
+                            details: detailsData.success ? detailsData.data : null
+                        };
+                    } catch (error) {
+                        console.error(`Error fetching details for ${faculty.email}:`, error);
+                        return {
+                            ...faculty,
+                            details: null
+                        };
+                    }
+                });
+
+                facultyData = await Promise.all(facultyDetailsPromises);
+                displayFaculty(facultyData);
+            } catch (error) {
+                console.error('Error loading faculty data:', error);
+                document.getElementById('facultyGrid').innerHTML = 
+                    '<div class="no-results">Error loading faculty data. Please try again later.</div>';
+            }
+        }
+
+
+
+        function displayFaculty(faculty) {
+            const grid = document.getElementById('facultyGrid');
+            if (!faculty || faculty.length === 0) {
+                grid.innerHTML = '<div class="no-results">No faculty members found in your department</div>';
+                return;
+            }
+
+            grid.innerHTML = faculty.map(f => `
+                <div class="faculty-card">
+                    <h3>${f.name || 'N/A'}</h3>
+                    <p><strong>Email:</strong> ${f.email || 'N/A'}</p>
+                    <p><strong>Department:</strong> ${f.department || 'N/A'}</p>
+                    <p><strong>Phone:</strong> ${f.phoneNumber || 'N/A'}</p>
+                    <button class="view-btn" onclick="viewFacultyDetails('${f.email}')">
+                        View Details
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function applyFiltersAndSort() {
+            let filtered = [...facultyData];
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const sortBy = document.getElementById('sortSelect').value;
+
+            // Apply search filter
+            if (searchTerm) {
+                filtered = filtered.filter(faculty => 
+                    faculty.name.toLowerCase().includes(searchTerm) ||
+                    faculty.email.toLowerCase().includes(searchTerm)
+                );
+            }
+
+            // Sort faculty
+            filtered.sort((a, b) => {
+                if (sortBy === 'name') {
+                    return a.name.localeCompare(b.name);
+                } else if (sortBy === 'email') {
+                    return a.email.localeCompare(b.email);
+                }
+                return 0;
+            });
+
+            displayFaculty(filtered);
+        }
+
+        async function showDetails(email) {
+            try {
+                const response = await fetch(`http://localhost:4009/api/faculty/details/byEmail/${email}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    const details = data.data;
+                    const modal = document.getElementById('detailsModal');
+                    const detailsDiv = document.getElementById('facultyDetails');
+
+                    detailsDiv.innerHTML = `
+                        <h2>Faculty Profile - ${details.personal.name}</h2>
+                        
+                        <div class="detail-section">
+                            <h4>Personal Information</h4>
+                            <p>Name: ${details.personal.name || 'N/A'}</p>
+                            <p>Email: ${details.personal.email || 'N/A'}</p>
+                            <p>Phone: ${details.personal.phone || 'N/A'}</p>
+                            <p>Gender: ${details.personal.gender || 'N/A'}</p>
+                            <p>Age: ${details.personal.age || 'N/A'}</p>
+                        </div>
+
+                        <div class="detail-section">
+                            <h4>Educational Qualifications</h4>
+                            ${createEducationSection(details.education)}
+                        </div>
+
+                        <div class="detail-section">
+                            <h4>Professional Experience</h4>
+                            ${createExperienceSection(details.experience)}
+                        </div>
+                    `;
+
+                    modal.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to load faculty details');
+            }
+        }
+
+        function createEducationSection(education) {
+            return `
+                <div class="education-details">
+                    ${Object.entries(education).map(([level, details]) => `
+                        <div class="edu-level">
+                            <h5>${level.toUpperCase()}</h5>
+                            <p>Institution: ${details.name || 'N/A'}</p>
+                            <p>Location: ${details.location || 'N/A'}</p>
+                            <p>Duration: ${details.duration || 'N/A'}</p>
+                            ${level === 'phd' ? `
+                                <p>Status: ${details.status || 'N/A'}</p>
+                                ${details.status === 'pursuing' ? `<p>Current Year: ${details.currentYear || 'N/A'}</p>` : ''}
+                            ` : ''}
+                            <p>Grade: ${details.grade || 'N/A'} (${details.gradeType || 'N/A'})</p>
+                        </div>
+                    `).join('<hr>')}
+                </div>
+            `;
+        }
+
+        function createExperienceSection(experience) {
+            if (!experience || experience.length === 0) {
+                return '<p>No experience data available</p>';
+            }
+
+            return experience.map(exp => `
+                <div class="exp-item">
+                    <p>Organization: ${exp.organization || 'N/A'}</p>
+                    <p>Designation: ${exp.designation || 'N/A'}</p>
+                    <p>Location: ${exp.state || 'N/A'}, ${exp.city || 'N/A'}</p>
+                    <p>Duration: ${exp.duration || 'N/A'}</p>
+                </div>
+            `).join('<hr>');
+        }
+
+        function viewFacultyDetails(email) {
+            showDetails(email);
+        }
+
+        // Event listeners
+        document.getElementById('searchInput').addEventListener('input', applyFiltersAndSort);
+        document.getElementById('sortSelect').addEventListener('change', applyFiltersAndSort);
+
+        // Load data when page loads
+        document.addEventListener('DOMContentLoaded', loadFacultyData);
+    </script>
+</body>
+</html>
