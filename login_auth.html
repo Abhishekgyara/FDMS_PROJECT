@@ -17,6 +17,7 @@
         body {
             background: #f5f5f5;
             height: 100vh;
+
             display: flex;
             align-items: center;
             justify-content: center;
@@ -122,6 +123,52 @@
         .notification.success {
             background-color: #4CAF50;
             top: 20px;
+        }
+
+        .department-input.invalid {
+            border-color: #dc3545;
+            background-color: #fff3f3;
+        }
+
+        .department-error {
+            color: #dc3545;
+            font-size: 0.875rem;
+            margin-top: -10px;
+            margin-bottom: 10px;
+            display: none;
+        }
+
+        .forgot-password {
+            text-align: right;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+        }
+
+        .forgot-password a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
+        #forgotPasswordCard, #otpCard, #newPasswordCard {
+            display: none;
+        }
+
+        .otp-input {
+            letter-spacing: 10px;
+            font-size: 20px;
+            text-align: center;
+        }
+
+        .resend-otp {
+            color: #007bff;
+            text-decoration: underline;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 0.9em;
         }
     </style>
     <style>
@@ -512,11 +559,114 @@
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .4), transparent);
             transition: .5s;
         }
-      </style>
+      
+      
+        .intro-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.word-animation {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    font-size: 3rem;
+    opacity: 0;
+    text-align: center;
+    width: 100%;
+}
+
+#tathya {
+    font-size: 5rem;
+    font-weight: bold;
+    color: #00abf0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px 40px;
+    z-index: 1;
+    overflow: hidden;
+}
+
+#tathya::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent,
+        rgba(255, 255, 255, 0.4),
+        rgba(0, 171, 240, 0.6),
+        transparent
+    );
+    animation: lightning 1s linear infinite;
+}
+
+#tathya::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 2px solid #00abf0;
+    animation: borderGlow 2s linear infinite;
+    box-shadow: 0 0 25px #00abf0;
+}
+
+@keyframes lightning {
+    0% { left: -100%; }
+    50% { left: 100%; }
+    100% { left: 100%; }
+}
+
+@keyframes borderGlow {
+    0% { border-color: #00abf0; box-shadow: 0 0 25px #00abf0; }
+    50% { border-color: #fff; box-shadow: 0 0 25px #fff; }
+    100% { border-color: #00abf0; box-shadow: 0 0 25px #00abf0; }
+}
+
+@keyframes fadeInOut {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+    50% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(1.2); }
+}
+
+@keyframes slideUp {
+    0% { transform: translate(-50%, 100vh); opacity: 0; }
+    100% { transform: translate(-50%, -50%); opacity: 1; }
+}
+
+/* Add this to ensure the auth-card is hidden initially */
+.auth-card {
+    display: none;
+}
+
+    
+</style>
 </head>
 <body>
+    <!-- Add this right after <body> tag -->
+<div id="intro-animation" class="intro-overlay">
+    <div class="word-animation" id="word1">Researches</div>
+    <div class="word-animation" id="word2">Publications</div>
+    <div class="word-animation" id="word3">Personal Data</div>
+    <div class="word-animation" id="word4">Professional Data</div>
+    <div class="word-animation" id="word5">Store Everything at One Place</div>
+    <div class="word-animation" id="tathya">TATHYA</div>
+</div>
     <div class="auth-card" id="loginCard">
-        <h3 class="text-center mb-4">Login</h3>
+        <h3 class="text-center mb-4">TATHYA Login</h3>
         
         <div class="role-buttons">
             <button class="role-btn" onclick="selectRole(this, 'Faculty')">
@@ -532,29 +682,33 @@
 
         <form id="loginForm">
             <input type="email" class="form-control" placeholder="Email" required>
-            <select class="form-control" required>
-                <option value="">Department</option>
-                <option value="CSE">CSE</option>
-                <option value="DS">DS</option>
-                <option value="AIML">AIML</option>
-                <option value="IT">IT</option>
-            </select>
+            <input type="text" 
+                   class="form-control" 
+                   placeholder="Department (CSE/DS/AIML/IT)" 
+                   id="loginDepartment" 
+                   oninput="validateDepartment(this)" 
+                   required>
+            <div class="department-error" id="loginDeptError">
+                Please enter a valid department (CSE, DS, AIML, or IT)
+            </div>
             <input type="password" class="form-control" placeholder="Password" required>
+            <div class="forgot-password">
+                <a href="#" onclick="showForgotPassword()">Forgot Password?</a>
+            </div>
             <button type="submit" class="btn btn-primary w-100 mb-3">Login</button>
-        </form>
-
-        <div class="divider">
-            <span>OR</span>
-        </div>
-
-        <!-- Update Google Sign-In button configuration -->
-        <div id="g_id_onload"
-             data-client_id="940020976752-ee8dupcuupmhepgsu70dcvsou7vs3rpi.apps.googleusercontent.com"
-             data-callback="handleGoogleSignIn"
-             data-auto_prompt="false"
-             data-auto_select="true">
-        </div>
-        <div class="g_id_signin"
+            
+            <div class="divider">
+                <span>OR</span>
+    
+            
+            <div id="g_id_onload"
+         data-client_id="940020976752-ee8dupcuupmhepgsu70dcvsou7vs3rpi.apps.googleusercontent.com"
+         data-callback="handleGoogleSignIn"
+         data-auto_prompt="false"
+         data-auto_select="true"
+         data-redirect_uri="https://fdms-kmit-abhishekgyara-abhishek-gyaras-projects.vercel.app/auth/google/callback"></div>
+    </div>
+    <div class="g_id_signin"
              data-type="standard"
              data-size="large"
              data-theme="outline"
@@ -564,11 +718,22 @@
         </div>
         <br>
 
+
         <p class="text-center mb-0">
             Don't have an account? 
             <a href="#" onclick="showSignup()">Sign up</a>
         </p>
-    </div>
+    </div></form>
+        
+        
+
+        <!-- Update Google Sign-In button configuration -->
+        
+
+
+
+
+        
 
     <div class="auth-card" id="signupCard" style="display: none;">
         <h3 class="text-center mb-4">Sign Up</h3>
@@ -588,13 +753,15 @@
         <form id="signupForm">
             <input type="text" class="form-control" placeholder="Full Name" required>
             <input type="email" class="form-control" placeholder="Email" required>
-            <select class="form-control" required>
-                <option value="">Select Department</option>
-                <option value="CSE">CSE</option>
-                <option value="DS">DS</option>
-                <option value="AIML">AIML</option>
-                <option value="IT">IT</option>
-            </select>
+            <input type="text" 
+                   class="form-control" 
+                   placeholder="Department (CSE/DS/AIML/IT)" 
+                   id="signupDepartment" 
+                   oninput="validateDepartment(this)" 
+                   required>
+            <div class="department-error" id="signupDeptError">
+                Please enter a valid department (CSE, DS, AIML, or IT)
+            </div>
             <input type="tel" class="form-control" placeholder="Phone Number" required>
             <input type="password" class="form-control" placeholder="Password" 
                    id="passwordInput" oninput="checkPassword()" required>
@@ -620,9 +787,102 @@
         </p>
     </div>
 
+    <div class="auth-card" id="forgotPasswordCard">
+        <h3 class="text-center mb-4">Forgot Password</h3>
+        <form id="forgotPasswordForm">
+            <input type="email" class="form-control" placeholder="Enter your email" id="resetEmail" required>
+            <button type="submit" class="btn btn-primary w-100 mb-3">Send OTP</button>
+            <p class="text-center mb-0">
+                <a href="#" onclick="showLogin()">Back to Login</a>
+            </p>
+        </form>
+    </div>
+
+    <div class="auth-card" id="otpCard">
+        <h3 class="text-center mb-4">Enter OTP</h3>
+        <form id="otpForm">
+            <input type="text" class="form-control otp-input" placeholder="Enter OTP" id="otpInput" maxlength="6" required>
+            <div class="text-center">
+                <span class="resend-otp" onclick="resendOTP()">Resend OTP</span>
+            </div>
+            <button type="submit" class="btn btn-primary w-100 mb-3">Verify OTP</button>
+        </form>
+    </div>
+
+    <div class="auth-card" id="newPasswordCard">
+        <h3 class="text-center mb-4">Set New Password</h3>
+        <form id="newPasswordForm">
+            <input type="password" class="form-control" placeholder="New Password" id="newPassword" required>
+            <div class="password-requirements">
+                <div class="requirement" id="newLengthReq">At least 6 characters</div>
+                <div class="requirement" id="newUpperReq">At least 1 uppercase letter</div>
+                <div class="requirement" id="newNumberReq">At least 1 number</div>
+            </div>
+            <button type="submit" class="btn btn-primary w-100 mb-3" id="resetPasswordBtn" disabled>Reset Password</button>
+        </form>
+    </div>
+
+    <div class="auth-card" id="securityQuestions" style="display: none;">
+        <h3 class="text-center mb-4">Security Questions</h3>
+        <form id="securityQuestionsForm">
+            <div id="questionsContainer">
+                <label id="question1Label"></label>
+                <input type="text" class="form-control" id="answer1" required>
+                <label id="question2Label"></label>
+                <input type="text" class="form-control" id="answer2" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100 mb-3">Verify Answers</button>
+            <p class="text-center mb-0">
+                <a href="#" onclick="showLogin()">Back to Login</a>
+            </p>
+        </form>
+    </div>
+
     <div class="notification" id="loginNotification"></div>
 
     <script>
+const backendUrl = window.location.hostname === 'localhost' ? 
+        'http://localhost:4009' : 
+        window.location.origin;
+
+       window.addEventListener('DOMContentLoaded', () => {
+    const intro = document.getElementById('intro-animation');
+    const words = document.querySelectorAll('.word-animation');
+    const tathya = document.getElementById('tathya');
+    const mainContent = document.getElementById('loginCard');
+    
+    // Ensure black background and hidden content initially
+    document.body.style.background = '#000';
+    mainContent.style.display = 'none';
+
+    const animateWords = async () => {
+        for (let i = 0; i < words.length - 1; i++) {
+            words[i].style.animation = 'fadeInOut 1s forwards';
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            words[i].style.animation = '';
+        }
+        
+        words[4].style.opacity = '1';
+        words[4].style.animation = 'fadeInOut 1s forwards';
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        tathya.style.animation = 'slideUp 2s forwards';
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        
+        intro.style.transition = 'opacity 2s';
+        intro.style.opacity = '0';
+        setTimeout(() => {
+            intro.style.display = 'none';
+            document.body.style.background = '';
+            mainContent.style.display = 'block';
+            mainContent.style.animation = 'fadeIn 1s forwards';
+        }, 500);
+    };
+
+    animateWords();
+});
+
+
         function selectRole(btn, role) {
             const buttons = btn.parentElement.getElementsByClassName('role-btn');
             Array.from(buttons).forEach(b => b.classList.remove('active'));
@@ -663,22 +923,34 @@
                 signupBtn.disabled = true;
             }
         }
-
-        function handleGoogleSignIn(response) {
+       
+        function handleGoogleSignIn(response){
+            const clientId = '940020976752-ee8dupcuupmhepgsu70dcvsou7vs3rpi.apps.googleusercontent.com';
+            const redirectUri = encodeURIComponent('https://fdms-kmit-abhishekgyara-abhishek-gyaras-projects.vercel.app/auth/google/callback');
+            const scope = encodeURIComponent('profile email');
+            const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&access_type=offline&prompt=consent`;
             if (response.credential) {
+                const backendUrl = window.location.hostname === 'localhost' ? 
+            'http://localhost:4009' : 
+            'https://fdms-kmit.vercel.app';
                 // Get user info from the credential
-                fetch('http://localhost:4009/auth/google', {
+                fetch(`${backendUrl}/auth/google`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
                         token: response.credential
+                    }),
+            credentials: 'include'
                     })
-                })
+
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
+                        const notification = document.getElementById('loginNotification');
+                        notification.textContent = `Google Sign-In successful as ${data.role}`;
+                        notification.classList.add('success');
                         localStorage.setItem('userName', data.name);
                         localStorage.setItem('userEmail', data.email);
                         localStorage.setItem('userRole', data.role);
@@ -686,13 +958,22 @@
                         localStorage.setItem('profilePhoto', data.profilePhoto);
 
                         // Redirect based on role
+                        let redirectUrl;
                         if (data.role === 'Faculty') {
-                            window.location.href = '/faculty_dashboard';
+                            redirectUrl = '/faculty_dashboard';
                         } else if (data.role === 'HOD') {
-                            window.location.href = '/hod_dashboard';
+                            redirectUrl = '/hod_dashboard';
                         } else if (data.role === 'Admin') {
-                            window.location.href = '/admin_dashboard';
+                            redirectUrl = '/admin_dashboard';
+                        } else {
+                            // Fallback or default redirect if role is unexpected
+                            redirectUrl = '/'; 
                         }
+
+                        // Redirect after a short delay to show notification
+                        setTimeout(() => {
+                            window.location.href = redirectUrl;
+                        }, 1500); 
                     } else {
                         alert('Login failed: ' + data.message);
                     }
@@ -704,6 +985,30 @@
             }
         }
 
+        function validateDepartment(input) {
+            const validDepartments = ['CSE', 'DS', 'AIML', 'IT'];
+            const value = input.value.toUpperCase();
+            const isValid = validDepartments.includes(value);
+            const errorId = input.id === 'loginDepartment' ? 'loginDeptError' : 'signupDeptError';
+            
+            input.classList.toggle('invalid', !isValid && value !== '');
+            document.getElementById(errorId).style.display = 
+                (!isValid && value !== '') ? 'block' : 'none';
+            
+            // Validate form submit buttons
+            const form = input.closest('form');
+            const submitBtn = form.querySelector('button[type="submit"]');
+            if (form.id === 'signupForm') {
+                // For signup, also check password requirements
+                submitBtn.disabled = !isValid || 
+                                   !document.getElementById('passwordInput').value.match(/^(?=.*[A-Z])(?=.*\d).{6,}$/);
+            } else {
+                submitBtn.disabled = !isValid;
+            }
+            
+            return isValid;
+        }
+
         document.getElementById('signupForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const formData = {
@@ -711,16 +1016,16 @@
                 email: e.target.querySelector('[placeholder="Email"]').value,
                 password: e.target.querySelector('#passwordInput').value,
                 phoneNumber: e.target.querySelector('[placeholder="Phone Number"]').value,
-                department: e.target.querySelector('select').value,
+                department: e.target.querySelector('#signupDepartment').value.toUpperCase(),
                 role: document.querySelector('#signupCard .role-btn.active')?.getAttribute('onclick')?.match(/'([^']+)'/)?.[1] || 'Faculty'
             };
 
             try {
-                const response = await fetch('http://localhost:4009/signup', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(formData)
-                });
+        const response = await fetch(`${backendUrl}/signup`, {  // Updated
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData)
+        });
 
                 const data = await response.json();
                 alert(data.message);
@@ -733,47 +1038,243 @@
             }
         });
 
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        // ... existing code ...
+
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = {
+        email: e.target.querySelector('[type="email"]').value,
+        password: e.target.querySelector('[type="password"]').value,
+        department: e.target.querySelector('#loginDepartment').value.toUpperCase(),
+        role: document.querySelector('#loginCard .role-btn.active')?.getAttribute('onclick')?.match(/'([^']+)'/)?.[1]
+    };
+
+    try {
+        const response = await fetch(`${backendUrl}/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData),
+            credentials: 'include'
+        });
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        // Check if response is JSON
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+            const text = await response.text();
+            throw new Error(text || 'Invalid response from server');
+        }
+
+        const data = await response.json();
+        
+        if (data.success) {
+            // Show success notification
+            const notification = document.getElementById('loginNotification');
+            notification.textContent = `Login successful as ${data.role}`;
+            notification.classList.add('success');
+            
+            // Store user data
+            localStorage.setItem('userName', data.name);
+            localStorage.setItem('userEmail', data.email);
+            localStorage.setItem('userRole', data.role);
+            localStorage.setItem('userDepartment', data.department);
+            
+            // Redirect after notification with proper role-based routing
+            setTimeout(() => {
+                window.location.href = data.role === 'Admin' ? '/admin_dashboard' : 
+                                     data.role === 'HOD' ? '/hod_dashboard' : 
+                                     '/faculty_dashboard';
+            }, 1500);
+        } else {
+            alert(data.message || 'Login failed');
+        }
+    } catch (error) {
+        console.error('Login failed:', error);
+        alert('Login failed: ' + error.message);
+    }
+});
+
+// ... existing code ...
+
+        let generatedOTP = '';
+        let resetEmailAddress = '';
+
+        function showForgotPassword() {
+    document.getElementById('loginCard').style.display = 'none';
+    document.getElementById('forgotPasswordCard').style.display = 'block'; // Changed from resetEmailCard
+}
+
+        function showOTPCard() {
+            document.getElementById('forgotPasswordCard').style.display = 'none';
+            document.getElementById('otpCard').style.display = 'block';
+        }
+
+        function showNewPasswordCard() {
+            document.getElementById('otpCard').style.display = 'none';
+            document.getElementById('newPasswordCard').style.display = 'block';
+        }
+
+        function generateOTP() {
+            return Math.floor(100000 + Math.random() * 900000).toString();
+        }
+
+        async function sendOTP(email) {
+            try {
+                generatedOTP = generateOTP();
+                const response = await fetch('http://localhost:4009/api/send-otp', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        to: email,
+                        otp: generatedOTP
+                    })
+                });
+                return response.ok;
+            } catch (error) {
+                console.error('Error sending OTP:', error);
+                return false;
+            }
+        }
+
+        document.getElementById('forgotPasswordForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const formData = {
-                email: e.target.querySelector('[type="email"]').value,
-                password: e.target.querySelector('[type="password"]').value,
-                department: e.target.querySelector('select').value,
-                role: document.querySelector('#loginCard .role-btn.active')?.getAttribute('onclick')?.match(/'([^']+)'/)?.[1]
-            };
+            resetEmailAddress = document.getElementById('resetEmail').value;
+            
+            // Check if email exists in database
+            const response = await fetch(`http://localhost:4009/api/check-email/${resetEmailAddress}`);
+            const data = await response.json();
+            
+            if (data.exists) {
+                if (await sendOTP(resetEmailAddress)) {
+                    showOTPCard();
+                } else {
+                    alert('Failed to send OTP. Please try again.');
+                }
+            } else {
+                alert('Email not found in our records.');
+            }
+        });
+
+        document.getElementById('otpForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const enteredOTP = document.getElementById('otpInput').value;
+            
+            if (enteredOTP === generatedOTP) {
+                showNewPasswordCard();
+            } else {
+                alert('Invalid OTP. Please try again.');
+            }
+        });
+
+        function checkNewPassword() {
+            const password = document.getElementById('newPassword').value;
+            const lengthReq = document.getElementById('newLengthReq');
+            const upperReq = document.getElementById('newUpperReq');
+            const numberReq = document.getElementById('newNumberReq');
+            const resetBtn = document.getElementById('resetPasswordBtn');
+
+            const hasLength = password.length >= 6;
+            const hasUpper = /[A-Z]/.test(password);
+            const hasNumber = /[0-9]/.test(password);
+
+            lengthReq.classList.toggle('met', hasLength);
+            upperReq.classList.toggle('met', hasUpper);
+            numberReq.classList.toggle('met', hasNumber);
+
+            resetBtn.disabled = !(hasLength && hasUpper && hasNumber);
+        }
+
+        document.getElementById('newPassword').addEventListener('input', checkNewPassword);
+
+        document.getElementById('newPasswordForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const newPassword = document.getElementById('newPassword').value;
+            
+            try {
+                const response = await fetch('http://localhost:4009/api/reset-password', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: resetEmailAddress,
+                        password: newPassword
+                    })
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    alert('Password reset successful!');
+                    showLogin();
+                } else {
+                    alert('Failed to reset password. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error resetting password:', error);
+                alert('Failed to reset password. Please try again.');
+            }
+        });
+
+        function resendOTP() {
+            if (resetEmailAddress) {
+                sendOTP(resetEmailAddress);
+                alert('New OTP has been sent to your email.');
+            }
+        }
+
+        function showSecurityQuestions() {
+            document.getElementById('loginCard').style.display = 'none';
+            document.getElementById('securityQuestions').style.display = 'block';
+            getSecurityQuestions();
+        }
+
+        async function getSecurityQuestions() {
+            const email = document.getElementById('resetEmail').value;
+            try {
+                const response = await fetch(`http://localhost:4009/api/get-security-questions/${email}`);
+                const data = await response.json();
+                
+                if (data.exists) {
+                    document.getElementById('question1Label').textContent = data.questions.question1;
+                    document.getElementById('question2Label').textContent = data.questions.question2;
+                } else {
+                    alert('No security questions found for this email.');
+                    showLogin();
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error fetching security questions');
+            }
+        }
+
+        document.getElementById('securityQuestionsForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('resetEmail').value;
+            const answer1 = document.getElementById('answer1').value;
+            const answer2 = document.getElementById('answer2').value;
 
             try {
-                const response = await fetch('http://localhost:4009/login', {
+                const response = await fetch('http://localhost:4009/api/verify-answers', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(formData)
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, answer1, answer2 })
                 });
 
                 const data = await response.json();
-                
                 if (data.success) {
-                    // Show success notification
-                    const notification = document.getElementById('loginNotification');
-                    notification.textContent = `Login successful as ${data.role}`;
-                    notification.classList.add('success');
-                    
-                    // Store user data
-                    localStorage.setItem('userName', data.name);
-                    localStorage.setItem('userEmail', data.email);
-                    localStorage.setItem('userRole', data.role);
-                    localStorage.setItem('userDepartment', data.department);
-                    
-                    // Redirect after notification with proper role-based routing
-                    setTimeout(() => {
-                        window.location.href = data.role === 'Admin' ? '/admin_dashboard' : 
-                                             data.role === 'HOD' ? '/hod_dashboard' : 
-                                             '/faculty_dashboard';
-                    }, 1500);
+                    showNewPasswordCard();
                 } else {
-                    alert(data.message);
+                    alert('Incorrect answers. Please try again.');
                 }
             } catch (error) {
-                alert('Login failed: ' + error.message);
+                console.error('Error:', error);
+                alert('Error verifying answers');
             }
         });
     </script>
